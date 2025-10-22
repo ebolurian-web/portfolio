@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eden Bolurian | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f8f8;
+            --bg-card: #fafafa;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --accent: #00a86b;
+            --accent-secondary: #e74c3c;
+            --accent-glow: rgba(0, 168, 107, 0.2);
+            --border: #e0e0e0;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-card: #111111;
+            --text-primary: #ffffff;
+            --text-secondary: #999999;
+            --accent: #00a86b;
+            --accent-secondary: #e74c3c;
+            --accent-glow: rgba(0, 168, 107, 0.3);
+            --border: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+        }
+
+        /* Animated Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 168, 107, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 168, 107, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+            pointer-events: none;
+            animation: gridPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes gridPulse {
+            0%, 100% {
+                opacity: 0.3;
+                background-size: 60px 60px;
+            }
+            50% {
+                opacity: 0.6;
+                background-size: 64px 64px;
+            }
+        }
+
+        /* Grid Accent Lines */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 168, 107, 0.08) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(0, 168, 107, 0.08) 2px, transparent 2px);
+            background-size: 300px 300px;
+            z-index: 0;
+            pointer-events: none;
+            animation: gridAccent 12s ease-in-out infinite;
+        }
+
+        @keyframes gridAccent {
+            0%, 100% {
+                opacity: 0;
+            }
+            25%, 75% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), #00ff88);
+            z-index: 10000;
+            transition: width 0.1s;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 1.75rem 0;
+            transition: all 0.3s;
+        }
+
+        [data-theme="dark"] nav {
+            background: rgba(0, 0, 0, 0.95);
+        }
+
+        nav .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            background: transparent;
+            color: var(--text-primary);
+            padding: 1.8rem 2.5rem 0.6rem 0.9rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--text-primary);
+            text-align: left;
+            line-height: 1;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        nav .logo:hover {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        nav ul {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: opacity 0.3s;
+            letter-spacing: 0.02em;
+        }
+
+        nav a:hover {
+            opacity: 0.7;
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 10rem 3rem 6rem;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out forwards;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-photo {
+            width: 350px;
+            height: 450px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-photo:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .hero-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-text-content {
+            flex: 1;
+        }
+
+        .hero h1 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 .hi-im {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .typewriter-text {
+            color: var(--accent);
+            position: relative;
+            display: inline-block;
+        }
+
+        .typewriter-text.selecting {
+            background: rgba(0, 168, 107, 0.2);
+            color: var(--text-primary);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 3px;
+            height: 0.9em;
+            background-color: var(--accent);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+            vertical-align: text-bottom;
+            position: relative;
+            top: 0;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 5rem;
+            margin-top: 4rem;
+        }
+
+        .stat {
+            border-left: 1px solid var(--text-secondary);
+            padding-left: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat:hover {
+            border-left-color: var(--accent);
+        }
+
+        .stat:hover .stat-value {
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .stat-value {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.1em;
+        }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .about-section {
+            padding: 8rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .photo-collage {
+            width: 100%;
+            height: 600px;
+        }
+
+        .photo-collage-item {
+            overflow: hidden;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            background: var(--bg-card);
+            width: 100%;
+            height: 100%;
+        }
+
+        .photo-collage-item:hover {
+            border-color: var(--accent);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        .photo-collage-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .about-content h2 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 2rem;
+        }
+
+        .about-content p {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #00a86b, #00ff88, #00a86b, #e74c3c, #00a86b);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientFlow 4s linear infinite;
+            font-weight: 600;
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% center;
+            }
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        .section-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .timeline-section {
+            padding: 5rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .experience-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .experience-card {
+            background: var(--bg-primary);
+            padding: 2rem;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .experience-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 168, 107, 0.05), transparent);
+            transition: width 0.4s ease;
+        }
+
+        .experience-card:hover::before {
+            width: 100%;
+        }
+
+        .experience-card:hover {
+            background: var(--bg-card);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px var(--accent-glow);
+        }
+
+        .experience-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .experience-title-group {
+            flex: 1;
+            text-align: left;
+        }
+
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            background: transparent;
+            padding: 0.25rem;
+            flex-shrink: 0;
+        }
+
+        .experience-company {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .experience-role {
+            font-size: 0.95rem;
+            color: var(--accent);
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .experience-date {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .experience-summary {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            text-align: left;
+            margin-top: 0.75rem;
+        }
+
+        .contact-section {
+            padding: 5rem 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .projects-section {
+            padding: 5rem 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            margin-top: 3rem;
+        }
+
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            padding: 4rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .carousel-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px var(--accent-glow);
+            transform: scale(1.02);
+        }
+
+        .carousel-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        .carousel-item h3 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .carousel-item p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .carousel-status {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.5rem 1.5rem;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            border: 1px solid var(--text-secondary);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .carousel-dot.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .carousel-arrows {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .carousel-arrow {
+            width: 50px;
+            height: 50px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .carousel-arrow:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .contact-form {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            padding: 3rem;
+            margin-top: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 1rem;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .submit-button {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .submit-button:hover {
+            box-shadow: 0 0 30px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .contact-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .contact-link:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .contact-icon {
+            width: 24px;
+            height: 24px;
+            color: var(--accent);
+        }
+
+        footer {
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border);
+            padding: 4rem 3rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 968px) {
+            .about-section {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                padding: 5rem 1.5rem;
+            }
+
+            .photo-collage {
+                height: 500px;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                text-align: center;
+            }
+
+            .hero-photo {
+                width: 280px;
+                height: 360px;
+                margin: 0 auto;
+            }
+
+            .hero {
+                padding: 8rem 1.5rem 4rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            nav .container {
+                padding: 0 1.5rem;
+            }
+
+            nav ul {
+                gap: 1.5rem;
+                font-size: 0.85rem;
+            }
+
+            .experience-card,
+            .experience-header {
+                padding: 2rem;
+            }
+
+            .experience-header {
+                flex-direction: column;
+            }
+
+            .experience-date {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <nav>
+        <div class="container">
+            <div class="logo">Bolurian.com</div>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><button class="theme-toggle" id="themeToggle">☀️</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-photo">
+                <img src="https://i.imgur.com/9mAr9Fg.jpeg" alt="Eden Bolurian">
+            </div>
+            <div class="hero-text-content">
+                <h1><span class="hi-im">Hi I'm</span><span class="typewriter-text" id="typewriter"></span><span class="cursor-blink"></span></h1>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-value" data-target="4.0">0</div>
+                        <div class="stat-label">MASTERS IN FINANCE GPA</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" data-target="24">0</div>
+                        <div class="stat-label">MONTHS TOTAL EXPERIENCE</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" data-target="32">0</div>
+                        <div class="stat-label">YTD RETURN ON PERSONAL PORTFOLIO</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about-section scroll-reveal">
+        <div class="photo-collage">
+            <div class="photo-collage-item">
+                <img src="https://i.imgur.com/NmGboCg.png" alt="Eden in LA">
+            </div>
+        </div>
+        <div class="about-content">
+            <h2>About Me</h2>
+            <p>Hi, I'm <span class="gradient-text">Eden Bolurian</span> — a Master of Science in Finance candidate at Southern Methodist University's Cox School of Business, with a background in accounting and a deep interest in investment analysis, financial statements, and finance operations.</p>
+            <p>I'm an adaptable analyst bridging <span class="gradient-text">traditional finance</span>, <span class="gradient-text">fundamental accounting</span>, and new tools. My experience spans <span class="gradient-text">private credit structuring</span>, Fortune 500 tax preparation, and managing a <span class="gradient-text">$9M equity portfolio</span> — building expertise in valuation, compliance, and data-driven investment strategy.</p>
+            <p>Currently, I'm learning to use <span class="gradient-text">Artificial Intelligence</span> to build tools, models, and projects that integrate finance, <span class="gradient-text">Python</span>, and modern web technologies — including projects like a <span class="gradient-text">Black-Scholes options pricing engine</span> and this personal portfolio site that reflects my commitment to detail, design, and continuous learning.</p>
+            <p>When I'm not studying finance, you'll find me with my cat, traveling, or developing my health & fitness. 😁🌴🧊</p>
+        </div>
+    </section>
+
+    <section id="experience" class="timeline-section scroll-reveal">
+        <h2 class="section-title">Experience</h2>
+        <div class="experience-grid">
+            <div class="experience-card">
+                <div class="experience-header">
+                    <img src="https://i.imgur.com/FvLmNBF.png" alt="SMU" class="company-logo">
+                    <div class="experience-title-group">
+                        <h3 class="experience-company">Nancy Chambers Underwood Fund</h3>
+                        <div class="experience-role">Investment Analyst</div>
+                    </div>
+                    <div class="experience-date">Aug 2025 – Present</div>
+                </div>
+                <p class="experience-summary">Co-managing SMU's $9M graduate equity portfolio with live investment recommendations to faculty committee</p>
+            </div>
+
+            <div class="experience-card">
+                <div class="experience-header">
+                    <img src="https://i.imgur.com/jUpyZGx.png" alt="TOV Capital" class="company-logo">
+                    <div class="experience-title-group">
+                        <h3 class="experience-company">TOV Capital Group</h3>
+                        <div class="experience-role">Private Credit Summer Analyst</div>
+                    </div>
+                    <div class="experience-date">May 2025 – Aug 2025</div>
+                </div>
+                <p class="experience-summary">Structured finance valuation modeling and due diligence for 35+ legal settlement funding opportunities</p>
+            </div>
+
+            <div class="experience-card">
+                <div class="experience-header">
+                    <img src="https://i.imgur.com/5fDY6FD.png" alt="KPMG" class="company-logo">
+                    <div class="experience-title-group">
+                        <h3 class="experience-company">KPMG</h3>
+                        <div class="experience-role">Asset Management Tax Intern</div>
+                    </div>
+                    <div class="experience-date">Jan 2025 – Apr 2025</div>
+                </div>
+                <p class="experience-summary">Prepared 50+ partnership returns for Fortune 500 clients using advanced Excel-based tax modeling</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="education" class="timeline-section scroll-reveal">
+        <h2 class="section-title">Education</h2>
+        <div class="experience-grid">
+            <div class="experience-card">
+                <div class="experience-header">
+                    <img src="https://i.imgur.com/FvLmNBF.png" alt="SMU" class="company-logo">
+                    <div class="experience-title-group">
+                        <h3 class="experience-company">Southern Methodist University</h3>
+                        <div class="experience-role">Master of Science in Finance</div>
+                    </div>
+                    <div class="experience-date">Aug 2025 – May 2026</div>
+                </div>
+                <p class="experience-summary">Cox School of Business • 4.0 GPA • Concentration in Investment Management</p>
+            </div>
+
+            <div class="experience-card">
+                <div class="experience-header">
+                    <img src="https://i.imgur.com/nVIhCVL.jpeg" alt="UT Dallas" class="company-logo">
+                    <div class="experience-title-group">
+                        <h3 class="experience-company">University of Texas at Dallas</h3>
+                        <div class="experience-role">Bachelor of Science in Accounting</div>
+                    </div>
+                    <div class="experience-date">Aug 2021 – May 2025</div>
+                </div>
+                <p class="experience-summary">Naveen Jindal School of Management • 3.76 GPA • Cum Laude • CPA Eligible</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="timeline-section scroll-reveal">
+        <h2 class="section-title">Projects</h2>
+        <div class="carousel-container">
+            <div class="carousel" id="projectCarousel">
+                <div class="carousel-item" onclick="window.open('https://www.bolurian.com/black-scholes', '_blank')">
+                    <div class="carousel-icon">Δ</div>
+                    <h3>Black-Scholes Options Pricing Model</h3>
+                    <p>Interactive options pricing calculator using the Black-Scholes model. Calculate call and put prices, Greeks (Delta, Gamma, Theta, Vega), and visualize option payoff diagrams with real-time inputs.</p>
+                    <div class="carousel-status">VIEW PROJECT →</div>
+                </div>
+                <div class="carousel-item" onclick="window.open('#', '_blank')">
+                    <div class="carousel-icon">∑</div>
+                    <h3>Financial Automation Suite</h3>
+                    <p>Python-based tools for automated financial statement analysis, ratio calculations, and trend forecasting using machine learning algorithms.</p>
+                    <div class="carousel-status">COMING SOON</div>
+                </div>
+                <div class="carousel-item" onclick="window.open('#', '_blank')">
+                    <div class="carousel-icon">π</div>
+                    <h3>Portfolio Analytics Dashboard</h3>
+                    <p>Interactive visualization tools for portfolio performance tracking, risk metrics, and scenario analysis with real-time market data integration.</p>
+                    <div class="carousel-status">COMING SOON</div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-nav">
+            <div class="carousel-dot active" data-index="0"></div>
+            <div class="carousel-dot" data-index="1"></div>
+            <div class="carousel-dot" data-index="2"></div>
+        </div>
+        <div class="carousel-arrows">
+            <button class="carousel-arrow" id="prevProjectBtn">←</button>
+            <button class="carousel-arrow" id="nextProjectBtn">→</button>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section scroll-reveal">
+        <h2 class="section-title">Get In Touch</h2>
+        <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            <button type="submit" class="submit-button">Send Message</button>
+        </form>
+
+        <div class="contact-links">
+            <a href="mailto:ebolurian@gmail.com" class="contact-link">
+                <svg class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                ebolurian@gmail.com
+            </a>
+            <a href="https://www.linkedin.com/in/edenbolurian/" target="_blank" class="contact-link">
+                <svg class="contact-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+                LinkedIn
+            </a>
+            <a href="tel:469-345-5481" class="contact-link">
+                <svg class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                </svg>
+                469-345-5481
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Eden Bolurian. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const scrollProgress = document.getElementById('scrollProgress');
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        let isDark = true;
+        
+        themeToggle.addEventListener('click', () => {
+            isDark = !isDark;
+            document.body.setAttribute('data-theme', isDark ? 'dark' : '');
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
+        });
+
+        // Typewriter Effect
+        const phrases = [
+            'Eden Bolurian',
+            'a Problem-Solver',
+            'Risk-Conscious',
+            'a Process Optimizer',
+            'Results Oriented',
+            'a Dynamic Learner'
+        ];
+        
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let isSelecting = false;
+        const typewriterElement = document.getElementById('typewriter');
+        const typingSpeed = 100;
+        const deletingSpeed = 50;
+        const pauseAfterTyping = 4000;
+        const pauseAfterSelecting = 500;
+        const pauseAfterDeleting = 300;
+
+        function typeWriter() {
+            const currentPhrase = phrases[phraseIndex];
+            
+            // Apply red color for "Risk-Conscious"
+            if (currentPhrase === 'Risk-Conscious') {
+                typewriterElement.style.color = '#e74c3c';
+            } else {
+                typewriterElement.style.color = '';
+            }
+            
+            if (!isDeleting && !isSelecting) {
+                if (charIndex < currentPhrase.length) {
+                    typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                    charIndex++;
+                    setTimeout(typeWriter, typingSpeed);
+                } else {
+                    setTimeout(() => {
+                        isSelecting = true;
+                        typewriterElement.classList.add('selecting');
+                        setTimeout(() => {
+                            isSelecting = false;
+                            isDeleting = true;
+                            typeWriter();
+                        }, pauseAfterSelecting);
+                    }, pauseAfterTyping);
+                }
+            } else if (isDeleting) {
+                typewriterElement.classList.remove('selecting');
+                if (charIndex > 0) {
+                    typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                    charIndex--;
+                    setTimeout(typeWriter, deletingSpeed);
+                } else {
+                    isDeleting = false;
+                    phraseIndex = (phraseIndex + 1) % phrases.length;
+                    setTimeout(typeWriter, pauseAfterDeleting);
+                }
+            }
+        }
+
+        setTimeout(typeWriter, 1000);
+
+        // Animated Stats Counter
+        let hasAnimated = false;
+        function animateStats() {
+            if (hasAnimated) return;
+            
+            const stats = document.querySelectorAll('.stat-value');
+            stats.forEach(stat => {
+                const target = parseFloat(stat.getAttribute('data-target'));
+                const duration = 2000;
+                const increment = target / (duration / 16);
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        // Format final value based on target
+                        if (target === 4.0) {
+                            stat.textContent = '4.0';
+                        } else if (stat.nextElementSibling.textContent.includes('MONTHS')) {
+                            stat.textContent = target + '+';
+                        } else if (stat.nextElementSibling.textContent.includes('YTD')) {
+                            stat.textContent = target + '%';
+                        } else {
+                            stat.textContent = target % 1 === 0 ? target : target.toFixed(1);
+                        }
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = current % 1 === 0 ? Math.floor(current) : current.toFixed(1);
+                    }
+                }, 16);
+            });
+            hasAnimated = true;
+        }
+
+        // Scroll Reveal Animation
+        const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+        
+        function checkScroll() {
+            scrollRevealElements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight * 0.8;
+                
+                if (isVisible) {
+                    el.classList.add('revealed');
+                }
+            });
+
+            // Animate stats counter
+            const heroStats = document.querySelector('.hero-stats');
+            if (heroStats) {
+                const rect = heroStats.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    animateStats();
+                }
+            }
+        }
+
+        window.addEventListener('scroll', checkScroll);
+        checkScroll();
+
+        // Project Carousel
+        let currentProject = 0;
+        const projectCarousel = document.getElementById('projectCarousel');
+        const projectDots = document.querySelectorAll('.carousel-dot');
+        const totalProjects = 3;
+
+        function updateCarousel() {
+            projectCarousel.style.transform = `translateX(-${currentProject * 100}%)`;
+            projectDots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentProject);
+            });
+        }
+
+        document.getElementById('nextProjectBtn').addEventListener('click', () => {
+            currentProject = (currentProject + 1) % totalProjects;
+            updateCarousel();
+        });
+
+        document.getElementById('prevProjectBtn').addEventListener('click', () => {
+            currentProject = (currentProject - 1 + totalProjects) % totalProjects;
+            updateCarousel();
+        });
+
+        projectDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentProject = index;
+                updateCarousel();
+            });
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
