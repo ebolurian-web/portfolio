@@ -886,27 +886,35 @@ document.getElementById('tickerInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') fetchStock();
 });
 
-// ─── PROXY FETCH (Fixed: uses AbortController, 3 proxies, dual query hosts) ──
+// ─── PROXY FETCH (parallel — all 3 proxies race, first success wins) ─────────
 async function proxyFetch(url) {
     const proxies = [
         'https://corsproxy.io/?' + encodeURIComponent(url),
         'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
         'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url),
     ];
-    let lastErr;
-    for (const proxy of proxies) {
-        try {
-            const controller = new AbortController();
-            const tid = setTimeout(() => controller.abort(), 12000);
-            const res = await fetch(proxy, { signal: controller.signal });
-            clearTimeout(tid);
-            if (!res.ok) continue;
-            const text = await res.text();
-            if (!text || text.trim().length < 5) continue;
-            return JSON.parse(text);
-        } catch (e) { lastErr = e; }
-    }
-    throw lastErr || new Error('All proxies failed');
+    const controllers = proxies.map(() => new AbortController());
+    const cancel = (except) => controllers.forEach((c, i) => i !== except && c.abort());
+
+    const attempts = proxies.map((proxy, i) =>
+        new Promise((resolve, reject) => {
+            const tid = setTimeout(() => { controllers[i].abort(); reject(new Error('timeout')); }, 10000);
+            fetch(proxy, { signal: controllers[i].signal })
+                .then(r => { clearTimeout(tid); if (!r.ok) throw new Error('bad status'); return r.text(); })
+                .then(text => {
+                    if (!text || text.trim().length < 5) throw new Error('empty');
+                    const data = JSON.parse(text);
+                    cancel(i);
+                    resolve(data);
+                })
+                .catch(e => { clearTimeout(tid); reject(e); });
+        })
+    );
+
+    return new Promise((resolve, reject) => {
+        let failed = 0;
+        attempts.forEach(p => p.then(resolve).catch(() => { if (++failed === attempts.length) reject(new Error('All proxies failed')); }));
+    });
 }
 
 // ─── STOCK FETCH ──────────────────────────────────────────────────────────────

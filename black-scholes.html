@@ -45,6 +45,22 @@
             50%      { opacity: 1;   background-size: 65px 65px; }
         }
 
+        body::after {
+            content: '';
+            position: fixed; inset: 0;
+            background-image:
+                linear-gradient(rgba(0,168,107,0.06) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(0,168,107,0.06) 2px, transparent 2px);
+            background-size: 300px 300px;
+            z-index: 0; pointer-events: none;
+            animation: gridAccent 12s ease-in-out infinite;
+        }
+
+        @keyframes gridAccent {
+            0%, 100% { opacity: 0; }
+            25%, 75%  { opacity: 0.5; }
+        }
+
         /* ── NAV ─────────────────────────────────────────── */
         .nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -94,6 +110,13 @@
             font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
             margin-bottom: 2.5rem;
             opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards;
+            cursor: default;
+            transition: box-shadow 0.3s, background 0.3s, border-color 0.3s;
+        }
+        .hero-badge:hover {
+            background: rgba(0,168,107,0.16);
+            border-color: rgba(0,168,107,0.55);
+            box-shadow: 0 0 28px var(--glow), 0 0 60px rgba(0,168,107,0.1);
         }
         .hero-badge-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 2s ease infinite; }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }

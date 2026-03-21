@@ -21,143 +21,133 @@
         body::before {
             content: ''; position: fixed; inset: 0;
             background-image: linear-gradient(rgba(0,168,107,0.03) 1px,transparent 1px), linear-gradient(90deg,rgba(0,168,107,0.03) 1px,transparent 1px);
-            background-size: 60px 60px; z-index: 0; pointer-events: none; animation: gridPulse 8s ease-in-out infinite;
+            background-size: 60px 60px; z-index: 0; pointer-events: none;
+            animation: gridPulse 8s ease-in-out infinite;
         }
-        @keyframes gridPulse { 0%,100%{opacity:.3;background-size:60px 60px} 50%{opacity:.7;background-size:64px 64px} }
+        body::after {
+            content: ''; position: fixed; inset: 0;
+            background-image: linear-gradient(rgba(0,168,107,0.06) 2px,transparent 2px), linear-gradient(90deg,rgba(0,168,107,0.06) 2px,transparent 2px);
+            background-size: 300px 300px; z-index: 0; pointer-events: none;
+            animation: gridAccent 12s ease-in-out infinite;
+        }
+        @keyframes gridPulse  { 0%,100%{opacity:.3;background-size:60px 60px} 50%{opacity:.7;background-size:64px 64px} }
+        @keyframes gridAccent { 0%,100%{opacity:0} 25%,75%{opacity:.5} }
 
         .wrap { max-width: 1400px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
 
         /* ── HEADER ── */
         header { padding: 1.75rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; }
         .header-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-        .logo { font-family: 'Libre Baskerville', serif; font-size: 1.5rem; font-weight: 400; color: var(--text); padding: 0.5rem 1.2rem 0.4rem; border: 2px solid var(--text); text-decoration: none; transition: all 0.3s; }
+        .logo { font-family: 'Libre Baskerville', serif; font-size: 1.5rem; font-weight: 400; color: var(--text); padding: .5rem 1.2rem .4rem; border: 2px solid var(--text); text-decoration: none; transition: all .3s; }
         .logo:hover { background: var(--green); color: #000; border-color: var(--green); box-shadow: 0 4px 20px var(--glow); }
         .header-nav { display: flex; gap: 1.5rem; align-items: center; }
-        .hn-link { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+        .hn-link { color: var(--muted); text-decoration: none; font-size: .82rem; transition: color .2s; }
         .hn-link:hover { color: var(--text); }
         .hn-link.active { color: var(--green); }
-        .hn-cta { background: var(--bg3); border: 1px solid var(--border); color: var(--green); padding: 0.45rem 1.1rem; font-size: 0.78rem; font-weight: 600; text-decoration: none; letter-spacing: 0.04em; transition: all 0.2s; }
+        .hn-cta { background: var(--bg3); border: 1px solid var(--border); color: var(--green); padding: .45rem 1.1rem; font-size: .78rem; font-weight: 600; text-decoration: none; letter-spacing: .04em; transition: all .2s; }
         .hn-cta:hover { border-color: var(--green); box-shadow: 0 0 12px var(--glow); }
 
-        h1 { font-family: 'Libre Baskerville', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
-        .subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+        h1 { font-family: 'Libre Baskerville', serif; font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 700; margin-bottom: .5rem; letter-spacing: -.02em; }
+        .subtitle { color: var(--muted); font-size: .9rem; margin-bottom: 2rem; }
 
         /* ── CARDS ── */
         .card { background: var(--bg3); border: 1px solid var(--border); padding: 2rem; margin-bottom: 2rem; }
-        .card-title { font-family: 'Libre Baskerville', serif; font-size: 1.15rem; color: var(--green); margin-bottom: 1.5rem; }
+        .card-title { font-family: 'Libre Baskerville', serif; font-size: 1.1rem; color: var(--green); margin-bottom: 1.4rem; }
 
         /* ── TOP ROW ── */
         .top-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
 
         /* ── INPUTS ── */
         .input-group { margin-bottom: 1rem; }
-        .input-label { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.82rem; margin-bottom: 0.35rem; font-weight: 500; }
-        input[type="number"], input[type="text"] {
+        .input-label { display: flex; justify-content: space-between; color: var(--muted); font-size: .82rem; margin-bottom: .35rem; font-weight: 500; }
+        input[type="number"], input[type="text"], input[type="date"] {
             width: 100%; background: var(--bg2); border: 1px solid var(--border);
-            color: var(--text); padding: 0.6rem 0.75rem; font-size: 0.92rem; font-family: inherit; transition: border-color 0.2s;
+            color: var(--text); padding: .6rem .75rem; font-size: .9rem; font-family: inherit; transition: border-color .2s;
         }
+        input[type="date"] { color-scheme: dark; }
         input:focus { outline: none; border-color: var(--green); }
         select.styled {
             width: 100%; background: var(--bg2); border: 1px solid var(--border);
-            color: var(--text); padding: 0.6rem 0.75rem; font-size: 0.88rem; font-family: inherit;
-            cursor: pointer; transition: border-color 0.2s;
+            color: var(--text); padding: .6rem .75rem; font-size: .85rem; font-family: inherit; cursor: pointer;
         }
         select.styled:focus { outline: none; border-color: var(--green); }
 
         /* ── BUTTONS ── */
-        .btn { border: none; padding: 0.65rem 1.25rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; letter-spacing: 0.03em; }
-        .btn-green  { background: var(--green); color: #000; }
+        .btn { border: none; padding: .65rem 1.25rem; font-size: .82rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all .2s; letter-spacing: .03em; }
+        .btn-green { background: var(--green); color: #000; }
         .btn-green:hover { box-shadow: 0 0 20px var(--glow); }
-        .btn-ghost  { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+        .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); }
         .btn-ghost:hover { border-color: var(--green); color: var(--green); }
-        .btn-red    { background: transparent; border: 1px solid var(--border); color: var(--red); }
-        .btn-red:hover { border-color: var(--red); background: rgba(231,76,60,0.08); }
-        .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.75rem; }
+        .btn-red { background: transparent; border: 1px solid var(--border); color: var(--red); }
+        .btn-red:hover { border-color: var(--red); background: rgba(231,76,60,.08); }
+        .btn-sm { padding: .3rem .65rem; font-size: .72rem; }
 
         /* ── STOCK INFO ── */
-        .stock-info { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; padding: 0.9rem 1.1rem; background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--green); margin-top: 1rem; }
-        .stock-info.hidden { display: none; }
+        .stock-info { display: none; align-items: center; gap: 2rem; flex-wrap: wrap; padding: .9rem 1.1rem; background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--green); margin-top: 1rem; }
+        .stock-info.visible { display: flex; }
         .stock-stat { display: flex; flex-direction: column; }
-        .stock-stat-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+        .stock-stat-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
         .stock-stat-value { font-size: 1rem; font-weight: 600; color: var(--green); }
-        .stock-error { color: var(--red); font-size: 0.82rem; margin-top: 0.75rem; display: none; }
+        .stock-error { color: var(--red); font-size: .82rem; margin-top: .75rem; display: none; }
 
-        /* ── STRATEGY PRESETS ── */
-        .preset-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
-        .preset-btn {
-            background: var(--bg2); border: 1px solid var(--border); color: var(--muted);
-            padding: 0.35rem 0.85rem; font-size: 0.76rem; font-weight: 600;
-            cursor: pointer; font-family: inherit; transition: all 0.2s; letter-spacing: 0.03em;
-            border-radius: 3px;
-        }
-        .preset-btn:hover { border-color: var(--green); color: var(--green); background: rgba(0,168,107,0.06); }
-        .preset-btn.active { border-color: var(--green); color: var(--green); background: rgba(0,168,107,0.1); }
+        /* ── PRESETS ── */
+        .preset-grid { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
+        .preset-btn { background: var(--bg2); border: 1px solid var(--border); color: var(--muted); padding: .35rem .85rem; font-size: .76rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all .2s; border-radius: 3px; }
+        .preset-btn:hover { border-color: var(--green); color: var(--green); }
+        .preset-btn.active { border-color: var(--green); color: var(--green); background: rgba(0,168,107,.1); }
 
         /* ── LEGS TABLE ── */
-        .legs-header { display: grid; grid-template-columns: 90px 90px 80px 100px 100px 100px 70px 60px; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); margin-bottom: 0.5rem; }
-        .legs-header span { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; }
-
-        .leg-row {
-            display: grid; grid-template-columns: 90px 90px 80px 100px 100px 100px 70px 60px;
-            gap: 0.5rem; align-items: center; padding: 0.5rem 0;
-            border-bottom: 1px solid #0d0d0d; transition: background 0.15s;
+        .legs-scroll { overflow-x: auto; }
+        table.legs-table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        table.legs-table th {
+            color: var(--muted); font-size: .68rem; text-transform: uppercase;
+            letter-spacing: .08em; font-weight: 500; padding: .5rem .75rem;
+            border-bottom: 1px solid var(--border); white-space: nowrap; text-align: left;
         }
-        .leg-row:hover { background: rgba(255,255,255,0.02); }
+        table.legs-table td { padding: .4rem .5rem; border-bottom: 1px solid #0d0d0d; vertical-align: middle; }
+        table.legs-table tr:last-child td { border-bottom: none; }
+        table.legs-table tr:hover td { background: rgba(255,255,255,.02); }
+        table.legs-table input[type="number"], table.legs-table input[type="date"], table.legs-table select.styled {
+            padding: .38rem .5rem; font-size: .82rem; background: var(--bg2);
+        }
+        table.legs-table select.styled { width: 100%; }
+        .leg-cost { font-size: .82rem; font-weight: 600; white-space: nowrap; }
+        .leg-cost-sub { font-size: .62rem; color: var(--muted); }
 
-        .leg-row input[type="number"] { padding: 0.4rem 0.5rem; font-size: 0.82rem; }
-        .leg-row select.styled { padding: 0.4rem 0.5rem; font-size: 0.82rem; }
+        .add-leg-row { display: flex; gap: .6rem; align-items: center; margin-top: 1.25rem; flex-wrap: wrap; }
 
-        .leg-dir-buy  { color: var(--green); font-weight: 700; font-size: 0.78rem; }
-        .leg-dir-sell { color: var(--red);   font-weight: 700; font-size: 0.78rem; }
-        .leg-type-call { color: var(--green); }
-        .leg-type-put  { color: var(--red); }
-
-        .add-leg-row { display: flex; gap: 0.75rem; align-items: center; margin-top: 1rem; flex-wrap: wrap; }
-        .pending-notice { background: rgba(0,168,107,0.08); border: 1px solid rgba(0,168,107,0.25); color: var(--green); padding: 0.6rem 1rem; font-size: 0.8rem; margin-bottom: 1rem; display: none; }
+        .pending-notice {
+            background: rgba(0,168,107,.08); border: 1px solid rgba(0,168,107,.25);
+            color: var(--green); padding: .6rem 1rem; font-size: .8rem; margin-bottom: 1rem; display: none;
+        }
         .pending-notice.visible { display: block; }
 
-        /* ── PAYOFF CHART ── */
-        .payoff-wrap { margin-bottom: 2rem; }
+        /* ── STATS ── */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px,1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-box { background: var(--bg2); border: 1px solid var(--border); padding: 1.2rem; text-align: center; }
+        .stat-label { font-size: .67rem; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin-bottom: .4rem; }
+        .stat-value { font-family: 'Libre Baskerville', serif; font-size: 1.55rem; font-weight: 700; line-height: 1.2; }
+        .stat-value.pos { color: var(--green); }
+        .stat-value.neg { color: var(--red); }
+        .stat-value.neu { color: var(--yellow); }
+        .stat-value.blu { color: var(--blue); }
+        .stat-sub { font-size: .7rem; color: var(--muted); margin-top: .25rem; }
 
-        /* ── STATS GRID ── */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-        .stat-box { background: var(--bg2); border: 1px solid var(--border); padding: 1.25rem; text-align: center; }
-        .stat-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin-bottom: 0.4rem; }
-        .stat-value { font-family: 'Libre Baskerville', serif; font-size: 1.6rem; font-weight: 700; }
-        .stat-value.positive { color: var(--green); }
-        .stat-value.negative { color: var(--red); }
-        .stat-value.neutral  { color: var(--yellow); }
-        .stat-value.blue     { color: var(--blue); }
-        .stat-sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.25rem; }
+        .breakeven-list { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .be-chip { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3); color: var(--yellow); padding: .3rem .9rem; font-size: .82rem; font-weight: 600; }
 
-        /* ── BREAK-EVENS ── */
-        .breakeven-list { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-        .be-chip { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: var(--yellow); padding: 0.35rem 1rem; font-size: 0.82rem; font-weight: 600; }
-
-        /* ── STRATEGY SUMMARY ── */
-        .strategy-summary { background: var(--bg2); border: 1px solid var(--border); padding: 1.25rem; margin-bottom: 1.5rem; font-size: 0.83rem; color: var(--muted); line-height: 1.7; }
+        .strategy-summary { background: var(--bg2); border: 1px solid var(--border); padding: 1.25rem; font-size: .83rem; color: var(--muted); line-height: 1.75; }
         .strategy-summary strong { color: var(--text); }
-        .summary-ok { color: var(--green); } .summary-warn { color: var(--red); }
+        .sum-ok   { color: var(--green); font-weight: 600; }
+        .sum-warn { color: var(--red);   font-weight: 600; }
 
         /* ── EMPTY STATE ── */
         .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
-        .empty-state .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
-        .empty-state p { font-size: 0.9rem; }
+        .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: .3; }
 
         /* ── RESPONSIVE ── */
-        @media (max-width: 1100px) {
-            .legs-header, .leg-row { grid-template-columns: 90px 90px 80px 100px 100px 70px 60px; }
-            .legs-header span:nth-child(5), .leg-row > *:nth-child(5) { display: none; }
-        }
-        @media (max-width: 900px) {
-            .top-row { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 700px) {
-            .wrap { padding: 1rem; }
-            .legs-header, .leg-row { grid-template-columns: 85px 85px 80px 90px 70px 45px; }
-            .legs-header span:nth-child(4), .leg-row > *:nth-child(4) { display: none; }
-            .header-nav .hn-link { display: none; }
-        }
+        @media (max-width: 900px) { .top-row { grid-template-columns: 1fr; } }
+        @media (max-width: 640px) { .wrap { padding: 1rem; } .header-nav .hn-link { display: none; } }
     </style>
 </head>
 <body>
@@ -174,34 +164,35 @@
         </div>
         <br>
         <h1>Strategy Builder</h1>
-        <p class="subtitle">Multi-leg options strategies · Combined payoff diagram · Risk &amp; reward analysis</p>
+        <p class="subtitle">Multi-leg options strategies · Combined payoff at expiry · Risk &amp; reward analysis</p>
     </header>
 
-    <!-- TOP ROW: Stock + Presets -->
+    <!-- TOP ROW -->
     <div class="top-row">
-        <!-- STOCK -->
+
+        <!-- UNDERLYING -->
         <div class="card" style="margin-bottom:0">
             <div class="card-title">Underlying</div>
             <div class="input-group">
-                <div class="input-label">Ticker (optional — for live prices)</div>
-                <div style="display:flex;gap:0.75rem">
+                <div class="input-label">Ticker — loads live price &amp; expiry dates</div>
+                <div style="display:flex;gap:.75rem">
                     <input type="text" id="strat_ticker" placeholder="e.g. AAPL" maxlength="10" style="text-transform:uppercase;flex:1">
-                    <button class="btn btn-green" onclick="stratFetchStock()">Fetch</button>
+                    <button class="btn btn-green" id="stratFetchBtn" onclick="stratFetchStock()">Fetch</button>
                 </div>
             </div>
             <div class="input-group">
-                <div class="input-label">Current Stock Price ($)</div>
+                <div class="input-label">Stock Price ($)</div>
                 <input type="number" id="strat_spot" value="100" step="0.01" min="0.01" oninput="recalc()">
             </div>
             <div class="input-group">
-                <div class="input-label">Implied Volatility (%) — used for probability</div>
+                <div class="input-label">Volatility % — used for probability estimate</div>
                 <input type="number" id="strat_iv" value="25" step="0.5" min="1" max="300" oninput="recalc()">
             </div>
-            <div class="stock-info hidden" id="stratStockInfo">
-                <div class="stock-stat"><span class="stock-stat-label">Price</span><span class="stock-stat-value" id="stratPrice">—</span></div>
-                <div class="stock-stat"><span class="stock-stat-label">Hist. Vol</span><span class="stock-stat-value" id="stratVol">—</span></div>
-                <div class="stock-stat"><span class="stock-stat-label">52W Hi</span><span class="stock-stat-value" id="stratHi">—</span></div>
-                <div class="stock-stat"><span class="stock-stat-label">52W Lo</span><span class="stock-stat-value" id="stratLo">—</span></div>
+            <div class="stock-info" id="stratStockInfo">
+                <div class="stock-stat"><span class="stock-stat-label">Price</span><span class="stock-stat-value" id="st_price">—</span></div>
+                <div class="stock-stat"><span class="stock-stat-label">Hist. Vol</span><span class="stock-stat-value" id="st_vol">—</span></div>
+                <div class="stock-stat"><span class="stock-stat-label">52W Hi</span><span class="stock-stat-value" id="st_hi">—</span></div>
+                <div class="stock-stat"><span class="stock-stat-label">52W Lo</span><span class="stock-stat-value" id="st_lo">—</span></div>
             </div>
             <div class="stock-error" id="stratError"></div>
         </div>
@@ -223,9 +214,10 @@
                 <button class="preset-btn" data-preset="butterfly">Long Butterfly</button>
                 <button class="preset-btn" data-preset="custom">Custom</button>
             </div>
-            <p style="font-size:0.78rem;color:var(--muted);line-height:1.6">
-                Select a preset to auto-populate legs with example prices. Adjust strikes, premiums, and quantities below to match real market prices.
-                Use the <strong style="color:var(--text)">BS Pricer ↗</strong> to fetch live prices and send legs directly.
+            <p style="font-size:.78rem;color:var(--muted);line-height:1.65">
+                Presets auto-populate with estimated prices based on the spot. Fetch a ticker to load real
+                expiry dates into the dropdowns. Use <strong style="color:var(--text)">BS Pricer ↗</strong>
+                to send live market contracts directly here.
             </p>
         </div>
     </div>
@@ -233,44 +225,50 @@
     <!-- LEGS BUILDER -->
     <div class="card">
         <div class="card-title">Legs</div>
-
         <div class="pending-notice" id="pendingNotice"></div>
 
-        <div class="legs-header">
-            <span>Action</span>
-            <span>Type</span>
-            <span>Qty</span>
-            <span>Strike ($)</span>
-            <span>Premium ($)</span>
-            <span>Days to Exp.</span>
-            <span>Cost</span>
-            <span></span>
-        </div>
-
-        <div id="legsContainer">
-            <div class="empty-state">
-                <div class="empty-icon">⊞</div>
-                <p>Select a preset above or add a custom leg below.</p>
-            </div>
+        <div class="legs-scroll">
+            <table class="legs-table" id="legsTable">
+                <thead>
+                    <tr>
+                        <th style="width:90px">Action</th>
+                        <th style="width:85px">Type</th>
+                        <th style="width:65px">Qty</th>
+                        <th style="width:105px">Strike ($)</th>
+                        <th style="width:105px">Premium ($/sh)</th>
+                        <th style="min-width:155px">Expiry Date</th>
+                        <th style="width:110px">Cost ×100</th>
+                        <th style="width:40px"></th>
+                    </tr>
+                </thead>
+                <tbody id="legsBody">
+                    <tr><td colspan="8">
+                        <div class="empty-state">
+                            <div class="empty-icon">⊞</div>
+                            <p>Select a preset above or add a leg below.</p>
+                        </div>
+                    </td></tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="add-leg-row">
-            <button class="btn btn-ghost" onclick="addLeg('buy','call')">+ Buy Call</button>
-            <button class="btn btn-ghost" onclick="addLeg('buy','put')">+ Buy Put</button>
-            <button class="btn btn-ghost" onclick="addLeg('sell','call')">+ Sell Call</button>
-            <button class="btn btn-ghost" onclick="addLeg('sell','put')">+ Sell Put</button>
-            <button class="btn btn-ghost" onclick="addLeg('buy','stock')">+ Long Stock</button>
+            <button class="btn btn-ghost btn-sm" onclick="addLeg('buy','call')">+ Buy Call</button>
+            <button class="btn btn-ghost btn-sm" onclick="addLeg('buy','put')">+ Buy Put</button>
+            <button class="btn btn-ghost btn-sm" onclick="addLeg('sell','call')">+ Sell Call</button>
+            <button class="btn btn-ghost btn-sm" onclick="addLeg('sell','put')">+ Sell Put</button>
+            <button class="btn btn-ghost btn-sm" onclick="addLeg('buy','stock')">+ Long Stock</button>
             <button class="btn btn-red btn-sm" onclick="clearAllLegs()" style="margin-left:auto">Clear All</button>
         </div>
     </div>
 
     <!-- PAYOFF CHART -->
-    <div class="card payoff-wrap" id="payoffCard">
+    <div class="card">
         <div class="card-title">Combined Payoff at Expiry</div>
         <div id="chartPayoff" style="height:420px">
-            <div class="empty-state" style="padding:6rem 2rem">
+            <div class="empty-state">
                 <div class="empty-icon">📈</div>
-                <p>Add legs to see the combined payoff diagram.</p>
+                <p>Add legs to see the payoff diagram.</p>
             </div>
         </div>
     </div>
@@ -280,131 +278,164 @@
         <div class="stats-grid">
             <div class="stat-box">
                 <div class="stat-label">Max Profit</div>
-                <div class="stat-value positive" id="stat_maxProfit">—</div>
-                <div class="stat-sub" id="stat_maxProfitSub"></div>
+                <div class="stat-value pos" id="s_maxProfit">—</div>
+                <div class="stat-sub" id="s_maxProfitSub"></div>
             </div>
             <div class="stat-box">
                 <div class="stat-label">Max Loss</div>
-                <div class="stat-value negative" id="stat_maxLoss">—</div>
-                <div class="stat-sub" id="stat_maxLossSub"></div>
+                <div class="stat-value neg" id="s_maxLoss">—</div>
+                <div class="stat-sub" id="s_maxLossSub"></div>
             </div>
             <div class="stat-box">
                 <div class="stat-label">Net Premium</div>
-                <div class="stat-value" id="stat_netPremium">—</div>
-                <div class="stat-sub" id="stat_netPremiumSub"></div>
+                <div class="stat-value" id="s_netPrem">—</div>
+                <div class="stat-sub" id="s_netPremSub"></div>
             </div>
             <div class="stat-box">
                 <div class="stat-label">Risk / Reward</div>
-                <div class="stat-value blue" id="stat_rr">—</div>
+                <div class="stat-value blu" id="s_rr">—</div>
                 <div class="stat-sub">Max loss : Max profit</div>
             </div>
             <div class="stat-box">
                 <div class="stat-label">Capital at Risk</div>
-                <div class="stat-value negative" id="stat_capital">—</div>
-                <div class="stat-sub">Per 1 contract (×100)</div>
+                <div class="stat-value neg" id="s_capital">—</div>
+                <div class="stat-sub">Per contract (×100 sh)</div>
             </div>
             <div class="stat-box">
                 <div class="stat-label">Prob. of Profit</div>
-                <div class="stat-value neutral" id="stat_pop">—</div>
-                <div class="stat-sub">Log-normal estimate</div>
+                <div class="stat-value neu" id="s_pop">—</div>
+                <div class="stat-sub">Log-normal simulation</div>
             </div>
         </div>
 
         <div class="card" style="padding:1.5rem">
-            <div class="card-title" style="margin-bottom:1rem;font-size:1rem">Break-Even Prices</div>
+            <div class="card-title" style="font-size:1rem;margin-bottom:1rem">Break-Even Prices</div>
             <div class="breakeven-list" id="breakEvenList">
-                <span style="color:var(--muted);font-size:0.83rem">No break-evens found</span>
+                <span style="color:var(--muted);font-size:.83rem">No break-evens found in range</span>
             </div>
-
-            <div class="strategy-summary" id="strategySummary">Add legs to generate a strategy summary.</div>
+            <div class="strategy-summary" id="strategySummary">Add legs to see a strategy summary.</div>
         </div>
     </div>
 
-</div><!-- end .wrap -->
+</div>
 
 <script>
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let legs   = [];
 let legId  = 0;
-let strat_spot = 100;
-let fetchedStockName = '';
+let stratExpiryDates = [];   // [{ts: Number, label: String, isoDate: String}]
 
-// ─── PRE-BUILT STRATEGIES ─────────────────────────────────────────────────────
-function getPreset(name) {
-    const S = parseFloat(document.getElementById('strat_spot').value) || 100;
-    const K = Math.round(S / 5) * 5; // Round to nearest $5
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function today30() {
+    const d = new Date(); d.setDate(d.getDate() + 30);
+    return d.toISOString().split('T')[0];
+}
 
-    const presets = {
-        'long-call':    [{ action:'buy',  type:'call', strike: K,        expiry_days: 30, premium: +(S*0.04).toFixed(2), qty: 1 }],
-        'long-put':     [{ action:'buy',  type:'put',  strike: K,        expiry_days: 30, premium: +(S*0.04).toFixed(2), qty: 1 }],
-        'covered-call': [
-            { action:'buy',  type:'stock', strike: K,            expiry_days: 30, premium: S, qty: 100 },
-            { action:'sell', type:'call',  strike: +(K*1.05).toFixed(2), expiry_days: 30, premium: +(S*0.02).toFixed(2), qty: 1 },
-        ],
-        'cash-put': [{ action:'sell', type:'put', strike: +(K*0.95).toFixed(2), expiry_days: 30, premium: +(S*0.02).toFixed(2), qty: 1 }],
-        'bull-call': [
-            { action:'buy',  type:'call', strike: K,                      expiry_days: 30, premium: +(S*0.04).toFixed(2), qty: 1 },
-            { action:'sell', type:'call', strike: +(K*1.05).toFixed(2),   expiry_days: 30, premium: +(S*0.02).toFixed(2), qty: 1 },
-        ],
-        'bear-put': [
-            { action:'buy',  type:'put', strike: K,                      expiry_days: 30, premium: +(S*0.04).toFixed(2), qty: 1 },
-            { action:'sell', type:'put', strike: +(K*0.95).toFixed(2),   expiry_days: 30, premium: +(S*0.02).toFixed(2), qty: 1 },
-        ],
-        'straddle': [
-            { action:'buy', type:'call', strike: K, expiry_days: 30, premium: +(S*0.04).toFixed(2), qty: 1 },
-            { action:'buy', type:'put',  strike: K, expiry_days: 30, premium: +(S*0.04).toFixed(2), qty: 1 },
-        ],
-        'strangle': [
-            { action:'buy', type:'call', strike: +(K*1.05).toFixed(2), expiry_days: 30, premium: +(S*0.025).toFixed(2), qty: 1 },
-            { action:'buy', type:'put',  strike: +(K*0.95).toFixed(2), expiry_days: 30, premium: +(S*0.025).toFixed(2), qty: 1 },
-        ],
-        'iron-condor': [
-            { action:'sell', type:'put',  strike: +(K*0.95).toFixed(2), expiry_days: 30, premium: +(S*0.02).toFixed(2),  qty: 1 },
-            { action:'buy',  type:'put',  strike: +(K*0.90).toFixed(2), expiry_days: 30, premium: +(S*0.008).toFixed(2), qty: 1 },
-            { action:'sell', type:'call', strike: +(K*1.05).toFixed(2), expiry_days: 30, premium: +(S*0.02).toFixed(2),  qty: 1 },
-            { action:'buy',  type:'call', strike: +(K*1.10).toFixed(2), expiry_days: 30, premium: +(S*0.008).toFixed(2), qty: 1 },
-        ],
-        'iron-butterfly': [
-            { action:'buy',  type:'put',  strike: +(K*0.90).toFixed(2), expiry_days: 30, premium: +(S*0.01).toFixed(2),  qty: 1 },
-            { action:'sell', type:'put',  strike: K,                     expiry_days: 30, premium: +(S*0.04).toFixed(2),  qty: 1 },
-            { action:'sell', type:'call', strike: K,                     expiry_days: 30, premium: +(S*0.04).toFixed(2),  qty: 1 },
-            { action:'buy',  type:'call', strike: +(K*1.10).toFixed(2), expiry_days: 30, premium: +(S*0.01).toFixed(2),  qty: 1 },
-        ],
-        'butterfly': [
-            { action:'buy',  type:'call', strike: +(K*0.95).toFixed(2), expiry_days: 30, premium: +(S*0.055).toFixed(2), qty: 1 },
-            { action:'sell', type:'call', strike: K,                     expiry_days: 30, premium: +(S*0.04).toFixed(2),  qty: 2 },
-            { action:'buy',  type:'call', strike: +(K*1.05).toFixed(2), expiry_days: 30, premium: +(S*0.025).toFixed(2), qty: 1 },
-        ],
-        'custom': [],
+function getDefaultExpiry() {
+    if (stratExpiryDates.length) return { expiry_ts: stratExpiryDates[0].ts, expiry_date: stratExpiryDates[0].isoDate };
+    return { expiry_ts: null, expiry_date: today30() };
+}
+
+function getLegTYears(leg) {
+    const nowSec = Date.now() / 1000;
+    if (leg.expiry_ts && leg.expiry_ts > nowSec) {
+        return (leg.expiry_ts - nowSec) / (365.25 * 24 * 3600);
+    }
+    if (leg.expiry_date) {
+        // Parse as local date to avoid timezone shifts
+        const [y, m, d] = leg.expiry_date.split('-').map(Number);
+        const target = new Date(y, m - 1, d);
+        const days   = (target - new Date()) / (1000 * 60 * 60 * 24);
+        return Math.max(0.001, days / 365.25);
+    }
+    return 30 / 365.25;
+}
+
+function fmt2(n) { return isNaN(n) ? '—' : n.toFixed(2); }
+
+// ─── PAYOFF MATH (clear, correct, simple) ────────────────────────────────────
+function legPnlAtExpiry(leg, S) {
+    const dir = leg.action === 'buy' ? 1 : -1;
+    if (leg.type === 'stock') {
+        // stock: entry price stored in leg.strike field, no ×100 multiplier per-share already qty shares
+        return dir * (S - leg.strike) * leg.qty;
+    }
+    const intrinsic = leg.type === 'call'
+        ? Math.max(0, S - leg.strike)
+        : Math.max(0, leg.strike - S);
+    // P&L = direction × (intrinsic at expiry − premium paid) × qty × 100 shares/contract
+    return dir * (intrinsic - leg.premium) * leg.qty * 100;
+}
+
+function computePnls(prices) {
+    return prices.map(S => legs.reduce((sum, l) => sum + legPnlAtExpiry(l, S), 0));
+}
+
+function findBreakEvens(prices, pnls) {
+    const bes = [];
+    for (let i = 1; i < pnls.length; i++) {
+        const a = pnls[i - 1], b = pnls[i];
+        if ((a < 0 && b >= 0) || (a >= 0 && b < 0)) {
+            const t = -a / (b - a);
+            bes.push(prices[i - 1] + t * (prices[i] - prices[i - 1]));
+        }
+    }
+    return bes;
+}
+
+// ─── PRESETS ─────────────────────────────────────────────────────────────────
+function buildPreset(name) {
+    const S   = parseFloat(document.getElementById('strat_spot').value) || 100;
+    const K   = Math.round(S / 5) * 5;
+    const exp = getDefaultExpiry();
+
+    const mk = (action, type, strikeMult, premMult, qty=1) => ({
+        id: legId++, action, type,
+        strike:  +(type === 'stock' ? S : K * strikeMult).toFixed(2),
+        premium: +(S * premMult).toFixed(2),
+        qty,
+        ...exp,
+    });
+
+    const map = {
+        'long-call':      [mk('buy',  'call', 1.00, 0.04)],
+        'long-put':       [mk('buy',  'put',  1.00, 0.04)],
+        'covered-call':   [mk('buy',  'stock',1.00, 1.00, 100), mk('sell','call',1.05, 0.02)],
+        'cash-put':       [mk('sell', 'put',  0.95, 0.02)],
+        'bull-call':      [mk('buy',  'call', 1.00, 0.04), mk('sell','call',1.05, 0.02)],
+        'bear-put':       [mk('buy',  'put',  1.00, 0.04), mk('sell','put', 0.95, 0.02)],
+        'straddle':       [mk('buy',  'call', 1.00, 0.04), mk('buy', 'put', 1.00, 0.04)],
+        'strangle':       [mk('buy',  'call', 1.05, 0.025),mk('buy', 'put', 0.95, 0.025)],
+        'iron-condor':    [mk('sell','put', 0.95,0.020), mk('buy','put', 0.90,0.008), mk('sell','call',1.05,0.020), mk('buy','call',1.10,0.008)],
+        'iron-butterfly': [mk('buy','put', 0.90,0.010), mk('sell','put', 1.00,0.040), mk('sell','call',1.00,0.040), mk('buy','call',1.10,0.010)],
+        'butterfly':      [mk('buy','call',0.95,0.055,1), mk('sell','call',1.00,0.040,2), mk('buy','call',1.05,0.025,1)],
+        'custom':         [],
     };
-    return presets[name] || [];
+    return map[name] ?? [];
 }
 
 document.querySelectorAll('.preset-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        const preset = getPreset(btn.dataset.preset);
-        legs = [];
-        legId = 0;
-        preset.forEach(l => { legs.push({ id: legId++, ...l }); });
+        legs  = buildPreset(btn.dataset.preset);
+        legId = legs.length;
         renderLegs();
         recalc();
     });
 });
 
-// ─── LEG MANAGEMENT ───────────────────────────────────────────────────────────
+// ─── LEG CRUD ─────────────────────────────────────────────────────────────────
 function addLeg(action, type) {
-    const S = parseFloat(document.getElementById('strat_spot').value) || 100;
-    const K = Math.round(S / 5) * 5;
+    const S   = parseFloat(document.getElementById('strat_spot').value) || 100;
+    const K   = Math.round(S / 5) * 5;
+    const exp = getDefaultExpiry();
     legs.push({
-        id: legId++,
-        action,
-        type,
-        strike: type === 'stock' ? S : K,
-        expiry_days: 30,
-        premium: type === 'stock' ? S : +(S * 0.03).toFixed(2),
-        qty: type === 'stock' ? 100 : 1,
+        id: legId++, action, type,
+        strike:  type === 'stock' ? +S.toFixed(2) : +K.toFixed(2),
+        premium: type === 'stock' ? +S.toFixed(2) : +(S * 0.03).toFixed(2),
+        qty:     type === 'stock' ? 100 : 1,
+        ...exp,
     });
     renderLegs();
     recalc();
@@ -417,301 +448,281 @@ function removeLeg(id) {
 }
 
 function clearAllLegs() {
-    legs = [];
+    legs  = [];
     legId = 0;
     document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
     renderLegs();
     recalc();
 }
 
-function renderLegs() {
-    const container = document.getElementById('legsContainer');
-    if (!legs.length) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-icon">⊞</div><p>Select a preset above or add a custom leg below.</p></div>';
-        return;
-    }
-
-    container.innerHTML = legs.map(l => {
-        const cost = (l.action === 'buy' ? -1 : 1) * l.premium * l.qty * (l.type === 'stock' ? 1 : 100);
-        const costStr = (cost >= 0 ? '+' : '') + '$' + Math.abs(cost).toFixed(2);
-        const costColor = cost >= 0 ? 'var(--green)' : 'var(--red)';
-        return `
-        <div class="leg-row" id="leg-row-${l.id}">
-            <select class="styled" onchange="updateLeg(${l.id},'action',this.value)">
-                <option value="buy"  ${l.action==='buy'  ?'selected':''}>Buy</option>
-                <option value="sell" ${l.action==='sell' ?'selected':''}>Sell</option>
-            </select>
-            <select class="styled" onchange="updateLeg(${l.id},'type',this.value)">
-                <option value="call"  ${l.type==='call'  ?'selected':''}>Call</option>
-                <option value="put"   ${l.type==='put'   ?'selected':''}>Put</option>
-                <option value="stock" ${l.type==='stock' ?'selected':''}>Stock</option>
-            </select>
-            <input type="number" value="${l.qty}" min="1" step="1" onchange="updateLeg(${l.id},'qty',+this.value)">
-            <input type="number" value="${l.strike}" min="0.01" step="0.5" onchange="updateLeg(${l.id},'strike',+this.value)">
-            <input type="number" value="${l.premium}" min="0" step="0.01" onchange="updateLeg(${l.id},'premium',+this.value)" ${l.type==='stock'?'placeholder="N/A"':''}>
-            <input type="number" value="${l.expiry_days}" min="1" step="1" onchange="updateLeg(${l.id},'expiry_days',+this.value)">
-            <span style="color:${costColor};font-size:0.8rem;font-weight:600;text-align:center">${costStr}</span>
-            <button class="btn btn-red btn-sm" onclick="removeLeg(${l.id})">✕</button>
-        </div>`;
-    }).join('');
-}
-
 function updateLeg(id, field, value) {
     const leg = legs.find(l => l.id === id);
     if (!leg) return;
-    leg[field] = value;
-    // If type changes to stock, set qty to 100
+    if (field === 'expiry_ts')   { leg.expiry_ts = +value; leg.expiry_date = null; }
+    else if (field === 'expiry_date') { leg.expiry_date = value; leg.expiry_ts = null; }
+    else leg[field] = field === 'action' || field === 'type' ? value : +value;
     if (field === 'type' && value === 'stock' && leg.qty < 10) leg.qty = 100;
     renderLegs();
     recalc();
 }
 
-// ─── PAYOFF COMPUTATION ───────────────────────────────────────────────────────
-function legPayoffAtExpiry(leg, price) {
-    const dir = leg.action === 'buy' ? 1 : -1;
-    const mult = leg.type === 'stock' ? leg.qty : leg.qty * 100;
-    let payoff;
-    if (leg.type === 'call')  payoff = Math.max(0, price - leg.strike);
-    else if (leg.type === 'put')   payoff = Math.max(0, leg.strike - price);
-    else                           payoff = price - leg.strike; // stock: entry = strike field
-    const entryPnl = leg.type === 'stock' ? 0 : -leg.premium * leg.qty * 100;
-    const exitPnl  = leg.type === 'stock' ? dir * payoff * leg.qty : dir * payoff * leg.qty * 100;
-    return exitPnl + (leg.type === 'stock' ? 0 : dir * entryPnl);
-}
-
-function computePayoffs(prices) {
-    return prices.map(p => legs.reduce((sum, l) => sum + legPayoffAtExpiry(l, p), 0));
-}
-
-function findBreakEvens(prices, pnls) {
-    const breaks = [];
-    for (let i = 1; i < pnls.length; i++) {
-        if ((pnls[i-1] < 0 && pnls[i] >= 0) || (pnls[i-1] >= 0 && pnls[i] < 0)) {
-            const t = -pnls[i-1] / (pnls[i] - pnls[i-1]);
-            breaks.push(prices[i-1] + t * (prices[i] - prices[i-1]));
-        }
+// ─── RENDER LEGS TABLE ────────────────────────────────────────────────────────
+function expiryCell(leg) {
+    if (stratExpiryDates.length) {
+        const selected = leg.expiry_ts || (leg.expiry_date ? dateToTs(leg.expiry_date) : 0);
+        const opts = stratExpiryDates.map(e =>
+            `<option value="${e.ts}" ${e.ts === (leg.expiry_ts || selected) ? 'selected' : ''}>${e.label}</option>`
+        ).join('');
+        return `<select class="styled" onchange="updateLeg(${leg.id},'expiry_ts',this.value)">${opts}</select>`;
     }
-    return breaks;
+    const val = leg.expiry_date || today30();
+    return `<input type="date" value="${val}" min="${new Date().toISOString().split('T')[0]}" onchange="updateLeg(${leg.id},'expiry_date',this.value)">`;
 }
 
-// Probability of profit using log-normal price distribution
-function probOfProfit(spot, vol, T_years, priceFn) {
-    if (vol <= 0 || T_years <= 0) return null;
-    const N = 1000;
-    let inProfit = 0;
-    const sig = vol / 100;
-    const mu  = -0.5 * sig * sig; // risk-neutral drift ≈ 0 for simplicity
-    for (let i = 0; i < N; i++) {
-        // Box-Muller
-        const u1 = Math.random(), u2 = Math.random();
-        const z  = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-        const sT = spot * Math.exp(mu * T_years + sig * Math.sqrt(T_years) * z);
-        if (priceFn(sT) > 0) inProfit++;
+function dateToTs(iso) {
+    const [y,m,d] = iso.split('-').map(Number);
+    return new Date(y, m-1, d).getTime() / 1000;
+}
+
+function renderLegs() {
+    const tbody = document.getElementById('legsBody');
+    if (!legs.length) {
+        tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">⊞</div><p>Select a preset above or add a leg below.</p></div></td></tr>`;
+        return;
     }
-    return (inProfit / N * 100).toFixed(1);
+    tbody.innerHTML = legs.map(l => {
+        const isOption = l.type !== 'stock';
+        const dir      = l.action === 'buy' ? -1 : 1;
+        const totalCost = isOption
+            ? dir * l.premium * l.qty * 100
+            : dir * l.strike  * l.qty;
+        const costColor = totalCost >= 0 ? 'var(--green)' : 'var(--red)';
+        const costSign  = totalCost >= 0 ? '+' : '-';
+        const typeColor = l.type === 'call' ? 'var(--green)' : l.type === 'put' ? 'var(--red)' : 'var(--muted)';
+
+        return `<tr>
+            <td>
+                <select class="styled" onchange="updateLeg(${l.id},'action',this.value)">
+                    <option value="buy"  ${l.action==='buy' ?'selected':''}>Buy</option>
+                    <option value="sell" ${l.action==='sell'?'selected':''}>Sell</option>
+                </select>
+            </td>
+            <td>
+                <select class="styled" onchange="updateLeg(${l.id},'type',this.value)" style="color:${typeColor}">
+                    <option value="call"  ${l.type==='call' ?'selected':''}>Call</option>
+                    <option value="put"   ${l.type==='put'  ?'selected':''}>Put</option>
+                    <option value="stock" ${l.type==='stock'?'selected':''}>Stock</option>
+                </select>
+            </td>
+            <td><input type="number" value="${l.qty}" min="1" step="1" style="width:100%" onchange="updateLeg(${l.id},'qty',this.value)"></td>
+            <td><input type="number" value="${l.strike}" min="0.01" step="0.5" style="width:100%" onchange="updateLeg(${l.id},'strike',this.value)"></td>
+            <td>${isOption
+                ? `<input type="number" value="${l.premium}" min="0" step="0.01" style="width:100%" onchange="updateLeg(${l.id},'premium',this.value)">`
+                : `<span style="color:var(--muted);font-size:.8rem;padding:.4rem .5rem;display:block">—</span>`
+            }</td>
+            <td>${expiryCell(l)}</td>
+            <td>
+                <div class="leg-cost" style="color:${costColor}">${costSign}$${Math.abs(totalCost).toFixed(2)}</div>
+                <div class="leg-cost-sub">${isOption ? `${l.qty} × 100 sh` : `${l.qty} shares`}</div>
+            </td>
+            <td><button class="btn btn-red btn-sm" onclick="removeLeg(${l.id})">✕</button></td>
+        </tr>`;
+    }).join('');
 }
 
 // ─── MAIN RECALC ──────────────────────────────────────────────────────────────
 function recalc() {
-    strat_spot = parseFloat(document.getElementById('strat_spot').value) || 100;
+    const spot = parseFloat(document.getElementById('strat_spot').value) || 100;
+    const vol  = parseFloat(document.getElementById('strat_iv').value)   || 25;
+    const statsEl = document.getElementById('statsSection');
+    const chartEl = document.getElementById('chartPayoff');
 
     if (!legs.length) {
-        document.getElementById('statsSection').style.display = 'none';
-        Plotly.purge('chartPayoff');
-        document.getElementById('chartPayoff').innerHTML = '<div class="empty-state" style="padding:6rem 2rem"><div class="empty-icon">📈</div><p>Add legs to see the combined payoff diagram.</p></div>';
+        statsEl.style.display = 'none';
+        try { Plotly.purge(chartEl); } catch(e) {}
+        chartEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📈</div><p>Add legs to see the payoff diagram.</p></div>`;
         return;
     }
 
-    // Price range
-    const allStrikes = legs.filter(l => l.type !== 'stock').map(l => l.strike);
-    const minK = allStrikes.length ? Math.min(...allStrikes) : strat_spot;
-    const maxK = allStrikes.length ? Math.max(...allStrikes) : strat_spot;
-    const lo   = Math.max(0.01, Math.min(minK * 0.6, strat_spot * 0.5));
-    const hi   = Math.max(maxK * 1.5, strat_spot * 1.5);
-    const N    = 200;
+    // Price range for chart
+    const optLegs = legs.filter(l => l.type !== 'stock');
+    const strikes = optLegs.map(l => l.strike);
+    const minK = strikes.length ? Math.min(...strikes) : spot;
+    const maxK = strikes.length ? Math.max(...strikes) : spot;
+    const lo   = Math.max(0.01, Math.min(minK * 0.55, spot * 0.45));
+    const hi   = Math.max(maxK * 1.55, spot * 1.55);
+    const N    = 300;
     const step = (hi - lo) / N;
     const prices = Array.from({ length: N + 1 }, (_, i) => lo + i * step);
-    const pnls   = computePayoffs(prices);
+    const pnls   = computePnls(prices);
 
-    // Max profit / loss
     const maxPnl = Math.max(...pnls);
     const minPnl = Math.min(...pnls);
-    // Check for unlimited at edges
-    const lastSlope  = pnls[N]   - pnls[N-5];
-    const firstSlope = pnls[0]   - pnls[5];
-    const unlimitedProfit = lastSlope  > Math.abs(maxPnl) * 0.05;
-    const unlimitedLoss   = firstSlope < -Math.abs(minPnl) * 0.05;
 
-    // Net premium
-    const netPremium = legs.reduce((sum, l) => {
-        if (l.type === 'stock') return sum;
-        return sum + (l.action === 'buy' ? -1 : 1) * l.premium * l.qty * 100;
-    }, 0);
+    // Detect unlimited profit/loss by checking the slope at range edges
+    const unlimProfit = pnls[N]   - pnls[N - 10] > Math.abs(maxPnl) * 0.08;
+    const unlimLoss   = pnls[10]  - pnls[0]       < -Math.abs(minPnl) * 0.08;
 
-    // Break-evens
-    const bes = findBreakEvens(prices, pnls);
+    const bes      = findBreakEvens(prices, pnls);
+    const spotPnl  = computePnls([spot])[0];
+    const netPrem  = legs.reduce((s, l) => l.type === 'stock' ? s : s + (l.action === 'buy' ? -1 : 1) * l.premium * l.qty * 100, 0);
 
-    // Current spot P&L
-    const spotPnl = computePayoffs([strat_spot])[0];
+    // Probability of profit via log-normal Monte Carlo
+    const maxDays = Math.max(...legs.map(l => getLegTYears(l) * 365));
+    const T = Math.max(1 / 365, maxDays / 365);
+    const sig = vol / 100;
+    let inProfit = 0;
+    const SIMS = 2000;
+    for (let i = 0; i < SIMS; i++) {
+        const u1 = Math.random(), u2 = Math.random();
+        const z  = Math.sqrt(-2 * Math.log(u1 || 1e-10)) * Math.cos(2 * Math.PI * u2);
+        const sT = spot * Math.exp((-0.5 * sig * sig) * T + sig * Math.sqrt(T) * z);
+        if (computePnls([sT])[0] > 0) inProfit++;
+    }
+    const pop = (inProfit / SIMS * 100).toFixed(1);
 
-    // Probability of profit
-    const maxDays = Math.max(...legs.map(l => l.expiry_days));
-    const vol     = parseFloat(document.getElementById('strat_iv').value) || 25;
-    const pop     = probOfProfit(strat_spot, vol, maxDays / 365, p => computePayoffs([p])[0]);
+    // ── Build chart ────────────────────────────────────────────────────────────
+    const padY   = Math.max(Math.abs(maxPnl), Math.abs(minPnl)) * 0.15 || 50;
+    const yRange = [minPnl - padY, maxPnl + padY];
 
-    // ── Draw chart ──
-    const zeroLine = { x: [lo, hi], y: [0, 0], mode: 'lines', line: { color: '#2a2a2a', width: 1 }, showlegend: false };
-    const spotLine = {
-        x: [strat_spot, strat_spot], y: [minPnl * 1.15, maxPnl * 1.15],
-        mode: 'lines', name: `Spot $${strat_spot.toFixed(2)}`,
-        line: { color: '#555', width: 1.5, dash: 'dash' }, showlegend: true
-    };
-    const payoffTrace = {
-        x: prices, y: pnls, name: 'P&L at Expiry', mode: 'lines',
-        line: { color: '#00a86b', width: 2.5 },
-        fill: 'tozeroy',
-        fillcolor: 'rgba(0,168,107,0.04)',
-        hovertemplate: 'Price: $%{x:.2f}<br>P&L: $%{y:.2f}<extra></extra>'
-    };
-
-    // Shade profitable zones
-    const traceFill = {
-        x: prices, y: pnls.map(v => Math.max(0, v)),
-        name: 'Profit zone', mode: 'lines', line: { width: 0 },
-        fill: 'tozeroy', fillcolor: 'rgba(0,168,107,0.08)',
-        showlegend: false, hoverinfo: 'skip'
-    };
-    const traceFillLoss = {
-        x: prices, y: pnls.map(v => Math.min(0, v)),
-        name: 'Loss zone', mode: 'lines', line: { width: 0 },
-        fill: 'tozeroy', fillcolor: 'rgba(231,76,60,0.06)',
-        showlegend: false, hoverinfo: 'skip'
-    };
+    const traces = [
+        // Zero line
+        { x: [lo, hi], y: [0, 0], mode: 'lines', line: { color: '#2a2a2a', width: 1 }, showlegend: false, hoverinfo: 'skip' },
+        // Loss fill
+        { x: prices, y: pnls.map(v => Math.min(0, v)), mode: 'lines', line: { width: 0 },
+          fill: 'tozeroy', fillcolor: 'rgba(231,76,60,0.07)', showlegend: false, hoverinfo: 'skip' },
+        // Profit fill
+        { x: prices, y: pnls.map(v => Math.max(0, v)), mode: 'lines', line: { width: 0 },
+          fill: 'tozeroy', fillcolor: 'rgba(0,168,107,0.08)', showlegend: false, hoverinfo: 'skip' },
+        // Main P&L line
+        { x: prices, y: pnls, name: 'P&L at Expiry', mode: 'lines',
+          line: { color: '#00a86b', width: 2.5 },
+          hovertemplate: 'Price: $%{x:.2f}<br>P&L: $%{y:.2f}<extra></extra>' },
+        // Spot marker
+        { x: [spot, spot], y: [yRange[0], yRange[1]], name: `Spot $${spot.toFixed(2)}`,
+          mode: 'lines', line: { color: '#555', width: 1.5, dash: 'dash' }, showlegend: true },
+    ];
 
     // Break-even markers
-    const beTrace = bes.length ? {
-        x: bes, y: bes.map(() => 0), name: 'Break-even',
-        mode: 'markers', marker: { color: '#f59e0b', size: 10, symbol: 'diamond' },
-        hovertemplate: 'B/E: $%{x:.2f}<extra></extra>'
-    } : null;
-
-    const traces = [zeroLine, traceFillLoss, traceFill, payoffTrace, spotLine];
-    if (beTrace) traces.push(beTrace);
+    if (bes.length) {
+        traces.push({
+            x: bes, y: bes.map(() => 0), name: 'Break-even',
+            mode: 'markers', marker: { color: '#f59e0b', size: 11, symbol: 'diamond' },
+            hovertemplate: 'Break-even: $%{x:.2f}<extra></extra>'
+        });
+    }
 
     const layout = {
         paper_bgcolor: '#111', plot_bgcolor: '#0a0a0a',
         font: { color: '#999', family: 'Inter', size: 11 },
-        xaxis: { gridcolor: '#1a1a1a', zerolinecolor: '#2a2a2a', color: '#666', title: 'Stock Price at Expiry ($)', titlefont: { color: '#999' } },
-        yaxis: { gridcolor: '#1a1a1a', zerolinecolor: '#333',    color: '#666', title: 'P&L ($)',                   titlefont: { color: '#999' } },
-        margin: { l: 65, r: 20, t: 20, b: 60 },
+        xaxis: { gridcolor: '#1a1a1a', zerolinecolor: '#222', color: '#666', title: { text: 'Stock Price at Expiry ($)', font: { color: '#777' } } },
+        yaxis: { gridcolor: '#1a1a1a', zerolinecolor: '#333', color: '#666', title: { text: 'P&L ($)', font: { color: '#777' } }, range: yRange },
+        margin: { l: 65, r: 20, t: 20, b: 55 },
         hovermode: 'x unified',
         legend: { bgcolor: 'rgba(17,17,17,0.9)', bordercolor: '#1a1a1a', borderwidth: 1 }
     };
 
-    document.getElementById('chartPayoff').innerHTML = '';
-    Plotly.react('chartPayoff', traces, layout, { responsive: true, displayModeBar: false });
+    // Always purge + newPlot to guarantee correct rendering
+    try { Plotly.purge(chartEl); } catch(e) {}
+    chartEl.innerHTML = '';
+    Plotly.newPlot(chartEl, traces, layout, { responsive: true, displayModeBar: false });
 
-    // ── Stats ──
-    document.getElementById('statsSection').style.display = 'block';
+    // ── Stats ──────────────────────────────────────────────────────────────────
+    statsEl.style.display = 'block';
 
-    document.getElementById('stat_maxProfit').textContent  = unlimitedProfit ? 'Unlimited' : '$' + maxPnl.toFixed(2);
-    document.getElementById('stat_maxProfitSub').textContent = unlimitedProfit ? 'Uncapped upside' : `At expiry`;
+    document.getElementById('s_maxProfit').textContent   = unlimProfit ? 'Unlimited' : '$' + fmt2(maxPnl);
+    document.getElementById('s_maxProfitSub').textContent = unlimProfit ? 'Uncapped upside' : 'Per 1 contract';
+    document.getElementById('s_maxLoss').textContent     = unlimLoss ? 'Unlimited' : '$' + fmt2(Math.abs(minPnl));
+    document.getElementById('s_maxLossSub').textContent  = unlimLoss ? '⚠ Naked short risk' : 'Per 1 contract';
 
-    document.getElementById('stat_maxLoss').textContent   = unlimitedLoss ? 'Unlimited' : '$' + minPnl.toFixed(2);
-    document.getElementById('stat_maxLossSub').textContent = unlimitedLoss ? 'Naked short risk' : 'At expiry';
+    const npEl = document.getElementById('s_netPrem');
+    npEl.textContent  = (netPrem >= 0 ? '+' : '') + '$' + fmt2(netPrem);
+    npEl.className    = 'stat-value ' + (netPrem >= 0 ? 'pos' : 'neg');
+    document.getElementById('s_netPremSub').textContent = netPrem >= 0 ? 'Net credit received' : 'Net debit paid';
 
-    const npLabel  = netPremium >= 0 ? 'Net credit' : 'Net debit';
-    const npColor  = netPremium >= 0 ? 'positive' : 'negative';
-    document.getElementById('stat_netPremium').textContent  = (netPremium >= 0 ? '+' : '') + '$' + netPremium.toFixed(2);
-    document.getElementById('stat_netPremium').className    = 'stat-value ' + npColor;
-    document.getElementById('stat_netPremiumSub').textContent = npLabel;
-
-    const rr = (!unlimitedProfit && !unlimitedLoss && maxPnl > 0 && minPnl < 0)
+    const rr = (!unlimProfit && !unlimLoss && maxPnl > 0 && minPnl < 0)
         ? (Math.abs(minPnl) / maxPnl).toFixed(2) + ' : 1' : '—';
-    document.getElementById('stat_rr').textContent = rr;
-
-    const capital = Math.abs(minPnl);
-    document.getElementById('stat_capital').textContent = unlimitedLoss ? 'Unlimited' : '$' + capital.toFixed(2);
-
-    document.getElementById('stat_pop').textContent = pop ? pop + '%' : '—';
+    document.getElementById('s_rr').textContent = rr;
+    document.getElementById('s_capital').textContent = unlimLoss ? 'Unlimited' : '$' + fmt2(Math.abs(minPnl));
+    document.getElementById('s_pop').textContent = pop + '%';
 
     // Break-evens
     const beList = document.getElementById('breakEvenList');
     beList.innerHTML = bes.length
         ? bes.map(b => `<span class="be-chip">$${b.toFixed(2)}</span>`).join('')
-        : '<span style="color:var(--muted);font-size:0.83rem">No break-evens found in range</span>';
+        : '<span style="color:var(--muted);font-size:.83rem">No break-evens found in displayed range</span>';
 
     // Summary
-    buildSummary(maxPnl, minPnl, netPremium, bes, unlimitedProfit, unlimitedLoss, spotPnl);
-}
-
-function buildSummary(maxP, minP, netPrem, bes, unlimP, unlimL, spotPnl) {
-    const S = strat_spot;
     const lines = [];
-
-    lines.push(`This strategy consists of <strong>${legs.length} leg${legs.length > 1 ? 's' : ''}</strong> with a net ${netPrem >= 0 ? `<span class="summary-ok">credit of $${netPrem.toFixed(2)}</span>` : `<span class="summary-warn">debit of $${Math.abs(netPrem).toFixed(2)}</span>`} per contract.`);
-
-    if (!unlimP && maxP > 0)  lines.push(`Maximum profit is <span class="summary-ok">$${maxP.toFixed(2)}</span> per contract.`);
-    if (unlimP)               lines.push(`This strategy has <span class="summary-ok">unlimited profit potential</span> as the stock moves favorably.`);
-    if (!unlimL && minP < 0)  lines.push(`Maximum loss is <span class="summary-warn">$${Math.abs(minP).toFixed(2)}</span> per contract.`);
-    if (unlimL)               lines.push(`<span class="summary-warn">⚠ This strategy carries unlimited loss risk.</span> Ensure you understand the margin requirements.`);
-    if (bes.length === 0)     lines.push(`No break-even points were found in the analyzed price range.`);
-    else if (bes.length === 1) lines.push(`The strategy breaks even at <strong>$${bes[0].toFixed(2)}</strong>.`);
-    else                      lines.push(`The strategy breaks even at <strong>${bes.map(b => '$' + b.toFixed(2)).join('</strong> and <strong>')}</strong>.`);
-
-    if (spotPnl >= 0) lines.push(`At the current spot price of $${S.toFixed(2)}, the strategy is currently <span class="summary-ok">in profit by $${spotPnl.toFixed(2)}</span>.`);
-    else              lines.push(`At the current spot price of $${S.toFixed(2)}, the strategy is currently at a <span class="summary-warn">loss of $${Math.abs(spotPnl).toFixed(2)}</span>.`);
+    lines.push(`Strategy has <strong>${legs.length}</strong> leg${legs.length > 1 ? 's' : ''} with a net ${netPrem >= 0 ? `<span class="sum-ok">credit of $${fmt2(netPrem)}</span>` : `<span class="sum-warn">debit of $${fmt2(Math.abs(netPrem))}</span>`}.`);
+    if (unlimProfit) lines.push(`<span class="sum-ok">Unlimited profit potential</span> as the underlying moves favorably.`);
+    else if (maxPnl > 0) lines.push(`Max profit capped at <span class="sum-ok">$${fmt2(maxPnl)}</span>.`);
+    if (unlimLoss) lines.push(`<span class="sum-warn">⚠ Unlimited loss risk — understand margin requirements before trading.</span>`);
+    else if (minPnl < 0) lines.push(`Max loss limited to <span class="sum-warn">$${fmt2(Math.abs(minPnl))}</span>.`);
+    if (bes.length === 1) lines.push(`Breaks even at <strong>$${bes[0].toFixed(2)}</strong>.`);
+    else if (bes.length > 1) lines.push(`Breaks even at <strong>${bes.map(b => '$' + b.toFixed(2)).join('</strong> and <strong>')}</strong>.`);
+    lines.push(spotPnl >= 0
+        ? `At current spot $${spot.toFixed(2)}: <span class="sum-ok">+$${fmt2(spotPnl)}</span> in profit.`
+        : `At current spot $${spot.toFixed(2)}: <span class="sum-warn">-$${fmt2(Math.abs(spotPnl))}</span> at a loss.`);
 
     document.getElementById('strategySummary').innerHTML = lines.join(' ');
 }
 
-// ─── PROXY FETCH ──────────────────────────────────────────────────────────────
+// ─── PROXY FETCH (parallel — first success wins) ──────────────────────────────
 async function proxyFetch(url) {
     const proxies = [
         'https://corsproxy.io/?' + encodeURIComponent(url),
         'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
         'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url),
     ];
-    let lastErr;
-    for (const proxy of proxies) {
-        try {
-            const controller = new AbortController();
-            const tid = setTimeout(() => controller.abort(), 12000);
-            const res = await fetch(proxy, { signal: controller.signal });
-            clearTimeout(tid);
-            if (!res.ok) continue;
-            const text = await res.text();
-            if (!text || text.trim().length < 5) continue;
-            return JSON.parse(text);
-        } catch(e) { lastErr = e; }
-    }
-    throw lastErr || new Error('All proxies failed');
+    const controllers = proxies.map(() => new AbortController());
+    const cancelOthers = (except) => controllers.forEach((c, i) => i !== except && c.abort());
+
+    const attempts = proxies.map((proxy, i) =>
+        new Promise((resolve, reject) => {
+            const tid = setTimeout(() => { controllers[i].abort(); reject(new Error('timeout')); }, 10000);
+            fetch(proxy, { signal: controllers[i].signal })
+                .then(r => { clearTimeout(tid); if (!r.ok) throw new Error('bad status'); return r.text(); })
+                .then(text => {
+                    if (!text || text.trim().length < 5) throw new Error('empty');
+                    const data = JSON.parse(text);
+                    cancelOthers(i);
+                    resolve(data);
+                })
+                .catch(e => { clearTimeout(tid); reject(e); });
+        })
+    );
+
+    return new Promise((resolve, reject) => {
+        let failed = 0;
+        attempts.forEach(p => p.then(resolve).catch(() => { if (++failed === attempts.length) reject(new Error('All proxies failed')); }));
+    });
 }
 
-// ─── STOCK FETCH ──────────────────────────────────────────────────────────────
+// ─── STOCK + EXPIRY FETCH ─────────────────────────────────────────────────────
 async function stratFetchStock() {
     const ticker = document.getElementById('strat_ticker').value.trim().toUpperCase();
     if (!ticker) return;
 
-    const btn = document.querySelector('#stratStockInfo').parentElement.querySelector('.btn-green');
+    const btn   = document.getElementById('stratFetchBtn');
     const errEl = document.getElementById('stratError');
     btn.disabled = true; btn.textContent = 'Loading…';
     errEl.style.display = 'none';
-    document.getElementById('stratStockInfo').classList.add('hidden');
+    document.getElementById('stratStockInfo').classList.remove('visible');
 
-    const urls = [
+    const chartUrls = [
         `https://query2.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y&includePrePost=false`,
         `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y&includePrePost=false`,
     ];
 
-    let data = null;
-    for (const url of urls) {
-        try { data = await proxyFetch(url); if (data?.chart?.result?.[0]) break; }
-        catch(e) { /* try next */ }
+    // Fetch chart + options in parallel
+    let chartData = null;
+    for (const url of chartUrls) {
+        try { chartData = await proxyFetch(url); if (chartData?.chart?.result?.[0]) break; } catch(e) {}
     }
 
     try {
-        const result = data?.chart?.result?.[0];
+        const result = chartData?.chart?.result?.[0];
         if (!result) throw new Error(`No data found for "${ticker}".`);
 
         const meta   = result.meta;
@@ -728,19 +739,43 @@ async function stratFetchStock() {
             hv = Math.sqrt(variance * 252) * 100;
         }
 
-        document.getElementById('stratPrice').textContent = '$' + price.toFixed(2);
-        document.getElementById('stratVol').textContent   = hv ? hv.toFixed(1) + '%' : '—';
-        document.getElementById('stratHi').textContent    = meta.fiftyTwoWeekHigh ? '$' + meta.fiftyTwoWeekHigh.toFixed(2) : '—';
-        document.getElementById('stratLo').textContent    = meta.fiftyTwoWeekLow  ? '$' + meta.fiftyTwoWeekLow.toFixed(2)  : '—';
-        document.getElementById('stratStockInfo').classList.remove('hidden');
-
+        document.getElementById('st_price').textContent = '$' + price.toFixed(2);
+        document.getElementById('st_vol').textContent   = hv ? hv.toFixed(1) + '%' : '—';
+        document.getElementById('st_hi').textContent    = meta.fiftyTwoWeekHigh ? '$' + meta.fiftyTwoWeekHigh.toFixed(2) : '—';
+        document.getElementById('st_lo').textContent    = meta.fiftyTwoWeekLow  ? '$' + meta.fiftyTwoWeekLow.toFixed(2)  : '—';
+        document.getElementById('stratStockInfo').classList.add('visible');
         document.getElementById('strat_spot').value = price.toFixed(2);
         if (hv > 0) document.getElementById('strat_iv').value = hv.toFixed(1);
 
+        // Fetch expiry dates
+        const optUrls = [
+            `https://query2.finance.yahoo.com/v7/finance/options/${ticker}`,
+            `https://query1.finance.yahoo.com/v7/finance/options/${ticker}`,
+        ];
+        let optData = null;
+        for (const url of optUrls) {
+            try { optData = await proxyFetch(url); if (optData?.optionChain?.result?.[0]) break; } catch(e) {}
+        }
+
+        const optResult = optData?.optionChain?.result?.[0];
+        if (optResult?.expirationDates?.length) {
+            stratExpiryDates = optResult.expirationDates.map(ts => {
+                const d    = new Date(ts * 1000);
+                const iso  = d.toISOString().split('T')[0];
+                const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                return { ts, label, isoDate: iso };
+            });
+            // Assign first expiry to all existing legs
+            if (legs.length && stratExpiryDates.length) {
+                legs.forEach(l => { l.expiry_ts = stratExpiryDates[0].ts; l.expiry_date = null; });
+            }
+        }
+
         recalc();
+        if (legs.length) renderLegs();
 
     } catch(e) {
-        errEl.textContent  = e.message || 'Could not fetch stock data.';
+        errEl.textContent  = e.message || 'Could not fetch data.';
         errEl.style.display = 'block';
     } finally {
         btn.disabled = false; btn.textContent = 'Fetch';
@@ -755,15 +790,23 @@ function loadPendingLegs() {
 
     if (spot) {
         document.getElementById('strat_spot').value = spot;
-        strat_spot = parseFloat(spot);
     }
 
-    pending.forEach(l => { legs.push({ id: legId++, ...l }); });
+    const exp = getDefaultExpiry();
+    pending.forEach(l => {
+        // Convert legacy expiry_days field if present
+        if (l.expiry_days && !l.expiry_date && !l.expiry_ts) {
+            const d = new Date(); d.setDate(d.getDate() + (l.expiry_days | 0));
+            l.expiry_date = d.toISOString().split('T')[0];
+        }
+        legs.push({ id: legId++, ...exp, ...l });
+    });
+
     localStorage.removeItem('bs_pending_legs');
     localStorage.removeItem('bs_spot');
 
     const notice = document.getElementById('pendingNotice');
-    notice.textContent = `${pending.length} leg${pending.length > 1 ? 's' : ''} loaded from BS Pricer. Adjust action, quantity, and expiry as needed.`;
+    notice.textContent = `${pending.length} leg${pending.length > 1 ? 's' : ''} loaded from BS Pricer — adjust expiry and quantity as needed.`;
     notice.classList.add('visible');
 
     renderLegs();
@@ -771,8 +814,6 @@ function loadPendingLegs() {
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-document.getElementById('strat_spot').addEventListener('input', () => { recalc(); });
-document.getElementById('strat_iv').addEventListener('input',   () => { recalc(); });
 document.getElementById('strat_ticker').addEventListener('keydown', e => {
     if (e.key === 'Enter') stratFetchStock();
 });
