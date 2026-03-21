@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BS Pricer | Options Suite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #000000;
+            --bg2: #0a0a0a;
+            --bg3: #111111;
+            --text: #ffffff;
+            --muted: #999999;
+            --green: #00a86b;
+            --red: #e74c3c;
+            --yellow: #f59e0b;
+            --glow: rgba(0,168,107,0.25);
+            --border: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image:
+                linear-gradient(rgba(0,168,107,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,168,107,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0; pointer-events: none;
+            animation: gridPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes gridPulse {
+            0%,100% { opacity: 0.3; background-size: 60px 60px; }
+            50%      { opacity: 0.7; background-size: 64px 64px; }
+        }
+
+        .wrap { max-width: 1400px; margin: 0 auto; padding: 2rem; position: relative; z-index: 1; }
+
+        /* ── HEADER ──────────────────────────────────────── */
+        header {
+            padding: 1.75rem 0 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2.5rem;
+        }
+        .header-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+
+        .logo {
+            font-family: 'Libre Baskerville', serif; font-size: 1.5rem; font-weight: 400;
+            color: var(--text); padding: 0.5rem 1.2rem 0.4rem;
+            border: 2px solid var(--text); text-decoration: none;
+            display: inline-flex; align-items: flex-end; transition: all 0.3s;
+        }
+        .logo:hover { background: var(--green); color: #000; border-color: var(--green); box-shadow: 0 4px 20px var(--glow); }
+
+        .header-nav { display: flex; gap: 1.5rem; align-items: center; }
+        .hn-link { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+        .hn-link:hover { color: var(--text); }
+        .hn-link.active { color: var(--green); }
+        .hn-cta {
+            background: var(--bg3); border: 1px solid var(--border);
+            color: var(--green); padding: 0.45rem 1.1rem; font-size: 0.78rem;
+            font-weight: 600; text-decoration: none; letter-spacing: 0.04em; transition: all 0.2s;
+        }
+        .hn-cta:hover { border-color: var(--green); box-shadow: 0 0 12px var(--glow); }
+
+        h1 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700;
+            margin-bottom: 0.5rem; letter-spacing: -0.02em;
+        }
+        .subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+
+        /* ── CARDS ───────────────────────────────────────── */
+        .card { background: var(--bg3); border: 1px solid var(--border); padding: 2rem; transition: border-color 0.3s; }
+        .card:hover { border-color: #222; }
+        .card-title { font-family: 'Libre Baskerville', serif; font-size: 1.15rem; color: var(--green); margin-bottom: 1.5rem; }
+
+        /* ── STOCK FINDER ────────────────────────────────── */
+        .stock-finder { margin-bottom: 2rem; }
+        .quick-tickers { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem; }
+        .ticker-chip {
+            background: var(--bg2); border: 1px solid var(--border); color: var(--muted);
+            padding: 0.3rem 0.75rem; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; letter-spacing: 0.04em; border-radius: 4px;
+        }
+        .ticker-chip:hover { border-color: var(--green); color: var(--green); }
+        .ticker-chip.active { border-color: var(--green); color: var(--green); background: rgba(0,168,107,0.08); }
+
+        .search-row { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+        .ticker-input {
+            flex: 1; max-width: 200px;
+            background: var(--bg2); border: 1px solid var(--border);
+            color: var(--text); padding: 0.75rem 1rem; font-size: 1rem; font-family: inherit;
+            text-transform: uppercase; transition: border-color 0.2s;
+        }
+        .ticker-input:focus { outline: none; border-color: var(--green); }
+
+        .fetch-btn {
+            background: var(--green); color: #000; border: none;
+            padding: 0.75rem 1.5rem; font-size: 0.875rem; font-weight: 600;
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+        }
+        .fetch-btn:hover { box-shadow: 0 0 20px var(--glow); }
+        .fetch-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .stock-info {
+            display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
+            margin-top: 1.25rem; padding: 1rem 1.25rem;
+            background: var(--bg2); border: 1px solid var(--border);
+            border-left: 3px solid var(--green);
+        }
+        .stock-info.hidden { display: none; }
+        .stock-name { font-weight: 600; font-size: 1rem; }
+        .stock-meta { display: flex; gap: 2rem; flex-wrap: wrap; }
+        .stock-stat { display: flex; flex-direction: column; }
+        .stock-stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+        .stock-stat-value { font-size: 1.05rem; font-weight: 600; color: var(--green); }
+        .stock-error { color: var(--red); font-size: 0.875rem; margin-top: 0.75rem; display: none; }
+
+        /* ── MAIN GRID ───────────────────────────────────── */
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+
+        /* ── INPUTS ──────────────────────────────────────── */
+        .input-group { margin-bottom: 1.25rem; }
+        .input-label {
+            display: flex; justify-content: space-between; align-items: center;
+            color: var(--muted); font-size: 0.82rem; margin-bottom: 0.4rem; font-weight: 500;
+        }
+        .input-label span { font-family: 'Libre Baskerville', serif; color: var(--green); font-size: 1rem; }
+
+        input[type="number"] {
+            width: 100%; background: var(--bg2); border: 1px solid var(--border);
+            color: var(--text); padding: 0.6rem 0.75rem; font-size: 0.95rem;
+            font-family: inherit; transition: border-color 0.2s;
+        }
+        input[type="number"]:focus { outline: none; border-color: var(--green); }
+
+        .slider-row { display: grid; grid-template-columns: 1fr 90px; gap: 0.75rem; align-items: center; }
+        input[type="range"] {
+            width: 100%; height: 4px; -webkit-appearance: none; appearance: none;
+            background: var(--border); outline: none; border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 16px; height: 16px; background: var(--green); cursor: pointer; border-radius: 50%;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 16px; height: 16px; background: var(--green);
+            cursor: pointer; border-radius: 50%; border: none;
+        }
+
+        .option-type-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .opt-btn {
+            background: var(--bg2); border: 1px solid var(--border); color: var(--muted);
+            padding: 0.6rem; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            font-family: inherit; transition: all 0.2s; text-align: center;
+        }
+        .opt-btn.active-call { border-color: var(--green); color: var(--green); background: rgba(0,168,107,0.08); }
+        .opt-btn.active-put  { border-color: var(--red);   color: var(--red);   background: rgba(231,76,60,0.08); }
+
+        /* ── RESULTS ─────────────────────────────────────── */
+        .price-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+        .price-box { background: var(--bg2); border: 1px solid var(--border); padding: 1.25rem; text-align: center; }
+        .price-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.4rem; }
+        .price-value { font-family: 'Libre Baskerville', serif; font-size: 2.2rem; font-weight: 700; }
+        .price-value.call { color: var(--green); }
+        .price-value.put  { color: var(--red); }
+
+        .info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem; }
+        .info-box { background: var(--bg2); border: 1px solid var(--border); padding: 0.9rem 1rem; }
+        .info-box-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.25rem; }
+        .info-box-value { font-size: 0.95rem; font-weight: 600; }
+
+        .moneyness-badge { display: inline-block; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; border-radius: 3px; }
+        .badge-itm { background: rgba(0,168,107,0.15); color: var(--green); border: 1px solid var(--green); }
+        .badge-otm { background: rgba(231,76,60,0.12); color: var(--red);   border: 1px solid var(--red); }
+        .badge-atm { background: rgba(245,158,11,0.12); color: var(--yellow); border: 1px solid var(--yellow); }
+
+        .parity-box { background: var(--bg2); border: 1px solid var(--border); padding: 0.9rem 1rem; margin-bottom: 1.5rem; font-size: 0.83rem; color: var(--muted); }
+        .parity-box strong { color: var(--text); }
+
+        /* ── GREEKS ──────────────────────────────────────── */
+        .greeks-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.75rem; }
+        .greeks-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.6rem; }
+        .greek-box { background: var(--bg2); border: 1px solid var(--border); padding: 0.75rem 0.5rem; text-align: center; }
+        .greek-sym  { font-family: 'Libre Baskerville', serif; font-size: 1.3rem; margin-bottom: 0.2rem; color: var(--green); }
+        .greek-name { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.4rem; }
+        .greek-vals { display: flex; flex-direction: column; gap: 0.15rem; }
+        .greek-val  { font-size: 0.8rem; font-weight: 600; }
+        .greek-val.call { color: var(--green); }
+        .greek-val.put  { color: var(--red); }
+        .greek-type { font-size: 0.6rem; color: var(--muted); }
+
+        /* ── TABS ────────────────────────────────────────── */
+        .tab-section { background: var(--bg3); border: 1px solid var(--border); margin-bottom: 2rem; }
+        .tab-bar { display: flex; border-bottom: 1px solid var(--border); overflow-x: auto; }
+        .tab {
+            padding: 0.9rem 1.5rem; font-size: 0.82rem; font-weight: 500; cursor: pointer;
+            color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px;
+            transition: all 0.2s; letter-spacing: 0.03em; background: none;
+            border-top: none; border-left: none; border-right: none;
+            font-family: inherit; white-space: nowrap;
+        }
+        .tab:hover { color: var(--text); }
+        .tab.active { color: var(--green); border-bottom-color: var(--green); }
+        .tab-content { padding: 2rem; display: none; }
+        .tab-content.active { display: block; }
+
+        .chart-toggle { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .toggle-btn {
+            background: var(--bg2); border: 1px solid var(--border); color: var(--muted);
+            padding: 0.35rem 0.9rem; font-size: 0.78rem; font-weight: 600;
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+        }
+        .toggle-btn.active-call { border-color: var(--green); color: var(--green); }
+        .toggle-btn.active-put  { border-color: var(--red);   color: var(--red); }
+        .toggle-btn.active-both { border-color: #555; color: var(--text); }
+
+        /* ── IV SOLVER ───────────────────────────────────── */
+        .iv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .iv-result { background: var(--bg2); border: 1px solid var(--green); padding: 1.5rem; text-align: center; display: none; }
+        .iv-result.visible { display: block; }
+        .iv-result-label { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+        .iv-result-value { font-family: 'Libre Baskerville', serif; font-size: 3rem; color: var(--green); font-weight: 700; }
+        .iv-result-sub { color: var(--muted); font-size: 0.8rem; margin-top: 0.5rem; }
+        .solve-btn {
+            background: var(--green); color: #000; border: none; padding: 0.75rem 2rem;
+            font-size: 0.875rem; font-weight: 600; cursor: pointer; font-family: inherit;
+            width: 100%; margin-top: 0.5rem; transition: all 0.2s;
+        }
+        .solve-btn:hover { box-shadow: 0 0 20px var(--glow); }
+        .iv-note { font-size: 0.78rem; color: var(--muted); margin-top: 0.75rem; line-height: 1.5; }
+
+        /* ── HEATMAP ─────────────────────────────────────── */
+        .heatmap-controls { display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
+        .heatmap-controls label { font-size: 0.8rem; color: var(--muted); }
+        .heatmap-controls select {
+            background: var(--bg2); border: 1px solid var(--border); color: var(--text);
+            padding: 0.4rem 0.75rem; font-size: 0.82rem; font-family: inherit;
+        }
+
+        /* ── OPTIONS CHAIN ───────────────────────────────── */
+        .options-section { margin-bottom: 2rem; display: none; }
+        .options-section.visible { display: block; }
+
+        .expiry-bar { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+        .expiry-bar label { font-size: 0.8rem; color: var(--muted); }
+        .expiry-select {
+            background: var(--bg2); border: 1px solid var(--border); color: var(--text);
+            padding: 0.45rem 0.9rem; font-size: 0.82rem; font-family: inherit; cursor: pointer;
+        }
+        .expiry-select:focus { outline: none; border-color: var(--green); }
+
+        .chain-toggle { display: flex; gap: 0.5rem; }
+        .chain-btn {
+            background: var(--bg2); border: 1px solid var(--border); color: var(--muted);
+            padding: 0.35rem 1rem; font-size: 0.78rem; font-weight: 600;
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+        }
+        .chain-btn.active-call { border-color: var(--green); color: var(--green); background: rgba(0,168,107,0.08); }
+        .chain-btn.active-put  { border-color: var(--red);   color: var(--red);   background: rgba(231,76,60,0.08); }
+
+        .chain-loading { color: var(--muted); font-size: 0.85rem; padding: 1rem 0; }
+
+        .options-table-wrap { overflow-x: auto; }
+        table.options-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        table.options-table th {
+            color: var(--muted); font-weight: 500; text-align: right;
+            padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);
+            font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.07em; white-space: nowrap;
+        }
+        table.options-table th:first-child { text-align: left; }
+        table.options-table td {
+            padding: 0.45rem 0.75rem; text-align: right;
+            border-bottom: 1px solid #111; white-space: nowrap;
+            cursor: pointer; transition: background 0.15s;
+        }
+        table.options-table td:first-child { text-align: left; font-weight: 600; }
+        table.options-table td:last-child { text-align: center; }
+        table.options-table tr:hover td { background: #1a1a1a; }
+        table.options-table tr.itm td { background: rgba(0,168,107,0.04); }
+        table.options-table tr.itm td:first-child { color: var(--green); }
+        table.options-table tr.itm-put td { background: rgba(231,76,60,0.04); }
+        table.options-table tr.itm-put td:first-child { color: var(--red); }
+
+        .diff-pos { color: var(--green); }
+        .diff-neg { color: var(--red); }
+        .itm-badge {
+            font-size: 0.6rem; font-weight: 700; padding: 1px 5px; border-radius: 2px;
+            margin-left: 5px; vertical-align: middle;
+        }
+        .itm-badge.call { background: rgba(0,168,107,0.2); color: var(--green); }
+        .itm-badge.put  { background: rgba(231,76,60,0.2);  color: var(--red); }
+
+        .strat-btn {
+            background: transparent; border: 1px solid #2a2a2a; color: var(--muted);
+            padding: 0.2rem 0.6rem; font-size: 0.68rem; font-weight: 600;
+            cursor: pointer; font-family: inherit; transition: all 0.15s; white-space: nowrap;
+        }
+        .strat-btn:hover { border-color: var(--green); color: var(--green); }
+
+        .chain-note { font-size: 0.72rem; color: var(--muted); margin-top: 0.75rem; line-height: 1.5; }
+
+        /* ── RESPONSIVE ──────────────────────────────────── */
+        @media (max-width: 900px) {
+            .main-grid    { grid-template-columns: 1fr; }
+            .greeks-grid  { grid-template-columns: repeat(3, 1fr); }
+            .iv-grid      { grid-template-columns: 1fr; }
+            .tab { padding: 0.75rem 1rem; font-size: 0.78rem; }
+        }
+        @media (max-width: 600px) {
+            .wrap { padding: 1rem; }
+            .price-value { font-size: 1.6rem; }
+            .greeks-grid { grid-template-columns: repeat(2, 1fr); }
+            .header-nav .hn-link { display: none; }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <header>
+        <div class="header-row">
+            <a href="index.html" class="logo">Bolurian.com</a>
+            <div class="header-nav">
+                <a href="black-scholes.html" class="hn-link">← Suite Home</a>
+                <a href="bs-pricer.html" class="hn-link active">Pricer</a>
+                <a href="bs-strategies.html" class="hn-cta">Strategy Builder ↗</a>
+            </div>
+        </div>
+        <br>
+        <h1>Black-Scholes Pricer</h1>
+        <p class="subtitle">Live market data · Greeks · Options Chain · IV Solver · Sensitivity Analysis</p>
+    </header>
+
+    <!-- STOCK FINDER -->
+    <div class="card stock-finder">
+        <div class="card-title">Stock Finder</div>
+        <div class="quick-tickers">
+            <span class="ticker-chip" data-ticker="AAPL">AAPL</span>
+            <span class="ticker-chip" data-ticker="MSFT">MSFT</span>
+            <span class="ticker-chip" data-ticker="NVDA">NVDA</span>
+            <span class="ticker-chip" data-ticker="TSLA">TSLA</span>
+            <span class="ticker-chip" data-ticker="AMZN">AMZN</span>
+            <span class="ticker-chip" data-ticker="META">META</span>
+            <span class="ticker-chip" data-ticker="GOOGL">GOOGL</span>
+            <span class="ticker-chip" data-ticker="SPY">SPY</span>
+            <span class="ticker-chip" data-ticker="QQQ">QQQ</span>
+            <span class="ticker-chip" data-ticker="JPM">JPM</span>
+        </div>
+        <div class="search-row">
+            <input type="text" class="ticker-input" id="tickerInput" placeholder="Enter ticker…" maxlength="10">
+            <button class="fetch-btn" id="fetchBtn" onclick="fetchStock()">Fetch Live Data ↗</button>
+        </div>
+        <div class="stock-info hidden" id="stockInfo">
+            <div class="stock-name" id="stockName"></div>
+            <div class="stock-meta">
+                <div class="stock-stat"><span class="stock-stat-label">Price</span><span class="stock-stat-value" id="stockPrice">—</span></div>
+                <div class="stock-stat"><span class="stock-stat-label">52-Wk Hi</span><span class="stock-stat-value" id="stock52H">—</span></div>
+                <div class="stock-stat"><span class="stock-stat-label">52-Wk Lo</span><span class="stock-stat-value" id="stock52L">—</span></div>
+                <div class="stock-stat"><span class="stock-stat-label">Hist. Vol (1yr)</span><span class="stock-stat-value" id="stockVol">—</span></div>
+                <div class="stock-stat"><span class="stock-stat-label">Div Yield</span><span class="stock-stat-value" id="stockDiv">—</span></div>
+            </div>
+        </div>
+        <div class="stock-error" id="stockError"></div>
+    </div>
+
+    <!-- OPTIONS CHAIN -->
+    <div class="card options-section" id="optionsSection">
+        <div class="card-title">
+            Live Options Chain
+            <span style="font-size:0.75rem;color:var(--muted);font-family:'Inter',sans-serif;font-weight:400"> — click any row to load into calculator</span>
+        </div>
+        <div class="expiry-bar">
+            <label>Expiry:</label>
+            <select class="expiry-select" id="expirySelect" onchange="loadChain()"></select>
+            <div class="chain-toggle">
+                <button class="chain-btn active-call" id="chn_call" onclick="setChainSide('call')">Calls</button>
+                <button class="chain-btn" id="chn_put" onclick="setChainSide('put')">Puts</button>
+            </div>
+        </div>
+        <div class="chain-loading" id="chainLoading" style="display:none">Loading options chain…</div>
+        <div class="options-table-wrap">
+            <table class="options-table" id="optionsTable">
+                <thead>
+                    <tr>
+                        <th>Strike</th>
+                        <th>Last</th>
+                        <th>Bid</th>
+                        <th>Ask</th>
+                        <th>Volume</th>
+                        <th>Open Int.</th>
+                        <th>Mkt IV</th>
+                        <th>Model Price</th>
+                        <th>Difference</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="chainBody"></tbody>
+            </table>
+        </div>
+        <p class="chain-note">Data via Yahoo Finance (15-min delayed). Model price uses your current σ and r inputs. Difference = Market Last − Model Price. Click any row or use "Add to Strategy" to send a leg to the Strategy Builder.</p>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="main-grid">
+        <!-- INPUTS -->
+        <div class="card">
+            <div class="card-title">Parameters</div>
+
+            <div class="input-group">
+                <div class="input-label">Stock Price (S) <span>S</span></div>
+                <input type="number" id="S" value="100" step="0.01" min="0.01" oninput="calc()">
+            </div>
+            <div class="input-group">
+                <div class="input-label">Strike Price (K) <span>K</span></div>
+                <input type="number" id="K" value="100" step="0.01" min="0.01" oninput="calc()">
+            </div>
+            <div class="input-group">
+                <div class="input-label">Time to Expiry (years) <span>T</span></div>
+                <div class="slider-row">
+                    <input type="range" id="T_sl" min="0.01" max="5" step="0.01" value="1" oninput="sync('T','T_sl');calc()">
+                    <input type="number" id="T" value="1" step="0.01" min="0.01" max="5" oninput="sync('T_sl','T');calc()">
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-label">Risk-Free Rate (%) <span>r</span></div>
+                <div class="slider-row">
+                    <input type="range" id="r_sl" min="0" max="20" step="0.1" value="4.5" oninput="sync('r','r_sl');calc()">
+                    <input type="number" id="r" value="4.5" step="0.1" min="0" oninput="sync('r_sl','r');calc()">
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-label">Volatility σ (%) <span>σ</span></div>
+                <div class="slider-row">
+                    <input type="range" id="sig_sl" min="1" max="150" step="0.5" value="20" oninput="sync('sig','sig_sl');calc()">
+                    <input type="number" id="sig" value="20" step="0.5" min="0.5" oninput="sync('sig_sl','sig');calc()">
+                </div>
+            </div>
+            <div class="input-group">
+                <div class="input-label">Dividend Yield (%) <span>q</span></div>
+                <div class="slider-row">
+                    <input type="range" id="q_sl" min="0" max="10" step="0.1" value="0" oninput="sync('q','q_sl');calc()">
+                    <input type="number" id="q" value="0" step="0.1" min="0" oninput="sync('q_sl','q');calc()">
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div class="card">
+            <div class="card-title">Results</div>
+
+            <div class="price-row">
+                <div class="price-box">
+                    <div class="price-label">Call Price</div>
+                    <div class="price-value call" id="callPrice">—</div>
+                </div>
+                <div class="price-box">
+                    <div class="price-label">Put Price</div>
+                    <div class="price-value put" id="putPrice">—</div>
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-box">
+                    <div class="info-box-label">Moneyness</div>
+                    <div class="info-box-value" id="moneyness">—</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-label">Intrinsic / Time Value</div>
+                    <div class="info-box-value" id="intrinsic">—</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-label">Break-Even (Call)</div>
+                    <div class="info-box-value" id="beCall">—</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-label">Break-Even (Put)</div>
+                    <div class="info-box-value" id="bePut">—</div>
+                </div>
+            </div>
+
+            <div class="parity-box" id="parityBox">—</div>
+
+            <div class="greeks-title">The Greeks — <span style="color:var(--green)">Call</span> / <span style="color:var(--red)">Put</span></div>
+            <div class="greeks-grid">
+                <div class="greek-box">
+                    <div class="greek-sym">Δ</div><div class="greek-name">Delta</div>
+                    <div class="greek-vals">
+                        <div class="greek-val call" id="g_deltaC">—</div>
+                        <div class="greek-val put"  id="g_deltaP">—</div>
+                    </div>
+                </div>
+                <div class="greek-box">
+                    <div class="greek-sym">Γ</div><div class="greek-name">Gamma</div>
+                    <div class="greek-vals"><div class="greek-val call" id="g_gamma">—</div></div>
+                </div>
+                <div class="greek-box">
+                    <div class="greek-sym">Θ</div><div class="greek-name">Theta/day</div>
+                    <div class="greek-vals">
+                        <div class="greek-val call" id="g_thetaC">—</div>
+                        <div class="greek-val put"  id="g_thetaP">—</div>
+                    </div>
+                </div>
+                <div class="greek-box">
+                    <div class="greek-sym">ν</div><div class="greek-name">Vega/1%</div>
+                    <div class="greek-vals"><div class="greek-val call" id="g_vega">—</div></div>
+                </div>
+                <div class="greek-box">
+                    <div class="greek-sym">ρ</div><div class="greek-name">Rho/1%</div>
+                    <div class="greek-vals">
+                        <div class="greek-val call" id="g_rhoC">—</div>
+                        <div class="greek-val put"  id="g_rhoP">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tab-section">
+        <div class="tab-bar">
+            <button class="tab active" onclick="showTab('payoff',this)">Payoff Diagram</button>
+            <button class="tab" onclick="showTab('greeks',this)">Greeks Chart</button>
+            <button class="tab" onclick="showTab('heatmap',this)">Sensitivity Heatmap</button>
+            <button class="tab" onclick="showTab('iv',this)">IV Solver</button>
+        </div>
+
+        <!-- PAYOFF -->
+        <div class="tab-content active" id="tab-payoff">
+            <div class="chart-toggle">
+                <button class="toggle-btn active-both" id="pay_both" onclick="setPayoffMode('both')">Both</button>
+                <button class="toggle-btn" id="pay_call" onclick="setPayoffMode('call')">Call Only</button>
+                <button class="toggle-btn" id="pay_put"  onclick="setPayoffMode('put')">Put Only</button>
+            </div>
+            <div id="chartPayoff" style="height:400px"></div>
+        </div>
+
+        <!-- GREEKS CHART -->
+        <div class="tab-content" id="tab-greeks">
+            <div class="chart-toggle">
+                <button class="toggle-btn active-call" id="gr_call" onclick="setGreeksMode('call')">Call Greeks</button>
+                <button class="toggle-btn" id="gr_put"  onclick="setGreeksMode('put')">Put Greeks</button>
+            </div>
+            <div id="chartGreeks" style="height:500px"></div>
+        </div>
+
+        <!-- HEATMAP -->
+        <div class="tab-content" id="tab-heatmap">
+            <div class="heatmap-controls">
+                <label>Show:</label>
+                <select id="hmType" onchange="drawHeatmap()">
+                    <option value="call">Call Price</option>
+                    <option value="put">Put Price</option>
+                    <option value="delta">Delta (Call)</option>
+                    <option value="vega">Vega</option>
+                </select>
+                <label style="margin-left:1rem">Spot range: ±</label>
+                <select id="hmRange" onchange="drawHeatmap()">
+                    <option value="0.3">30%</option>
+                    <option value="0.5" selected>50%</option>
+                    <option value="0.75">75%</option>
+                </select>
+            </div>
+            <div id="chartHeatmap" style="height:480px"></div>
+        </div>
+
+        <!-- IV SOLVER -->
+        <div class="tab-content" id="tab-iv">
+            <div class="iv-grid">
+                <div>
+                    <div class="card-title" style="margin-bottom:1.25rem">Implied Volatility Solver</div>
+                    <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.65">
+                        Enter an observed market price to back-solve for the implied volatility using Newton-Raphson iteration.
+                        All other parameters are pulled from the inputs above.
+                    </p>
+                    <div class="input-group">
+                        <div class="input-label">Option Type</div>
+                        <div class="option-type-row">
+                            <button class="opt-btn active-call" id="iv_call" onclick="setIVType('call')">Call</button>
+                            <button class="opt-btn" id="iv_put" onclick="setIVType('put')">Put</button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-label">Observed Market Price ($)</div>
+                        <input type="number" id="ivMarketPrice" value="" step="0.01" min="0.01" placeholder="e.g. 5.50">
+                    </div>
+                    <button class="solve-btn" onclick="solveIV()">Solve for Implied Volatility →</button>
+                    <p class="iv-note">
+                        Uses Newton-Raphson convergence (max 200 iterations, tolerance 1e-8).<br>
+                        A solution may not exist if the market price is outside arbitrage bounds.
+                    </p>
+                </div>
+                <div>
+                    <div class="iv-result" id="ivResult">
+                        <div class="iv-result-label">Implied Volatility</div>
+                        <div class="iv-result-value" id="ivValue">—</div>
+                        <div class="iv-result-sub" id="ivSub">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div><!-- end .wrap -->
+
+<script>
+// ─── MATH ────────────────────────────────────────────────────────────────────
+function ncdf(x) {
+    const t = 1 / (1 + 0.2316419 * Math.abs(x));
+    const d = 0.3989423 * Math.exp(-x * x / 2);
+    const p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+    return x > 0 ? 1 - p : p;
+}
+function npdf(x) { return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI); }
+
+function bs(S, K, T, r, sig, q) {
+    if (T <= 0 || sig <= 0) return null;
+    const sqT = Math.sqrt(T);
+    const d1  = (Math.log(S / K) + (r - q + 0.5 * sig * sig) * T) / (sig * sqT);
+    const d2  = d1 - sig * sqT;
+    const eqT = Math.exp(-q * T), erT = Math.exp(-r * T);
+    const call    = S * eqT * ncdf(d1)  - K * erT * ncdf(d2);
+    const put     = K * erT * ncdf(-d2) - S * eqT * ncdf(-d1);
+    const deltaC  = eqT * ncdf(d1);
+    const deltaP  = eqT * (ncdf(d1) - 1);
+    const gamma   = eqT * npdf(d1) / (S * sig * sqT);
+    const thetaC  = (-(S * eqT * npdf(d1) * sig) / (2 * sqT) - r * K * erT * ncdf(d2)  + q * S * eqT * ncdf(d1))  / 365;
+    const thetaP  = (-(S * eqT * npdf(d1) * sig) / (2 * sqT) + r * K * erT * ncdf(-d2) - q * S * eqT * ncdf(-d1)) / 365;
+    const vega    = S * eqT * npdf(d1) * sqT / 100;
+    const rhoC    = K * T * erT * ncdf(d2)   / 100;
+    const rhoP    = -K * T * erT * ncdf(-d2) / 100;
+    return { call, put, deltaC, deltaP, gamma, thetaC, thetaP, vega, rhoC, rhoP, d1, d2 };
+}
+
+function inputs() {
+    return {
+        S:   parseFloat(document.getElementById('S').value),
+        K:   parseFloat(document.getElementById('K').value),
+        T:   parseFloat(document.getElementById('T').value),
+        r:   parseFloat(document.getElementById('r').value) / 100,
+        sig: parseFloat(document.getElementById('sig').value) / 100,
+        q:   parseFloat(document.getElementById('q').value) / 100,
+    };
+}
+
+function fmt(n, dec=2) { return isNaN(n) ? '—' : n.toFixed(dec); }
+
+// ─── MAIN CALC ────────────────────────────────────────────────────────────────
+let payoffMode = 'both', greeksMode = 'call', ivType = 'call';
+
+function calc() {
+    const { S, K, T, r, sig, q } = inputs();
+    const res = bs(S, K, T, r, sig, q);
+    if (!res) return;
+
+    document.getElementById('callPrice').textContent = '$' + fmt(res.call);
+    document.getElementById('putPrice').textContent  = '$' + fmt(res.put);
+
+    const pct  = ((S - K) / K * 100).toFixed(1);
+    const mono = Math.abs(S - K) / K < 0.01 ? 'ATM' : S > K ? 'ITM' : 'OTM';
+    const cls  = mono === 'ATM' ? 'badge-atm' : mono === 'ITM' ? 'badge-itm' : 'badge-otm';
+    document.getElementById('moneyness').innerHTML =
+        `<span class="moneyness-badge ${cls}">${mono}</span> <span style="color:var(--muted);font-size:0.82rem;font-weight:400">${pct}%</span>`;
+
+    const intrC = Math.max(0, S - K);
+    const timeC = res.call - intrC;
+    document.getElementById('intrinsic').textContent = `$${fmt(intrC)} / $${fmt(timeC)}`;
+
+    document.getElementById('beCall').textContent = '$' + fmt(K + res.call);
+    document.getElementById('bePut').textContent  = '$' + fmt(K - res.put);
+
+    const lhs  = res.call - res.put;
+    const rhs  = S * Math.exp(-q * T) - K * Math.exp(-r * T);
+    const diff = Math.abs(lhs - rhs);
+    document.getElementById('parityBox').innerHTML =
+        `<strong>Put-Call Parity:</strong> C − P = $${fmt(lhs)} &nbsp;|&nbsp; Se<sup>−qT</sup> − Ke<sup>−rT</sup> = $${fmt(rhs)} &nbsp;|&nbsp;` +
+        `<span style="color:${diff < 0.01 ? 'var(--green)' : 'var(--red)'}"> Δ = $${fmt(diff, 4)} ${diff < 0.01 ? '✓' : '⚠'}</span>`;
+
+    document.getElementById('g_deltaC').textContent = fmt(res.deltaC, 4);
+    document.getElementById('g_deltaP').textContent = fmt(res.deltaP, 4);
+    document.getElementById('g_gamma').textContent  = fmt(res.gamma,  4);
+    document.getElementById('g_thetaC').textContent = fmt(res.thetaC, 4);
+    document.getElementById('g_thetaP').textContent = fmt(res.thetaP, 4);
+    document.getElementById('g_vega').textContent   = fmt(res.vega,   4);
+    document.getElementById('g_rhoC').textContent   = fmt(res.rhoC,   4);
+    document.getElementById('g_rhoP').textContent   = fmt(res.rhoP,   4);
+
+    drawPayoff();
+    if (document.getElementById('tab-greeks').classList.contains('active'))  drawGreeks();
+    if (document.getElementById('tab-heatmap').classList.contains('active')) drawHeatmap();
+}
+
+// ─── PAYOFF CHART ─────────────────────────────────────────────────────────────
+function drawPayoff() {
+    const { S, K, T, r, sig, q } = inputs();
+    const res = bs(S, K, T, r, sig, q); if (!res) return;
+    const rng = K * 0.6, step = rng / 60;
+    const prices = [], calls = [], puts = [];
+    for (let p = Math.max(0.5, K - rng); p <= K + rng; p += step) {
+        prices.push(p);
+        calls.push(Math.max(0, p - K) - res.call);
+        puts.push(Math.max(0, K - p)  - res.put);
+    }
+    const yMin = Math.min(...calls, ...puts) * 1.1;
+    const yMax = Math.max(...calls, ...puts) * 1.1;
+    const traces = [];
+    if (payoffMode !== 'put')  traces.push({ x: prices, y: calls, name: 'Call P&L', mode: 'lines', line: { color: '#00a86b', width: 2.5 } });
+    if (payoffMode !== 'call') traces.push({ x: prices, y: puts,  name: 'Put P&L',  mode: 'lines', line: { color: '#e74c3c', width: 2.5 } });
+    traces.push({ x: [S, S], y: [yMin, yMax], name: 'Spot', mode: 'lines', line: { color: '#555', width: 1.5, dash: 'dash' }, showlegend: false });
+    traces.push({ x: [Math.max(0.5, K - rng), K + rng], y: [0, 0], mode: 'lines', line: { color: '#333', width: 1 }, showlegend: false });
+    Plotly.react('chartPayoff', traces, darkLayout('Stock Price at Expiry', 'P&L ($)'), { responsive: true, displayModeBar: false });
+}
+
+// ─── GREEKS CHART ─────────────────────────────────────────────────────────────
+function drawGreeks() {
+    const { S, K, T, r, sig, q } = inputs();
+    const rng = S * 0.5, step = rng / 60;
+    const prices = [], deltas = [], gammas = [], thetas = [], vegas = [];
+    for (let p = Math.max(0.5, S - rng); p <= S + rng; p += step) {
+        const res = bs(p, K, T, r, sig, q); if (!res) continue;
+        prices.push(p);
+        deltas.push(greeksMode === 'call' ? res.deltaC : res.deltaP);
+        gammas.push(res.gamma);
+        thetas.push(greeksMode === 'call' ? res.thetaC : res.thetaP);
+        vegas.push(res.vega);
+    }
+    const col = greeksMode === 'call' ? '#00a86b' : '#e74c3c';
+    const mk  = (y, name, row, c2) => ({ x: prices, y, name, mode: 'lines', line: { color: c2 || col, width: 2 }, xaxis: 'x', yaxis: 'y' + row });
+    const data = [mk(deltas,'Delta',1,col), mk(gammas,'Gamma',2,'#f59e0b'), mk(thetas,'Theta/day',3,'#8b5cf6'), mk(vegas,'Vega/1%',4,'#06b6d4')];
+    const layout = {
+        ...darkLayoutBase(),
+        grid: { rows: 4, columns: 1, pattern: 'independent', roworder: 'top to bottom' },
+        height: 500,
+        yaxis:  { ...axStyle(), title: 'Delta' },
+        yaxis2: { ...axStyle(), title: 'Gamma' },
+        yaxis3: { ...axStyle(), title: 'Theta' },
+        yaxis4: { ...axStyle(), title: 'Vega' },
+        margin: { l: 60, r: 30, t: 20, b: 50 },
+        showlegend: false,
+        shapes: [0, 1, 2, 3].map(i => ({
+            type: 'line', x0: S, x1: S, y0: 0, y1: 1,
+            yref: 'y' + (i ? i + 1 : ''), xref: 'x',
+            line: { color: '#444', width: 1, dash: 'dot' }
+        }))
+    };
+    Plotly.react('chartGreeks', data, layout, { responsive: true, displayModeBar: false });
+}
+
+// ─── HEATMAP ──────────────────────────────────────────────────────────────────
+function drawHeatmap() {
+    const { S, K, T, r, q } = inputs();
+    const hmType  = document.getElementById('hmType').value;
+    const hmRange = parseFloat(document.getElementById('hmRange').value);
+    const spots = [], vols = [], z = [];
+    const nS = 20, nV = 16;
+    for (let i = 0; i <= nS; i++) spots.push(S * (1 - hmRange + 2 * hmRange * i / nS));
+    for (let j = 0; j <= nV; j++) vols.push(5 + j * (80 - 5) / nV);
+    for (let j = 0; j <= nV; j++) {
+        const row = [];
+        for (let i = 0; i <= nS; i++) {
+            const res = bs(spots[i], K, T, r, vols[j] / 100, q);
+            if (!res) { row.push(null); continue; }
+            row.push(parseFloat(({ call: res.call, put: res.put, delta: res.deltaC, vega: res.vega }[hmType]).toFixed(4)));
+        }
+        z.push(row);
+    }
+    const labels = { call: 'Call Price ($)', put: 'Put Price ($)', delta: 'Delta (Call)', vega: 'Vega / 1%' };
+    const trace  = {
+        x: spots.map(s => s.toFixed(2)), y: vols.map(v => v.toFixed(1) + '%'),
+        z, type: 'heatmap', colorscale: 'Viridis',
+        colorbar: { title: labels[hmType], titlefont: { color: '#999' }, tickfont: { color: '#999' } },
+        hovertemplate: 'Spot: $%{x}<br>Vol: %{y}<br>' + labels[hmType] + ': %{z}<extra></extra>'
+    };
+    const shapes = [{ type: 'line', x0: S.toFixed(2), x1: S.toFixed(2), y0: 0, y1: 1, yref: 'paper', line: { color: '#00a86b', width: 2, dash: 'dash' } }];
+    Plotly.react('chartHeatmap', [trace], { ...darkLayoutBase(), xaxis: { ...axStyle(), title: 'Spot Price' }, yaxis: { ...axStyle(), title: 'Volatility' }, margin: { l: 70, r: 20, t: 20, b: 60 }, shapes }, { responsive: true, displayModeBar: false });
+}
+
+// ─── IV SOLVER ────────────────────────────────────────────────────────────────
+function solveIV() {
+    const { S, K, T, r, q } = inputs();
+    const mktPrice = parseFloat(document.getElementById('ivMarketPrice').value);
+    if (isNaN(mktPrice) || mktPrice <= 0) { alert('Enter a valid market price.'); return; }
+    let sig = 0.3;
+    for (let i = 0; i < 200; i++) {
+        const res = bs(S, K, T, r, sig, q); if (!res) break;
+        const price = ivType === 'call' ? res.call : res.put;
+        const vega  = res.vega * 100;
+        const diff  = price - mktPrice;
+        if (Math.abs(diff) < 1e-8) break;
+        if (Math.abs(vega) < 1e-10) { sig = null; break; }
+        sig -= diff / vega;
+        if (sig <= 0) sig = 0.0001;
+        if (sig > 20) { sig = null; break; }
+    }
+    const box = document.getElementById('ivResult');
+    box.classList.add('visible');
+    if (!sig || sig > 10) {
+        document.getElementById('ivValue').textContent = 'No Solution';
+        document.getElementById('ivSub').textContent   = 'Price may be outside arbitrage bounds.';
+        box.style.borderColor = 'var(--red)';
+        document.getElementById('ivValue').style.color = 'var(--red)';
+    } else {
+        document.getElementById('ivValue').textContent = (sig * 100).toFixed(2) + '%';
+        document.getElementById('ivSub').textContent   = `Market price $${fmt(mktPrice)} · ${ivType.toUpperCase()} · Converged`;
+        box.style.borderColor = 'var(--green)';
+        document.getElementById('ivValue').style.color = 'var(--green)';
+    }
+}
+
+// ─── CHART HELPERS ────────────────────────────────────────────────────────────
+function darkLayoutBase() {
+    return { paper_bgcolor: '#111', plot_bgcolor: '#0a0a0a', font: { color: '#999', family: 'Inter', size: 11 } };
+}
+function darkLayout(xtitle, ytitle) {
+    return {
+        ...darkLayoutBase(),
+        xaxis: { ...axStyle(), title: xtitle },
+        yaxis: { ...axStyle(), title: ytitle },
+        margin: { l: 60, r: 20, t: 20, b: 60 },
+        hovermode: 'x unified',
+        legend: { bgcolor: 'rgba(17,17,17,0.8)', bordercolor: '#1a1a1a', borderwidth: 1 }
+    };
+}
+function axStyle() {
+    return { gridcolor: '#1a1a1a', zerolinecolor: '#2a2a2a', color: '#666', titlefont: { color: '#999' } };
+}
+
+// ─── UI HELPERS ───────────────────────────────────────────────────────────────
+function sync(target, source) {
+    document.getElementById(target).value = document.getElementById(source).value;
+}
+
+function showTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+    if (id === 'greeks')  drawGreeks();
+    if (id === 'heatmap') drawHeatmap();
+}
+
+function setPayoffMode(m) {
+    payoffMode = m;
+    ['both','call','put'].forEach(x => {
+        const b = document.getElementById('pay_' + x);
+        b.className = 'toggle-btn' + (x === m ? (m === 'both' ? ' active-both' : m === 'call' ? ' active-call' : ' active-put') : '');
+    });
+    drawPayoff();
+}
+
+function setGreeksMode(m) {
+    greeksMode = m;
+    document.getElementById('gr_call').className = 'toggle-btn' + (m === 'call' ? ' active-call' : '');
+    document.getElementById('gr_put').className  = 'toggle-btn' + (m === 'put'  ? ' active-put'  : '');
+    drawGreeks();
+}
+
+function setIVType(t) {
+    ivType = t;
+    document.getElementById('iv_call').className = 'opt-btn' + (t === 'call' ? ' active-call' : '');
+    document.getElementById('iv_put').className  = 'opt-btn' + (t === 'put'  ? ' active-put'  : '');
+}
+
+// ─── QUICK TICKERS ────────────────────────────────────────────────────────────
+document.querySelectorAll('.ticker-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+        document.querySelectorAll('.ticker-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        document.getElementById('tickerInput').value = chip.dataset.ticker;
+        fetchStock();
+    });
+});
+document.getElementById('tickerInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') fetchStock();
+});
+
+// ─── PROXY FETCH (Fixed: uses AbortController, 3 proxies, dual query hosts) ──
+async function proxyFetch(url) {
+    const proxies = [
+        'https://corsproxy.io/?' + encodeURIComponent(url),
+        'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+        'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url),
+    ];
+    let lastErr;
+    for (const proxy of proxies) {
+        try {
+            const controller = new AbortController();
+            const tid = setTimeout(() => controller.abort(), 12000);
+            const res = await fetch(proxy, { signal: controller.signal });
+            clearTimeout(tid);
+            if (!res.ok) continue;
+            const text = await res.text();
+            if (!text || text.trim().length < 5) continue;
+            return JSON.parse(text);
+        } catch (e) { lastErr = e; }
+    }
+    throw lastErr || new Error('All proxies failed');
+}
+
+// ─── STOCK FETCH ──────────────────────────────────────────────────────────────
+let currentTicker = '';
+let expiryDates   = [];
+let chainSide     = 'call';
+let chainData     = {};
+
+async function fetchStock() {
+    const ticker = document.getElementById('tickerInput').value.trim().toUpperCase();
+    if (!ticker) return;
+    currentTicker = ticker;
+
+    const btn = document.getElementById('fetchBtn');
+    const errEl = document.getElementById('stockError');
+    btn.disabled = true; btn.textContent = 'Loading…';
+    errEl.style.display = 'none';
+    document.getElementById('stockInfo').classList.add('hidden');
+    document.getElementById('optionsSection').classList.remove('visible');
+
+    // Try query2 first, then query1 as fallback
+    const chartUrls = [
+        `https://query2.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y&includePrePost=false`,
+        `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y&includePrePost=false`,
+    ];
+
+    let chartData = null;
+    for (const url of chartUrls) {
+        try { chartData = await proxyFetch(url); if (chartData?.chart?.result?.[0]) break; }
+        catch(e) { /* try next */ }
+    }
+
+    try {
+        const result = chartData?.chart?.result?.[0];
+        if (!result) throw new Error(`No data returned for "${ticker}". Check the ticker symbol.`);
+
+        const meta   = result.meta;
+        const closes = result.indicators?.quote?.[0]?.close?.filter(c => c != null) ?? [];
+        const price  = meta.regularMarketPrice ?? meta.chartPreviousClose;
+        if (!price) throw new Error('Could not read price data.');
+
+        const hi52   = meta.fiftyTwoWeekHigh;
+        const lo52   = meta.fiftyTwoWeekLow;
+        const divYld = meta.dividendYield ?? 0;
+
+        let hv = 0;
+        if (closes.length > 5) {
+            const rets = [];
+            for (let i = 1; i < closes.length; i++) rets.push(Math.log(closes[i] / closes[i - 1]));
+            const mean = rets.reduce((a, b) => a + b, 0) / rets.length;
+            const variance = rets.reduce((a, b) => a + (b - mean) ** 2, 0) / (rets.length - 1);
+            hv = Math.sqrt(variance * 252) * 100;
+        }
+
+        document.getElementById('stockName').textContent  = meta.longName ?? meta.shortName ?? ticker;
+        document.getElementById('stockPrice').textContent = '$' + price.toFixed(2);
+        document.getElementById('stock52H').textContent   = hi52 ? '$' + hi52.toFixed(2) : '—';
+        document.getElementById('stock52L').textContent   = lo52 ? '$' + lo52.toFixed(2) : '—';
+        document.getElementById('stockVol').textContent   = hv ? hv.toFixed(1) + '%' : '—';
+        document.getElementById('stockDiv').textContent   = divYld ? (divYld * 100).toFixed(2) + '%' : '0%';
+        document.getElementById('stockInfo').classList.remove('hidden');
+
+        document.getElementById('S').value = price.toFixed(2);
+        document.getElementById('K').value = price.toFixed(2);
+        if (hv > 0) { document.getElementById('sig').value = hv.toFixed(1); document.getElementById('sig_sl').value = hv.toFixed(1); }
+        if (divYld) { document.getElementById('q').value   = (divYld * 100).toFixed(2); document.getElementById('q_sl').value = (divYld * 100).toFixed(2); }
+        calc();
+
+        // Options chain
+        const optUrls = [
+            `https://query2.finance.yahoo.com/v7/finance/options/${ticker}`,
+            `https://query1.finance.yahoo.com/v7/finance/options/${ticker}`,
+        ];
+        let optData = null;
+        for (const url of optUrls) {
+            try { optData = await proxyFetch(url); if (optData?.optionChain?.result?.[0]) break; }
+            catch(e) { /* try next */ }
+        }
+
+        const optResult = optData?.optionChain?.result?.[0];
+        if (optResult?.expirationDates?.length) {
+            expiryDates = optResult.expirationDates;
+            chainData   = {};
+            populateExpirySelect();
+            const nearest = optResult.expirationDates[0];
+            if (optResult.options?.[0]) {
+                chainData[nearest] = {
+                    calls: optResult.options[0].calls ?? [],
+                    puts:  optResult.options[0].puts  ?? [],
+                };
+            }
+            document.getElementById('optionsSection').classList.add('visible');
+            renderChain();
+        }
+
+    } catch (e) {
+        errEl.textContent  = e.message || 'Could not fetch data. Check ticker or try again shortly.';
+        errEl.style.display = 'block';
+    } finally {
+        btn.disabled = false; btn.textContent = 'Fetch Live Data ↗';
+    }
+}
+
+// ─── OPTIONS CHAIN ────────────────────────────────────────────────────────────
+function populateExpirySelect() {
+    const sel = document.getElementById('expirySelect');
+    sel.innerHTML = '';
+    expiryDates.forEach(ts => {
+        const d   = new Date(ts * 1000);
+        const opt = document.createElement('option');
+        opt.value   = ts;
+        opt.textContent = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        sel.appendChild(opt);
+    });
+}
+
+async function loadChain() {
+    const ts = parseInt(document.getElementById('expirySelect').value);
+    if (!ts) return;
+    if (chainData[ts]) { renderChain(); return; }
+
+    document.getElementById('chainLoading').style.display = 'block';
+    document.getElementById('chainBody').innerHTML = '';
+    try {
+        const urls = [
+            `https://query2.finance.yahoo.com/v7/finance/options/${currentTicker}?date=${ts}`,
+            `https://query1.finance.yahoo.com/v7/finance/options/${currentTicker}?date=${ts}`,
+        ];
+        let data = null;
+        for (const url of urls) {
+            try { data = await proxyFetch(url); if (data?.optionChain?.result?.[0]) break; }
+            catch(e) { /* try next */ }
+        }
+        const res = data?.optionChain?.result?.[0];
+        chainData[ts] = {
+            calls: res?.options?.[0]?.calls ?? [],
+            puts:  res?.options?.[0]?.puts  ?? [],
+        };
+        renderChain();
+    } catch(e) {
+        document.getElementById('chainBody').innerHTML =
+            '<tr><td colspan="10" style="color:var(--red);padding:1rem">Failed to load options chain.</td></tr>';
+    } finally {
+        document.getElementById('chainLoading').style.display = 'none';
+    }
+}
+
+function setChainSide(side) {
+    chainSide = side;
+    document.getElementById('chn_call').className = 'chain-btn' + (side === 'call' ? ' active-call' : '');
+    document.getElementById('chn_put').className  = 'chain-btn' + (side === 'put'  ? ' active-put'  : '');
+    renderChain();
+}
+
+function renderChain() {
+    const ts        = parseInt(document.getElementById('expirySelect').value);
+    const bucket    = chainData[ts];
+    if (!bucket) { loadChain(); return; }
+    const contracts = chainSide === 'call' ? bucket.calls : bucket.puts;
+    const S   = parseFloat(document.getElementById('S').value);
+    const r   = parseFloat(document.getElementById('r').value) / 100;
+    const sig = parseFloat(document.getElementById('sig').value) / 100;
+    const q   = parseFloat(document.getElementById('q').value) / 100;
+    const now = Date.now() / 1000;
+    const T   = Math.max(0.001, (ts - now) / (365 * 24 * 3600));
+
+    const body = document.getElementById('chainBody');
+    body.innerHTML = '';
+
+    contracts.forEach(c => {
+        const strike  = c.strike;
+        const last    = c.lastPrice ?? 0;
+        const bid     = c.bid ?? 0;
+        const ask     = c.ask ?? 0;
+        const vol     = c.volume ?? 0;
+        const oi      = c.openInterest ?? 0;
+        const mktIV   = c.impliedVolatility ? (c.impliedVolatility * 100).toFixed(1) + '%' : '—';
+        const itm     = c.inTheMoney ?? false;
+        const res     = bs(S, strike, T, r, sig, q);
+        const modelPx = res ? (chainSide === 'call' ? res.call : res.put) : null;
+        const diff    = modelPx !== null ? (last - modelPx) : null;
+
+        const tr = document.createElement('tr');
+        if (itm) tr.classList.add(chainSide === 'call' ? 'itm' : 'itm-put');
+
+        const itmBadge = itm ? `<span class="itm-badge ${chainSide}">ITM</span>` : '';
+        const diffHtml = diff !== null
+            ? `<span class="${diff >= 0 ? 'diff-pos' : 'diff-neg'}">${diff >= 0 ? '+' : ''}$${Math.abs(diff).toFixed(2)}</span>`
+            : '—';
+
+        tr.innerHTML = `
+            <td>$${strike.toFixed(2)}${itmBadge}</td>
+            <td>$${last.toFixed(2)}</td>
+            <td>${bid ? '$' + bid.toFixed(2) : '—'}</td>
+            <td>${ask ? '$' + ask.toFixed(2) : '—'}</td>
+            <td>${vol ? vol.toLocaleString() : '—'}</td>
+            <td>${oi  ? oi.toLocaleString()  : '—'}</td>
+            <td>${mktIV}</td>
+            <td>${modelPx !== null ? '$' + modelPx.toFixed(2) : '—'}</td>
+            <td>${diffHtml}</td>
+            <td><button class="strat-btn" onclick="event.stopPropagation();sendToStrategy(${strike},${T.toFixed(6)},${last},${chainSide === 'call' ? 1 : 0})">+ Strategy</button></td>`;
+
+        tr.addEventListener('click', () => populateFromContract(strike, T, last, c.impliedVolatility));
+        body.appendChild(tr);
+    });
+
+    if (!contracts.length) {
+        body.innerHTML = '<tr><td colspan="10" style="color:var(--muted);padding:1rem">No contracts for this expiry.</td></tr>';
+    }
+}
+
+function populateFromContract(strike, T, mktPrice, mktIV) {
+    document.getElementById('K').value    = strike.toFixed(2);
+    const tVal = Math.max(0.01, parseFloat(T.toFixed(4)));
+    document.getElementById('T').value    = tVal;
+    document.getElementById('T_sl').value = tVal;
+    if (mktIV && mktIV > 0) {
+        const ivPct = Math.min(150, mktIV * 100).toFixed(1);
+        document.getElementById('sig').value    = ivPct;
+        document.getElementById('sig_sl').value = ivPct;
+    }
+    document.getElementById('ivMarketPrice').value = mktPrice.toFixed(2);
+    setIVType(chainSide);
+    calc();
+    const ivTab = document.querySelector('.tab[onclick*="iv"]');
+    showTab('iv', ivTab);
+    solveIV();
+    window.scrollTo({ top: document.getElementById('tab-iv').offsetTop - 20, behavior: 'smooth' });
+}
+
+// ─── SEND TO STRATEGY BUILDER ─────────────────────────────────────────────────
+function sendToStrategy(strike, T_years, premium, isCall) {
+    const S = parseFloat(document.getElementById('S').value);
+    const leg = {
+        action:  'buy',
+        type:    isCall ? 'call' : 'put',
+        strike:  strike,
+        expiry_days: Math.round(T_years * 365),
+        premium: premium,
+        qty:     1,
+    };
+    const pending = JSON.parse(localStorage.getItem('bs_pending_legs') || '[]');
+    pending.push(leg);
+    localStorage.setItem('bs_pending_legs', JSON.stringify(pending));
+    localStorage.setItem('bs_spot', S.toFixed(2));
+    // Brief confirmation flash
+    const note = document.createElement('div');
+    note.style.cssText = 'position:fixed;bottom:2rem;right:2rem;background:var(--green);color:#000;padding:0.75rem 1.5rem;font-weight:700;font-size:0.85rem;z-index:9999;animation:fadeUp 0.3s ease';
+    note.textContent = `Leg added! ${pending.length} leg${pending.length > 1 ? 's' : ''} queued → Strategy Builder`;
+    document.body.appendChild(note);
+    setTimeout(() => note.remove(), 2500);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+calc();
+</script>
+</body>
+</html>
