@@ -312,6 +312,66 @@
 
         .chain-note { font-size: 0.72rem; color: var(--muted); margin-top: 0.75rem; line-height: 1.5; }
 
+        /* ── PARAM SELECT (expiry date / strike dropdowns) ─── */
+        .param-select {
+            width: 100%; background: var(--bg2); border: 1px solid var(--border);
+            color: var(--text); padding: 0.6rem 0.75rem; font-size: 0.95rem;
+            font-family: inherit; cursor: pointer; transition: border-color 0.2s;
+        }
+        .param-select:focus { outline: none; border-color: var(--green); }
+        .param-hint { font-size: 0.7rem; color: var(--muted); margin-top: 0.3rem; font-style: italic; }
+
+        /* ── TOOLTIPS ─────────────────────────────────────── */
+        .tip-wrap { position: relative; display: inline-block; }
+        .tip-icon {
+            font-size: 0.6rem; color: #444; cursor: help;
+            border: 1px solid #333; border-radius: 50%; width: 13px; height: 13px;
+            display: inline-flex; align-items: center; justify-content: center;
+            margin-left: 5px; vertical-align: middle; font-weight: 700; line-height: 1;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .tip-wrap:hover .tip-icon { color: var(--green); border-color: var(--green); }
+        .tip-box {
+            visibility: hidden; position: absolute;
+            background: #1c1c1c; border: 1px solid #2a2a2a;
+            color: #ccc; font-size: 0.75rem; padding: 0.65rem 0.85rem;
+            width: 240px; z-index: 200; bottom: calc(100% + 6px); left: 50%;
+            transform: translateX(-50%); line-height: 1.55;
+            opacity: 0; transition: opacity 0.15s; pointer-events: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .tip-box::after {
+            content: ''; position: absolute; top: 100%; left: 50%;
+            transform: translateX(-50%); border: 5px solid transparent;
+            border-top-color: #2a2a2a;
+        }
+        .tip-wrap:hover .tip-box { visibility: visible; opacity: 1; }
+
+        /* Greek box tooltip */
+        .greek-box { position: relative; cursor: help; }
+        .greek-tip {
+            visibility: hidden; position: absolute;
+            background: #1c1c1c; border: 1px solid #2a2a2a;
+            color: #ccc; font-size: 0.72rem; padding: 0.65rem 0.85rem;
+            width: 230px; z-index: 200; bottom: calc(100% + 8px); left: 50%;
+            transform: translateX(-50%); line-height: 1.55;
+            opacity: 0; transition: opacity 0.15s; pointer-events: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5); text-align: left;
+        }
+        .greek-tip::after {
+            content: ''; position: absolute; top: 100%; left: 50%;
+            transform: translateX(-50%); border: 5px solid transparent;
+            border-top-color: #2a2a2a;
+        }
+        .greek-box:hover .greek-tip { visibility: visible; opacity: 1; }
+        .greek-box:hover { border-color: #2a2a2a; }
+
+        /* Treasury rate live badge */
+        .rate-live {
+            font-size: 0.63rem; color: var(--green); border: 1px solid rgba(0,168,107,0.35);
+            padding: 1px 5px; margin-left: 6px; vertical-align: middle; border-radius: 2px;
+        }
+
         /* ── RESPONSIVE ──────────────────────────────────── */
         @media (max-width: 900px) {
             .main-grid    { grid-template-columns: 1fr; }
@@ -426,19 +486,23 @@
             <div class="input-group">
                 <div class="input-label">Strike Price (K) <span>K</span></div>
                 <input type="number" id="K" value="100" step="0.01" min="0.01" oninput="calc()">
+                <select id="K_sel" class="param-select" style="display:none" onchange="setKFromSelect()"></select>
+                <div id="K_hint" class="param-hint" style="display:none">Fetch a ticker to see traded strikes</div>
             </div>
             <div class="input-group">
-                <div class="input-label">Time to Expiry (years) <span>T</span></div>
-                <div class="slider-row">
+                <div class="input-label" id="T_label">Time to Expiry (years) <span>T</span></div>
+                <div id="T_wrap_slider" class="slider-row">
                     <input type="range" id="T_sl" min="0.01" max="5" step="0.01" value="1" oninput="sync('T','T_sl');calc()">
                     <input type="number" id="T" value="1" step="0.01" min="0.01" max="5" oninput="sync('T_sl','T');calc()">
                 </div>
+                <select id="T_sel" class="param-select" style="display:none" onchange="setExpiryFromSelect()"></select>
+                <div id="T_hint" class="param-hint" style="display:none">Fetch a ticker to see traded expiry dates</div>
             </div>
             <div class="input-group">
-                <div class="input-label">Risk-Free Rate (%) <span>r</span></div>
+                <div class="input-label">Risk-Free Rate (%) <span>r</span> <span id="r_live_badge" class="rate-live" style="display:none">LIVE ^TNX</span></div>
                 <div class="slider-row">
-                    <input type="range" id="r_sl" min="0" max="20" step="0.1" value="4.5" oninput="sync('r','r_sl');calc()">
-                    <input type="number" id="r" value="4.5" step="0.1" min="0" oninput="sync('r_sl','r');calc()">
+                    <input type="range" id="r_sl" min="0" max="20" step="0.1" value="4.5" oninput="sync('r','r_sl');calc();document.getElementById('r_live_badge').style.display='none'">
+                    <input type="number" id="r" value="4.5" step="0.1" min="0" oninput="sync('r_sl','r');calc();document.getElementById('r_live_badge').style.display='none'">
                 </div>
             </div>
             <div class="input-group">
@@ -473,8 +537,18 @@
             </div>
 
             <div class="info-row">
-                <div class="info-box">
-                    <div class="info-box-label">Moneyness</div>
+                <div class="info-box" style="position:relative">
+                    <div class="info-box-label">
+                        <span class="tip-wrap">Moneyness
+                            <span class="tip-icon">?</span>
+                            <div class="tip-box" style="left:0;transform:none;width:260px">
+                                <strong style="color:#fff">Moneyness</strong> describes the relationship between spot (S) and strike (K).<br><br>
+                                <strong style="color:#00a86b">ITM</strong> (In The Money): Call when S &gt; K; Put when S &lt; K — has intrinsic value.<br>
+                                <strong style="color:#f59e0b">ATM</strong> (At The Money): S ≈ K (within 1%). All value is time value.<br>
+                                <strong style="color:#e74c3c">OTM</strong> (Out of The Money): Call when S &lt; K; Put when S &gt; K — pure time value.
+                            </div>
+                        </span>
+                    </div>
                     <div class="info-box-value" id="moneyness">—</div>
                 </div>
                 <div class="info-box">
@@ -493,9 +567,14 @@
 
             <div class="parity-box" id="parityBox">—</div>
 
-            <div class="greeks-title">The Greeks — <span style="color:var(--green)">Call</span> / <span style="color:var(--red)">Put</span></div>
+            <div class="greeks-title">The Greeks — <span style="color:var(--green)">Call</span> / <span style="color:var(--red)">Put</span> &nbsp;<span style="font-size:0.65rem;color:#444">(hover for explanation)</span></div>
             <div class="greeks-grid">
                 <div class="greek-box">
+                    <div class="greek-tip">
+                        <strong style="color:#fff">Delta (Δ)</strong> — Rate of change of option price per $1 move in the stock.<br><br>
+                        Call Δ ranges 0→1. Put Δ ranges −1→0. ATM options ≈ ±0.50.<br><br>
+                        Example: Δ = 0.65 means the call gains ~$0.65 when the stock rises $1.
+                    </div>
                     <div class="greek-sym">Δ</div><div class="greek-name">Delta</div>
                     <div class="greek-vals">
                         <div class="greek-val call" id="g_deltaC">—</div>
@@ -503,10 +582,20 @@
                     </div>
                 </div>
                 <div class="greek-box">
+                    <div class="greek-tip">
+                        <strong style="color:#fff">Gamma (Γ)</strong> — Rate of change of Delta per $1 stock move (Delta's delta).<br><br>
+                        High Γ = Delta changes rapidly. Peaks at ATM near expiry. Both calls and puts share the same Γ.<br><br>
+                        Long options have positive Γ (convexity works in your favor).
+                    </div>
                     <div class="greek-sym">Γ</div><div class="greek-name">Gamma</div>
                     <div class="greek-vals"><div class="greek-val call" id="g_gamma">—</div></div>
                 </div>
                 <div class="greek-box">
+                    <div class="greek-tip">
+                        <strong style="color:#fff">Theta (Θ)</strong> — Daily time decay of the option's value (per calendar day).<br><br>
+                        Negative for long options — you lose money every day from time decay alone. At-the-money options near expiry have the fastest decay.<br><br>
+                        Theta is the "rent" you pay to hold an option.
+                    </div>
                     <div class="greek-sym">Θ</div><div class="greek-name">Theta/day</div>
                     <div class="greek-vals">
                         <div class="greek-val call" id="g_thetaC">—</div>
@@ -514,10 +603,20 @@
                     </div>
                 </div>
                 <div class="greek-box">
+                    <div class="greek-tip">
+                        <strong style="color:#fff">Vega (ν)</strong> — Change in option price per 1% increase in implied volatility.<br><br>
+                        High Vega = option is very sensitive to volatility changes. Peaks near ATM with longer expiry.<br><br>
+                        Example: Vega = 0.25 means the option gains $0.25 if volatility rises 1%.
+                    </div>
                     <div class="greek-sym">ν</div><div class="greek-name">Vega/1%</div>
                     <div class="greek-vals"><div class="greek-val call" id="g_vega">—</div></div>
                 </div>
                 <div class="greek-box">
+                    <div class="greek-tip">
+                        <strong style="color:#fff">Rho (ρ)</strong> — Change in option price per 1% change in the risk-free interest rate.<br><br>
+                        Calls have positive Rho (higher rates → higher call value). Puts have negative Rho.<br><br>
+                        Rho matters most for long-dated options; it's small for short-term contracts.
+                    </div>
                     <div class="greek-sym">ρ</div><div class="greek-name">Rho/1%</div>
                     <div class="greek-vals">
                         <div class="greek-val call" id="g_rhoC">—</div>
@@ -706,21 +805,26 @@ function calc() {
 function drawPayoff() {
     const { S, K, T, r, sig, q } = inputs();
     const res = bs(S, K, T, r, sig, q); if (!res) return;
-    const rng = K * 0.6, step = rng / 60;
+    // Smart range: focus on where P&L actually changes
+    const lo   = Math.max(0.01, Math.min(S, K) * 0.65);
+    const hi   = Math.max(S, K) * 1.55;
+    const step = (hi - lo) / 120;
     const prices = [], calls = [], puts = [];
-    for (let p = Math.max(0.5, K - rng); p <= K + rng; p += step) {
+    for (let p = lo; p <= hi; p += step) {
         prices.push(p);
         calls.push(Math.max(0, p - K) - res.call);
         puts.push(Math.max(0, K - p)  - res.put);
     }
-    const yMin = Math.min(...calls, ...puts) * 1.1;
-    const yMax = Math.max(...calls, ...puts) * 1.1;
+    const yMin = Math.min(...calls, ...puts) * 1.15;
+    const yMax = Math.max(...calls, ...puts) * 1.15;
     const traces = [];
     if (payoffMode !== 'put')  traces.push({ x: prices, y: calls, name: 'Call P&L', mode: 'lines', line: { color: '#00a86b', width: 2.5 } });
     if (payoffMode !== 'call') traces.push({ x: prices, y: puts,  name: 'Put P&L',  mode: 'lines', line: { color: '#e74c3c', width: 2.5 } });
     traces.push({ x: [S, S], y: [yMin, yMax], name: 'Spot', mode: 'lines', line: { color: '#555', width: 1.5, dash: 'dash' }, showlegend: false });
-    traces.push({ x: [Math.max(0.5, K - rng), K + rng], y: [0, 0], mode: 'lines', line: { color: '#333', width: 1 }, showlegend: false });
-    Plotly.react('chartPayoff', traces, darkLayout('Stock Price at Expiry', 'P&L ($)'), { responsive: true, displayModeBar: false });
+    traces.push({ x: [lo, hi], y: [0, 0], mode: 'lines', line: { color: '#333', width: 1 }, showlegend: false });
+    const layout = { ...darkLayout('Stock Price at Expiry', 'P&L ($)'), xaxis: { ...axStyle(), title: 'Stock Price at Expiry', range: [lo, hi] } };
+    try { Plotly.purge('chartPayoff'); } catch(e) {}
+    Plotly.newPlot('chartPayoff', traces, layout, { responsive: true, displayModeBar: false });
 }
 
 // ─── GREEKS CHART ─────────────────────────────────────────────────────────────
@@ -934,6 +1038,7 @@ async function fetchStock() {
     errEl.style.display = 'none';
     document.getElementById('stockInfo').classList.add('hidden');
     document.getElementById('optionsSection').classList.remove('visible');
+    resetParamInputs(); // reset to slider/number while loading
 
     // Try query2 first, then query1 as fallback
     const chartUrls = [
@@ -1029,12 +1134,155 @@ function populateExpirySelect() {
         opt.textContent = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         sel.appendChild(opt);
     });
+    // Also populate the parameter expiry date select
+    populateParamExpirySelect();
+}
+
+function populateParamExpirySelect() {
+    const sel = document.getElementById('T_sel');
+    sel.innerHTML = '';
+    expiryDates.forEach(ts => {
+        const d   = new Date(ts * 1000);
+        const opt = document.createElement('option');
+        opt.value   = ts;
+        opt.textContent = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+        sel.appendChild(opt);
+    });
+    // Switch from slider to date select
+    document.getElementById('T_label').innerHTML = 'Expiry Date <span>T</span>';
+    document.getElementById('T_wrap_slider').style.display = 'none';
+    document.getElementById('T_sel').style.display = '';
+    document.getElementById('T_hint').style.display = 'none';
+    // Also show the K select hint, K_sel will fill after expiry chosen
+    document.getElementById('K_hint').style.display = '';
+    document.getElementById('K_hint').textContent = 'Select an expiry to see traded strikes';
+    // Set T from first (nearest) expiry
+    setExpiryFromSelect();
+}
+
+function setExpiryFromSelect() {
+    const ts  = parseInt(document.getElementById('T_sel').value);
+    if (!ts) return;
+    const now = Date.now() / 1000;
+    const T   = Math.max(0.001, (ts - now) / (365.25 * 24 * 3600));
+    document.getElementById('T').value    = T.toFixed(6);
+    document.getElementById('T_sl').value = Math.min(5, T).toFixed(6);
+    // Sync the chain expiry select
+    document.getElementById('expirySelect').value = ts;
+    // Load chain for this expiry, then populate strikes
+    if (chainData[ts]) {
+        populateStrikeSelect(ts);
+        renderChain();
+    } else {
+        loadChainForExpiry(ts);
+    }
+    calc();
+}
+
+async function loadChainForExpiry(ts) {
+    document.getElementById('chainLoading').style.display = 'block';
+    try {
+        const urls = [
+            `https://query2.finance.yahoo.com/v7/finance/options/${currentTicker}?date=${ts}`,
+            `https://query1.finance.yahoo.com/v7/finance/options/${currentTicker}?date=${ts}`,
+        ];
+        let data = null;
+        for (const url of urls) {
+            try { data = await proxyFetch(url); if (data?.optionChain?.result?.[0]) break; }
+            catch(e) { /* next */ }
+        }
+        const res = data?.optionChain?.result?.[0];
+        chainData[ts] = {
+            calls: res?.options?.[0]?.calls ?? [],
+            puts:  res?.options?.[0]?.puts  ?? [],
+        };
+        populateStrikeSelect(ts);
+        renderChain();
+    } catch(e) { /* fail silently */ }
+    finally { document.getElementById('chainLoading').style.display = 'none'; }
+}
+
+function populateStrikeSelect(ts) {
+    const bucket = chainData[ts];
+    if (!bucket) return;
+    const allStrikes = new Set();
+    (bucket.calls || []).forEach(c => allStrikes.add(c.strike));
+    (bucket.puts  || []).forEach(c => allStrikes.add(c.strike));
+    const sorted = [...allStrikes].sort((a, b) => a - b);
+    if (!sorted.length) return;
+
+    const sel       = document.getElementById('K_sel');
+    const currentK  = parseFloat(document.getElementById('K').value);
+    sel.innerHTML   = '';
+
+    // Find closest strike to current K
+    let bestDiff = Infinity, bestStrike = sorted[0];
+    sorted.forEach(s => { const d = Math.abs(s - currentK); if (d < bestDiff) { bestDiff = d; bestStrike = s; } });
+
+    sorted.forEach(strike => {
+        const opt       = document.createElement('option');
+        opt.value       = strike;
+        opt.textContent = '$' + strike.toFixed(2);
+        if (strike === bestStrike) opt.selected = true;
+        sel.appendChild(opt);
+    });
+
+    // Show select, hide number input and hint
+    document.getElementById('K').style.display    = 'none';
+    sel.style.display = '';
+    document.getElementById('K_hint').style.display = 'none';
+
+    // Update K value to selected strike
+    document.getElementById('K').value = bestStrike.toFixed(2);
+    // Auto-set IV from nearest contract
+    autoSetIVFromStrike(ts, bestStrike);
+    calc();
+}
+
+function autoSetIVFromStrike(ts, strike) {
+    const bucket = chainData[ts];
+    if (!bucket) return;
+    const contracts = chainSide === 'call' ? bucket.calls : bucket.puts;
+    const contract  = contracts.find(c => Math.abs(c.strike - strike) < 0.01);
+    if (contract?.impliedVolatility && contract.impliedVolatility > 0) {
+        const ivPct = Math.min(150, contract.impliedVolatility * 100).toFixed(1);
+        document.getElementById('sig').value    = ivPct;
+        document.getElementById('sig_sl').value = ivPct;
+    }
+}
+
+function setKFromSelect() {
+    const val = parseFloat(document.getElementById('K_sel').value);
+    document.getElementById('K').value = val.toFixed(2);
+    const ts = parseInt(document.getElementById('T_sel').value || document.getElementById('expirySelect').value);
+    autoSetIVFromStrike(ts, val);
+    calc();
+}
+
+function resetParamInputs() {
+    // Restore slider T
+    document.getElementById('T_label').innerHTML = 'Time to Expiry (years) <span>T</span>';
+    document.getElementById('T_wrap_slider').style.display = '';
+    document.getElementById('T_sel').style.display = 'none';
+    document.getElementById('T_hint').style.display = '';
+    // Restore number K
+    document.getElementById('K').style.display = '';
+    document.getElementById('K_sel').style.display = 'none';
+    document.getElementById('K_hint').style.display = 'none';
 }
 
 async function loadChain() {
     const ts = parseInt(document.getElementById('expirySelect').value);
     if (!ts) return;
-    if (chainData[ts]) { renderChain(); return; }
+    // Sync T_sel if present
+    if (document.getElementById('T_sel').style.display !== 'none') {
+        document.getElementById('T_sel').value = ts;
+        const now = Date.now() / 1000;
+        const T   = Math.max(0.001, (ts - now) / (365.25 * 24 * 3600));
+        document.getElementById('T').value    = T.toFixed(6);
+        document.getElementById('T_sl').value = Math.min(5, T).toFixed(6);
+    }
+    if (chainData[ts]) { renderChain(); populateStrikeSelect(ts); return; }
 
     document.getElementById('chainLoading').style.display = 'block';
     document.getElementById('chainBody').innerHTML = '';
@@ -1054,6 +1302,7 @@ async function loadChain() {
             puts:  res?.options?.[0]?.puts  ?? [],
         };
         renderChain();
+        populateStrikeSelect(ts);
     } catch(e) {
         document.getElementById('chainBody').innerHTML =
             '<tr><td colspan="10" style="color:var(--red);padding:1rem">Failed to load options chain.</td></tr>';
@@ -1067,6 +1316,13 @@ function setChainSide(side) {
     document.getElementById('chn_call').className = 'chain-btn' + (side === 'call' ? ' active-call' : '');
     document.getElementById('chn_put').className  = 'chain-btn' + (side === 'put'  ? ' active-put'  : '');
     renderChain();
+    // Re-populate strike select to reflect the new side's IVs
+    const ts = parseInt(document.getElementById('expirySelect').value);
+    if (ts && chainData[ts] && document.getElementById('K_sel').style.display !== 'none') {
+        const currentK = parseFloat(document.getElementById('K').value);
+        autoSetIVFromStrike(ts, currentK);
+        calc();
+    }
 }
 
 function renderChain() {
@@ -1168,8 +1424,25 @@ function sendToStrategy(strike, T_years, premium, isCall) {
     setTimeout(() => note.remove(), 2500);
 }
 
+// ─── TREASURY RATE AUTO-FETCH ─────────────────────────────────────────────────
+async function fetchTreasuryRate() {
+    try {
+        const url  = 'https://query2.finance.yahoo.com/v8/finance/chart/%5ETNX?interval=1d&range=5d&includePrePost=false';
+        const data = await proxyFetch(url);
+        const price = data?.chart?.result?.[0]?.meta?.regularMarketPrice;
+        // ^TNX value is already in %, e.g. 4.35 means 4.35%
+        if (price && price > 0 && price < 20) {
+            document.getElementById('r').value    = price.toFixed(2);
+            document.getElementById('r_sl').value = price.toFixed(2);
+            document.getElementById('r_live_badge').style.display = '';
+            calc();
+        }
+    } catch(e) { /* keep default 4.5% */ }
+}
+
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 calc();
+fetchTreasuryRate();
 </script>
 </body>
 </html>

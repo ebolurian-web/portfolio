@@ -145,6 +145,9 @@
         .empty-state { text-align: center; padding: 4rem 2rem; color: var(--muted); }
         .empty-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: .3; }
 
+        /* ── TOGGLE ACTIVE STATE ── */
+        .active-toggle { border-color: var(--green) !important; color: var(--green) !important; }
+
         /* ── RESPONSIVE ── */
         @media (max-width: 900px) { .top-row { grid-template-columns: 1fr; } }
         @media (max-width: 640px) { .wrap { padding: 1rem; } .header-nav .hn-link { display: none; } }
@@ -258,19 +261,40 @@
             <button class="btn btn-ghost btn-sm" onclick="addLeg('sell','call')">+ Sell Call</button>
             <button class="btn btn-ghost btn-sm" onclick="addLeg('sell','put')">+ Sell Put</button>
             <button class="btn btn-ghost btn-sm" onclick="addLeg('buy','stock')">+ Long Stock</button>
+            <button class="btn btn-ghost btn-sm" id="loadMktBtn" onclick="loadMarketPrices()" style="border-color:rgba(245,158,11,.4);color:var(--yellow)">↻ Load Market Prices</button>
             <button class="btn btn-red btn-sm" onclick="clearAllLegs()" style="margin-left:auto">Clear All</button>
         </div>
+        <div id="mktPriceStatus" style="font-size:.75rem;color:var(--muted);margin-top:.6rem;display:none"></div>
     </div>
 
     <!-- PAYOFF CHART -->
     <div class="card">
-        <div class="card-title">Combined Payoff at Expiry</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:.75rem">
+            <div class="card-title" style="margin-bottom:0">Combined Payoff at Expiry</div>
+            <div style="display:flex;gap:.5rem" id="payoffToggleBar">
+                <button class="btn btn-ghost btn-sm active-toggle" id="pvBtn_total" onclick="setPayoffView('total')">Strategy Total</button>
+                <button class="btn btn-ghost btn-sm" id="pvBtn_per1" onclick="setPayoffView('per1')">Per Contract (1×)</button>
+            </div>
+        </div>
         <div id="chartPayoff" style="height:420px">
             <div class="empty-state">
                 <div class="empty-icon">📈</div>
                 <p>Add legs to see the payoff diagram.</p>
             </div>
         </div>
+    </div>
+
+    <!-- PROBABILITY DISTRIBUTION CHART -->
+    <div class="card" id="distChartCard" style="display:none">
+        <div class="card-title">Probability Distribution at Expiry</div>
+        <p style="font-size:.78rem;color:var(--muted);margin-bottom:1rem;line-height:1.6">
+            Log-normal distribution of expected stock prices at expiry (based on current spot and volatility).
+            <span style="color:var(--green)">■ Green</span> = profit zone &nbsp;·&nbsp;
+            <span style="color:var(--red)">■ Red</span> = loss zone &nbsp;·&nbsp;
+            ◆ Break-evens &nbsp;·&nbsp; <span style="color:#888">│ Current spot</span>
+        </p>
+        <div id="chartDist" style="height:340px"></div>
+        <div id="distPop" style="text-align:center;margin-top:.75rem;font-size:.82rem;color:var(--muted)"></div>
     </div>
 
     <!-- STATS -->
@@ -324,6 +348,16 @@
 let legs   = [];
 let legId  = 0;
 let stratExpiryDates = [];   // [{ts: Number, label: String, isoDate: String}]
+let stratChainData   = {};   // ts → {calls:[], puts:[]}
+let stratTicker      = '';
+let payoffViewMode   = 'total'; // 'total' | 'per1'
+
+function setPayoffView(mode) {
+    payoffViewMode = mode;
+    document.getElementById('pvBtn_total').classList.toggle('active-toggle', mode === 'total');
+    document.getElementById('pvBtn_per1').classList.toggle('active-toggle', mode === 'per1');
+    recalc();
+}
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
 function today30() {
@@ -539,22 +573,32 @@ function recalc() {
 
     if (!legs.length) {
         statsEl.style.display = 'none';
+        document.getElementById('distChartCard').style.display = 'none';
         try { Plotly.purge(chartEl); } catch(e) {}
         chartEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📈</div><p>Add legs to see the payoff diagram.</p></div>`;
         return;
     }
 
-    // Price range for chart
+    // Build effective legs (per-contract mode normalizes option qty to 1)
+    const effectiveLegs = payoffViewMode === 'per1'
+        ? legs.map(l => ({ ...l, qty: l.type === 'stock' ? l.qty : 1 }))
+        : legs;
+
+    // Save real computePnls scope (use effectiveLegs for chart)
+    const computeEff = prices => prices.map(S => effectiveLegs.reduce((sum, l) => sum + legPnlAtExpiry(l, S), 0));
+    const computeAll = prices => prices.map(S => legs.reduce((sum, l) => sum + legPnlAtExpiry(l, S), 0));
+
+    // Smart price range: focus on where P&L changes
     const optLegs = legs.filter(l => l.type !== 'stock');
     const strikes = optLegs.map(l => l.strike);
     const minK = strikes.length ? Math.min(...strikes) : spot;
     const maxK = strikes.length ? Math.max(...strikes) : spot;
-    const lo   = Math.max(0.01, Math.min(minK * 0.55, spot * 0.45));
-    const hi   = Math.max(maxK * 1.55, spot * 1.55);
+    const lo   = Math.max(0.01, Math.min(minK, spot) * 0.60);
+    const hi   = Math.max(maxK, spot) * 1.55;
     const N    = 300;
     const step = (hi - lo) / N;
     const prices = Array.from({ length: N + 1 }, (_, i) => lo + i * step);
-    const pnls   = computePnls(prices);
+    const pnls   = computeEff(prices);
 
     const maxPnl = Math.max(...pnls);
     const minPnl = Math.min(...pnls);
@@ -564,12 +608,18 @@ function recalc() {
     const unlimLoss   = pnls[10]  - pnls[0]       < -Math.abs(minPnl) * 0.08;
 
     const bes      = findBreakEvens(prices, pnls);
-    const spotPnl  = computePnls([spot])[0];
+    const spotPnl  = computeEff([spot])[0];
+    // Stats always use actual total legs (not per-1)
+    const allPnls  = computeAll(prices);
+    const allMax   = Math.max(...allPnls);
+    const allMin   = Math.min(...allPnls);
     const netPrem  = legs.reduce((s, l) => l.type === 'stock' ? s : s + (l.action === 'buy' ? -1 : 1) * l.premium * l.qty * 100, 0);
+    const unlimProfitAll = allPnls[N]  - allPnls[N-10] > Math.abs(allMax) * 0.08;
+    const unlimLossAll   = allPnls[10] - allPnls[0]    < -Math.abs(allMin) * 0.08;
 
     // Probability of profit via log-normal Monte Carlo
     const maxDays = Math.max(...legs.map(l => getLegTYears(l) * 365));
-    const T = Math.max(1 / 365, maxDays / 365);
+    const T   = Math.max(1 / 365, maxDays / 365);
     const sig = vol / 100;
     let inProfit = 0;
     const SIMS = 2000;
@@ -577,33 +627,28 @@ function recalc() {
         const u1 = Math.random(), u2 = Math.random();
         const z  = Math.sqrt(-2 * Math.log(u1 || 1e-10)) * Math.cos(2 * Math.PI * u2);
         const sT = spot * Math.exp((-0.5 * sig * sig) * T + sig * Math.sqrt(T) * z);
-        if (computePnls([sT])[0] > 0) inProfit++;
+        if (computeEff([sT])[0] > 0) inProfit++;
     }
     const pop = (inProfit / SIMS * 100).toFixed(1);
 
-    // ── Build chart ────────────────────────────────────────────────────────────
+    // ── Build payoff chart ─────────────────────────────────────────────────────
     const padY   = Math.max(Math.abs(maxPnl), Math.abs(minPnl)) * 0.15 || 50;
     const yRange = [minPnl - padY, maxPnl + padY];
+    const yLabel = payoffViewMode === 'per1' ? 'P&L per Contract ($)' : 'P&L ($)';
 
     const traces = [
-        // Zero line
         { x: [lo, hi], y: [0, 0], mode: 'lines', line: { color: '#2a2a2a', width: 1 }, showlegend: false, hoverinfo: 'skip' },
-        // Loss fill
         { x: prices, y: pnls.map(v => Math.min(0, v)), mode: 'lines', line: { width: 0 },
           fill: 'tozeroy', fillcolor: 'rgba(231,76,60,0.07)', showlegend: false, hoverinfo: 'skip' },
-        // Profit fill
         { x: prices, y: pnls.map(v => Math.max(0, v)), mode: 'lines', line: { width: 0 },
           fill: 'tozeroy', fillcolor: 'rgba(0,168,107,0.08)', showlegend: false, hoverinfo: 'skip' },
-        // Main P&L line
-        { x: prices, y: pnls, name: 'P&L at Expiry', mode: 'lines',
+        { x: prices, y: pnls, name: payoffViewMode === 'per1' ? 'P&L per Contract' : 'P&L at Expiry', mode: 'lines',
           line: { color: '#00a86b', width: 2.5 },
           hovertemplate: 'Price: $%{x:.2f}<br>P&L: $%{y:.2f}<extra></extra>' },
-        // Spot marker
         { x: [spot, spot], y: [yRange[0], yRange[1]], name: `Spot $${spot.toFixed(2)}`,
           mode: 'lines', line: { color: '#555', width: 1.5, dash: 'dash' }, showlegend: true },
     ];
 
-    // Break-even markers
     if (bes.length) {
         traces.push({
             x: bes, y: bes.map(() => 0), name: 'Break-even',
@@ -615,35 +660,39 @@ function recalc() {
     const layout = {
         paper_bgcolor: '#111', plot_bgcolor: '#0a0a0a',
         font: { color: '#999', family: 'Inter', size: 11 },
-        xaxis: { gridcolor: '#1a1a1a', zerolinecolor: '#222', color: '#666', title: { text: 'Stock Price at Expiry ($)', font: { color: '#777' } } },
-        yaxis: { gridcolor: '#1a1a1a', zerolinecolor: '#333', color: '#666', title: { text: 'P&L ($)', font: { color: '#777' } }, range: yRange },
+        xaxis: { gridcolor: '#1a1a1a', zerolinecolor: '#222', color: '#666', range: [lo, hi],
+                 title: { text: 'Stock Price at Expiry ($)', font: { color: '#777' } } },
+        yaxis: { gridcolor: '#1a1a1a', zerolinecolor: '#333', color: '#666', range: yRange,
+                 title: { text: yLabel, font: { color: '#777' } } },
         margin: { l: 65, r: 20, t: 20, b: 55 },
         hovermode: 'x unified',
         legend: { bgcolor: 'rgba(17,17,17,0.9)', bordercolor: '#1a1a1a', borderwidth: 1 }
     };
 
-    // Always purge + newPlot to guarantee correct rendering
     try { Plotly.purge(chartEl); } catch(e) {}
     chartEl.innerHTML = '';
     Plotly.newPlot(chartEl, traces, layout, { responsive: true, displayModeBar: false });
 
-    // ── Stats ──────────────────────────────────────────────────────────────────
+    // ── Probability distribution chart ────────────────────────────────────────
+    drawDistributionChart(spot, sig, T, prices, pnls, bes, pop);
+
+    // ── Stats (always based on full strategy total, not per-contract view) ──────
     statsEl.style.display = 'block';
 
-    document.getElementById('s_maxProfit').textContent   = unlimProfit ? 'Unlimited' : '$' + fmt2(maxPnl);
-    document.getElementById('s_maxProfitSub').textContent = unlimProfit ? 'Uncapped upside' : 'Per 1 contract';
-    document.getElementById('s_maxLoss').textContent     = unlimLoss ? 'Unlimited' : '$' + fmt2(Math.abs(minPnl));
-    document.getElementById('s_maxLossSub').textContent  = unlimLoss ? '⚠ Naked short risk' : 'Per 1 contract';
+    document.getElementById('s_maxProfit').textContent    = unlimProfitAll ? 'Unlimited' : '$' + fmt2(allMax);
+    document.getElementById('s_maxProfitSub').textContent = unlimProfitAll ? 'Uncapped upside' : 'Strategy total';
+    document.getElementById('s_maxLoss').textContent      = unlimLossAll ? 'Unlimited' : '$' + fmt2(Math.abs(allMin));
+    document.getElementById('s_maxLossSub').textContent   = unlimLossAll ? '⚠ Naked short risk' : 'Strategy total';
 
     const npEl = document.getElementById('s_netPrem');
     npEl.textContent  = (netPrem >= 0 ? '+' : '') + '$' + fmt2(netPrem);
     npEl.className    = 'stat-value ' + (netPrem >= 0 ? 'pos' : 'neg');
     document.getElementById('s_netPremSub').textContent = netPrem >= 0 ? 'Net credit received' : 'Net debit paid';
 
-    const rr = (!unlimProfit && !unlimLoss && maxPnl > 0 && minPnl < 0)
-        ? (Math.abs(minPnl) / maxPnl).toFixed(2) + ' : 1' : '—';
+    const rr = (!unlimProfitAll && !unlimLossAll && allMax > 0 && allMin < 0)
+        ? (Math.abs(allMin) / allMax).toFixed(2) + ' : 1' : '—';
     document.getElementById('s_rr').textContent = rr;
-    document.getElementById('s_capital').textContent = unlimLoss ? 'Unlimited' : '$' + fmt2(Math.abs(minPnl));
+    document.getElementById('s_capital').textContent = unlimLossAll ? 'Unlimited' : '$' + fmt2(Math.abs(allMin));
     document.getElementById('s_pop').textContent = pop + '%';
 
     // Break-evens
@@ -652,20 +701,158 @@ function recalc() {
         ? bes.map(b => `<span class="be-chip">$${b.toFixed(2)}</span>`).join('')
         : '<span style="color:var(--muted);font-size:.83rem">No break-evens found in displayed range</span>';
 
-    // Summary
+    // Summary (based on total strategy)
+    const totalSpotPnl = computeAll([spot])[0];
     const lines = [];
     lines.push(`Strategy has <strong>${legs.length}</strong> leg${legs.length > 1 ? 's' : ''} with a net ${netPrem >= 0 ? `<span class="sum-ok">credit of $${fmt2(netPrem)}</span>` : `<span class="sum-warn">debit of $${fmt2(Math.abs(netPrem))}</span>`}.`);
-    if (unlimProfit) lines.push(`<span class="sum-ok">Unlimited profit potential</span> as the underlying moves favorably.`);
-    else if (maxPnl > 0) lines.push(`Max profit capped at <span class="sum-ok">$${fmt2(maxPnl)}</span>.`);
-    if (unlimLoss) lines.push(`<span class="sum-warn">⚠ Unlimited loss risk — understand margin requirements before trading.</span>`);
-    else if (minPnl < 0) lines.push(`Max loss limited to <span class="sum-warn">$${fmt2(Math.abs(minPnl))}</span>.`);
+    if (unlimProfitAll) lines.push(`<span class="sum-ok">Unlimited profit potential</span> as the underlying moves favorably.`);
+    else if (allMax > 0) lines.push(`Max profit capped at <span class="sum-ok">$${fmt2(allMax)}</span>.`);
+    if (unlimLossAll) lines.push(`<span class="sum-warn">⚠ Unlimited loss risk — understand margin requirements before trading.</span>`);
+    else if (allMin < 0) lines.push(`Max loss limited to <span class="sum-warn">$${fmt2(Math.abs(allMin))}</span>.`);
     if (bes.length === 1) lines.push(`Breaks even at <strong>$${bes[0].toFixed(2)}</strong>.`);
     else if (bes.length > 1) lines.push(`Breaks even at <strong>${bes.map(b => '$' + b.toFixed(2)).join('</strong> and <strong>')}</strong>.`);
-    lines.push(spotPnl >= 0
-        ? `At current spot $${spot.toFixed(2)}: <span class="sum-ok">+$${fmt2(spotPnl)}</span> in profit.`
-        : `At current spot $${spot.toFixed(2)}: <span class="sum-warn">-$${fmt2(Math.abs(spotPnl))}</span> at a loss.`);
+    lines.push(totalSpotPnl >= 0
+        ? `At current spot $${spot.toFixed(2)}: <span class="sum-ok">+$${fmt2(totalSpotPnl)}</span> in profit.`
+        : `At current spot $${spot.toFixed(2)}: <span class="sum-warn">-$${fmt2(Math.abs(totalSpotPnl))}</span> at a loss.`);
+    lines.push(`Log-normal probability of profit at expiry: <strong style="color:var(--green)">${pop}%</strong>.`);
 
     document.getElementById('strategySummary').innerHTML = lines.join(' ');
+}
+
+// ─── DISTRIBUTION CHART ───────────────────────────────────────────────────────
+function drawDistributionChart(spot, sig, T, prices, pnls, bes, pop) {
+    const distCard = document.getElementById('distChartCard');
+    const chartEl  = document.getElementById('chartDist');
+    distCard.style.display = 'block';
+
+    // Log-normal PDF: f(x) = 1/(x * sigT * sqrt(2π)) * exp(-((ln(x/S) - mu)^2) / (2*sigT^2))
+    const mu   = -0.5 * sig * sig * T;
+    const sigT = sig * Math.sqrt(T);
+
+    function lnPdf(x) {
+        if (x <= 0) return 0;
+        const z = (Math.log(x / spot) - mu) / sigT;
+        return Math.exp(-0.5 * z * z) / (x * sigT * Math.sqrt(2 * Math.PI));
+    }
+
+    const pdfs = prices.map(lnPdf);
+    const pdfMax = Math.max(...pdfs);
+
+    // Split into profit (pnl >= 0) and loss (pnl < 0) segments
+    const profitX = [], profitY = [], lossX = [], lossY = [];
+    prices.forEach((p, i) => {
+        if (pnls[i] >= 0) { profitX.push(p); profitY.push(pdfs[i]); lossX.push(p); lossY.push(0); }
+        else               { lossX.push(p);  lossY.push(pdfs[i]);  profitX.push(p); profitY.push(0); }
+    });
+
+    const traces = [
+        // Loss zone
+        { x: lossX, y: lossY, mode: 'lines', name: 'Loss Zone', line: { width: 0 },
+          fill: 'tozeroy', fillcolor: 'rgba(231,76,60,0.22)',
+          hovertemplate: 'Price: $%{x:.2f}<br>Density: %{y:.6f}<extra>Loss Zone</extra>' },
+        // Profit zone
+        { x: profitX, y: profitY, mode: 'lines', name: 'Profit Zone', line: { width: 0 },
+          fill: 'tozeroy', fillcolor: 'rgba(0,168,107,0.22)',
+          hovertemplate: 'Price: $%{x:.2f}<br>Density: %{y:.6f}<extra>Profit Zone</extra>' },
+        // Full PDF outline
+        { x: prices, y: pdfs, mode: 'lines', name: 'Price Distribution',
+          line: { color: '#666', width: 1.5 }, hoverinfo: 'skip', showlegend: false },
+        // Current spot
+        { x: [spot, spot], y: [0, pdfMax * 1.15], mode: 'lines', name: `Spot $${spot.toFixed(2)}`,
+          line: { color: '#888', width: 1.5, dash: 'dash' } },
+    ];
+
+    // Break-even lines
+    bes.forEach((be, i) => {
+        traces.push({
+            x: [be, be], y: [0, pdfMax * 1.15], mode: 'lines',
+            name: i === 0 ? 'Break-even' : null, showlegend: i === 0,
+            line: { color: '#f59e0b', width: 1.5, dash: 'dot' },
+        });
+    });
+
+    const layout = {
+        paper_bgcolor: '#111', plot_bgcolor: '#0a0a0a',
+        font: { color: '#999', family: 'Inter', size: 11 },
+        xaxis: { gridcolor: '#1a1a1a', zerolinecolor: '#222', color: '#666', range: [prices[0], prices[prices.length-1]],
+                 title: { text: 'Stock Price at Expiry ($)', font: { color: '#777' } } },
+        yaxis: { gridcolor: '#1a1a1a', zerolinecolor: '#222', color: '#666', range: [0, pdfMax * 1.25],
+                 title: { text: 'Probability Density', font: { color: '#777' } } },
+        margin: { l: 65, r: 20, t: 15, b: 55 },
+        hovermode: 'x unified',
+        legend: { bgcolor: 'rgba(17,17,17,0.9)', bordercolor: '#1a1a1a', borderwidth: 1 }
+    };
+
+    try { Plotly.purge(chartEl); } catch(e) {}
+    chartEl.innerHTML = '';
+    Plotly.newPlot(chartEl, traces, layout, { responsive: true, displayModeBar: false });
+
+    document.getElementById('distPop').innerHTML =
+        `Log-normal P(profit) = <strong style="color:var(--green)">${pop}%</strong> &nbsp;·&nbsp; ` +
+        `T = ${(T * 365).toFixed(0)} days &nbsp;·&nbsp; σ = ${(sig * 100).toFixed(1)}%`;
+}
+
+// ─── LOAD MARKET PRICES FOR LEGS ──────────────────────────────────────────────
+async function loadMarketPrices() {
+    if (!stratTicker) {
+        document.getElementById('mktPriceStatus').style.display = '';
+        document.getElementById('mktPriceStatus').textContent = 'Fetch a ticker first to load market prices.';
+        return;
+    }
+    const statusEl = document.getElementById('mktPriceStatus');
+    statusEl.style.display = '';
+    statusEl.textContent = 'Loading market prices…';
+
+    // Collect unique expiry timestamps needed
+    const uniqueTs = [...new Set(legs.filter(l => l.type !== 'stock').map(l => l.expiry_ts).filter(Boolean))];
+    if (!uniqueTs.length) {
+        statusEl.textContent = 'No option legs with known expiry timestamps found. Set expiry dates first.';
+        return;
+    }
+
+    let loaded = 0, updated = 0;
+    for (const ts of uniqueTs) {
+        if (!stratChainData[ts]) {
+            try {
+                const urls = [
+                    `https://query2.finance.yahoo.com/v7/finance/options/${stratTicker}?date=${ts}`,
+                    `https://query1.finance.yahoo.com/v7/finance/options/${stratTicker}?date=${ts}`,
+                ];
+                let data = null;
+                for (const url of urls) {
+                    try { data = await proxyFetch(url); if (data?.optionChain?.result?.[0]) break; } catch(e) {}
+                }
+                const res = data?.optionChain?.result?.[0];
+                stratChainData[ts] = {
+                    calls: res?.options?.[0]?.calls ?? [],
+                    puts:  res?.options?.[0]?.puts  ?? [],
+                };
+                loaded++;
+            } catch(e) { /* skip */ }
+        } else { loaded++; }
+    }
+
+    // Apply bid-ask midpoint to each leg
+    legs.forEach(leg => {
+        if (leg.type === 'stock' || !leg.expiry_ts) return;
+        const bucket = stratChainData[leg.expiry_ts];
+        if (!bucket) return;
+        const contracts = leg.type === 'call' ? bucket.calls : bucket.puts;
+        const contract  = contracts.find(c => Math.abs(c.strike - leg.strike) < 0.5);
+        if (contract) {
+            const bid = contract.bid ?? 0;
+            const ask = contract.ask ?? 0;
+            const mid = bid && ask ? (bid + ask) / 2 : (contract.lastPrice ?? leg.premium);
+            if (mid > 0) { leg.premium = +mid.toFixed(2); updated++; }
+        }
+    });
+
+    statusEl.textContent = updated
+        ? `✓ Updated ${updated} leg${updated > 1 ? 's' : ''} with live bid-ask midpoint prices.`
+        : 'No matching contracts found — check strikes and expiry dates.';
+    statusEl.style.color = updated ? 'var(--green)' : 'var(--red)';
+    renderLegs();
+    recalc();
 }
 
 // ─── PROXY FETCH (parallel — first success wins) ──────────────────────────────
@@ -703,6 +890,8 @@ async function proxyFetch(url) {
 async function stratFetchStock() {
     const ticker = document.getElementById('strat_ticker').value.trim().toUpperCase();
     if (!ticker) return;
+    stratTicker     = ticker;
+    stratChainData  = {}; // reset chain cache on new ticker
 
     const btn   = document.getElementById('stratFetchBtn');
     const errEl = document.getElementById('stratError');
@@ -765,6 +954,14 @@ async function stratFetchStock() {
                 const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                 return { ts, label, isoDate: iso };
             });
+            // Cache chain data for nearest expiry from the initial fetch
+            if (optResult.options?.[0]) {
+                const nearestTs = stratExpiryDates[0].ts;
+                stratChainData[nearestTs] = {
+                    calls: optResult.options[0].calls ?? [],
+                    puts:  optResult.options[0].puts  ?? [],
+                };
+            }
             // Assign first expiry to all existing legs
             if (legs.length && stratExpiryDates.length) {
                 legs.forEach(l => { l.expiry_ts = stratExpiryDates[0].ts; l.expiry_date = null; });
