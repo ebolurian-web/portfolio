@@ -190,6 +190,41 @@
         .heatmap-controls select { background: var(--bg2); border: 1px solid var(--border); color: var(--text);
             padding: 0.4rem 0.75rem; font-size: 0.82rem; font-family: inherit; }
 
+        /* OPTIONS CHAIN */
+        .options-section { margin-bottom: 2rem; display: none; }
+        .options-section.visible { display: block; }
+        .expiry-bar { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+        .expiry-bar label { font-size: 0.8rem; color: var(--muted); }
+        .expiry-select { background: var(--bg2); border: 1px solid var(--border); color: var(--text);
+            padding: 0.45rem 0.9rem; font-size: 0.82rem; font-family: inherit; cursor: pointer; }
+        .expiry-select:focus { outline: none; border-color: var(--green); }
+        .chain-toggle { display: flex; gap: 0.5rem; }
+        .chain-btn { background: var(--bg2); border: 1px solid var(--border); color: var(--muted);
+            padding: 0.35rem 1rem; font-size: 0.78rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+        .chain-btn.active-call { border-color: var(--green); color: var(--green); background: rgba(0,168,107,0.08); }
+        .chain-btn.active-put  { border-color: var(--red);   color: var(--red);   background: rgba(231,76,60,0.08); }
+        .chain-loading { color: var(--muted); font-size: 0.85rem; padding: 1rem 0; }
+        .options-table-wrap { overflow-x: auto; }
+        table.options-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        table.options-table th { color: var(--muted); font-weight: 500; text-align: right; padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid var(--border); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.07em; white-space: nowrap; }
+        table.options-table th:first-child { text-align: left; }
+        table.options-table td { padding: 0.45rem 0.75rem; text-align: right; border-bottom: 1px solid #111;
+            white-space: nowrap; cursor: pointer; transition: background 0.15s; }
+        table.options-table td:first-child { text-align: left; font-weight: 600; }
+        table.options-table tr:hover td { background: #1a1a1a; }
+        table.options-table tr.itm td { background: rgba(0,168,107,0.04); }
+        table.options-table tr.itm td:first-child { color: var(--green); }
+        table.options-table tr.itm-put td { background: rgba(231,76,60,0.04); }
+        table.options-table tr.itm-put td:first-child { color: var(--red); }
+        .diff-pos { color: var(--green); }
+        .diff-neg { color: var(--red); }
+        .itm-badge { font-size: 0.6rem; font-weight: 700; padding: 1px 5px; border-radius: 2px;
+            margin-left: 5px; vertical-align: middle; }
+        .itm-badge.call { background: rgba(0,168,107,0.2); color: var(--green); }
+        .itm-badge.put  { background: rgba(231,76,60,0.2);  color: var(--red); }
+        .chain-note { font-size: 0.72rem; color: var(--muted); margin-top: 0.75rem; }
+
         @media (max-width: 900px) {
             .main-grid { grid-template-columns: 1fr; }
             .greeks-grid { grid-template-columns: repeat(3, 1fr); }
@@ -245,6 +280,39 @@
             </div>
         </div>
         <div class="stock-error" id="stockError">Could not fetch data. Check ticker and try again.</div>
+    </div>
+
+    <!-- OPTIONS CHAIN -->
+    <div class="card options-section" id="optionsSection">
+        <div class="card-title">Live Options Chain <span style="font-size:0.75rem;color:var(--muted);font-family:'Inter',sans-serif;font-weight:400">— click any row to load into calculator</span></div>
+        <div class="expiry-bar">
+            <label>Expiry:</label>
+            <select class="expiry-select" id="expirySelect" onchange="loadChain()"></select>
+            <div class="chain-toggle">
+                <button class="chain-btn active-call" id="chn_call" onclick="setChainSide('call')">Calls</button>
+                <button class="chain-btn" id="chn_put" onclick="setChainSide('put')">Puts</button>
+            </div>
+        </div>
+        <div class="chain-loading" id="chainLoading" style="display:none">Loading options chain…</div>
+        <div class="options-table-wrap">
+            <table class="options-table" id="optionsTable">
+                <thead>
+                    <tr>
+                        <th>Strike</th>
+                        <th>Last</th>
+                        <th>Bid</th>
+                        <th>Ask</th>
+                        <th>Volume</th>
+                        <th>Open Int.</th>
+                        <th>Mkt IV</th>
+                        <th>Model Price</th>
+                        <th>Difference</th>
+                    </tr>
+                </thead>
+                <tbody id="chainBody"></tbody>
+            </table>
+        </div>
+        <p class="chain-note">Data via Yahoo Finance (15-min delayed). Model price uses your current σ and r inputs. Difference = Market Last − Model Price.</p>
     </div>
 
     <!-- MAIN GRID -->
@@ -704,43 +772,67 @@ document.querySelectorAll('.ticker-chip').forEach(chip => {
         fetchStock();
     });
 });
-
 document.getElementById('tickerInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') fetchStock();
 });
 
-// ─── STOCK API ───────────────────────────────────────────────────────────────
+// ─── PROXY HELPER ────────────────────────────────────────────────────────────
+async function proxyFetch(url) {
+    const proxies = [
+        'https://corsproxy.io/?' + encodeURIComponent(url),
+        'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+    ];
+    let lastErr;
+    for (const proxy of proxies) {
+        try {
+            const res = await fetch(proxy, { signal: AbortSignal.timeout(10000) });
+            if (!res.ok) continue;
+            const text = await res.text();
+            return JSON.parse(text);
+        } catch (e) { lastErr = e; }
+    }
+    throw lastErr || new Error('All proxies failed');
+}
+
+// ─── STOCK FETCH ─────────────────────────────────────────────────────────────
+let currentTicker = '';
+let expiryDates   = [];
+let chainSide     = 'call';
+let chainData     = {};   // keyed by timestamp → { calls, puts }
+
 async function fetchStock() {
     const ticker = document.getElementById('tickerInput').value.trim().toUpperCase();
     if (!ticker) return;
+    currentTicker = ticker;
     const btn = document.getElementById('fetchBtn');
     btn.disabled = true; btn.textContent = 'Loading…';
     document.getElementById('stockError').style.display = 'none';
     document.getElementById('stockInfo').classList.add('hidden');
+    document.getElementById('optionsSection').classList.remove('visible');
+
     try {
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y&includePrePost=false`;
-        const proxy = 'https://corsproxy.io/?' + encodeURIComponent(url);
-        const res = await fetch(proxy);
-        if (!res.ok) throw new Error('API error');
-        const data = await res.json();
-        const result = data?.chart?.result?.[0];
+        // Fetch chart data (price + historical vol)
+        const chartUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y&includePrePost=false`;
+        const chartData = await proxyFetch(chartUrl);
+        const result = chartData?.chart?.result?.[0];
         if (!result) throw new Error('No data');
+
         const meta   = result.meta;
         const closes = result.indicators?.quote?.[0]?.close?.filter(Boolean) ?? [];
         const price  = meta.regularMarketPrice ?? meta.chartPreviousClose;
         const hi52   = meta.fiftyTwoWeekHigh;
         const lo52   = meta.fiftyTwoWeekLow;
         const divYld = meta.dividendYield ?? 0;
-        // Historical vol: annualised std of daily log-returns
+
         let hv = 0;
         if (closes.length > 5) {
             const rets = [];
-            for (let i = 1; i < closes.length; i++) rets.push(Math.log(closes[i] / closes[i-1]));
-            const mean = rets.reduce((a,b) => a+b, 0) / rets.length;
-            const variance = rets.reduce((a,b) => a + (b-mean)**2, 0) / (rets.length - 1);
+            for (let i = 1; i < closes.length; i++) rets.push(Math.log(closes[i] / closes[i - 1]));
+            const mean = rets.reduce((a, b) => a + b, 0) / rets.length;
+            const variance = rets.reduce((a, b) => a + (b - mean) ** 2, 0) / (rets.length - 1);
             hv = Math.sqrt(variance * 252) * 100;
         }
-        // Populate UI
+
         document.getElementById('stockName').textContent  = meta.longName ?? ticker;
         document.getElementById('stockPrice').textContent = '$' + price.toFixed(2);
         document.getElementById('stock52H').textContent   = hi52 ? '$' + hi52.toFixed(2) : '—';
@@ -748,17 +840,157 @@ async function fetchStock() {
         document.getElementById('stockVol').textContent   = hv ? hv.toFixed(1) + '%' : '—';
         document.getElementById('stockDiv').textContent   = divYld ? (divYld * 100).toFixed(2) + '%' : '0%';
         document.getElementById('stockInfo').classList.remove('hidden');
-        // Auto-fill parameters
-        document.getElementById('S').value   = price.toFixed(2);
-        document.getElementById('K').value   = price.toFixed(2);
+
+        document.getElementById('S').value = price.toFixed(2);
+        document.getElementById('K').value = price.toFixed(2);
         if (hv > 0) { document.getElementById('sig').value = hv.toFixed(1); document.getElementById('sig_sl').value = hv.toFixed(1); }
-        if (divYld) { document.getElementById('q').value   = (divYld * 100).toFixed(2); document.getElementById('q_sl').value = (divYld * 100).toFixed(2); }
+        if (divYld)  { document.getElementById('q').value   = (divYld * 100).toFixed(2); document.getElementById('q_sl').value = (divYld * 100).toFixed(2); }
         calc();
+
+        // Fetch options expiry dates
+        const optUrl  = `https://query2.finance.yahoo.com/v7/finance/options/${ticker}`;
+        const optData = await proxyFetch(optUrl);
+        const optResult = optData?.optionChain?.result?.[0];
+        if (optResult?.expirationDates?.length) {
+            expiryDates = optResult.expirationDates;
+            chainData   = {};
+            populateExpirySelect();
+            // Seed nearest expiry from the already-returned options
+            const nearest = optResult.expirationDates[0];
+            if (optResult.options?.[0]) {
+                chainData[nearest] = {
+                    calls: optResult.options[0].calls ?? [],
+                    puts:  optResult.options[0].puts  ?? [],
+                };
+            }
+            document.getElementById('optionsSection').classList.add('visible');
+            renderChain();
+        }
     } catch (e) {
+        document.getElementById('stockError').textContent = 'Could not fetch data. Check ticker or try again shortly.';
         document.getElementById('stockError').style.display = 'block';
     } finally {
         btn.disabled = false; btn.textContent = 'Fetch Live Data ↗';
     }
+}
+
+// ─── OPTIONS CHAIN ────────────────────────────────────────────────────────────
+function populateExpirySelect() {
+    const sel = document.getElementById('expirySelect');
+    sel.innerHTML = '';
+    expiryDates.forEach(ts => {
+        const d = new Date(ts * 1000);
+        const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const opt = document.createElement('option');
+        opt.value = ts; opt.textContent = label;
+        sel.appendChild(opt);
+    });
+}
+
+async function loadChain() {
+    const ts = parseInt(document.getElementById('expirySelect').value);
+    if (!ts) return;
+    if (chainData[ts]) { renderChain(); return; }
+
+    document.getElementById('chainLoading').style.display = 'block';
+    document.getElementById('chainBody').innerHTML = '';
+    try {
+        const url  = `https://query2.finance.yahoo.com/v7/finance/options/${currentTicker}?date=${ts}`;
+        const data = await proxyFetch(url);
+        const res  = data?.optionChain?.result?.[0];
+        chainData[ts] = {
+            calls: res?.options?.[0]?.calls ?? [],
+            puts:  res?.options?.[0]?.puts  ?? [],
+        };
+        renderChain();
+    } catch(e) {
+        document.getElementById('chainBody').innerHTML =
+            '<tr><td colspan="9" style="color:var(--red);padding:1rem">Failed to load chain.</td></tr>';
+    } finally {
+        document.getElementById('chainLoading').style.display = 'none';
+    }
+}
+
+function setChainSide(side) {
+    chainSide = side;
+    document.getElementById('chn_call').className = 'chain-btn' + (side === 'call' ? ' active-call' : '');
+    document.getElementById('chn_put').className  = 'chain-btn' + (side === 'put'  ? ' active-put'  : '');
+    renderChain();
+}
+
+function renderChain() {
+    const ts       = parseInt(document.getElementById('expirySelect').value);
+    const bucket   = chainData[ts];
+    if (!bucket) { loadChain(); return; }
+    const contracts = chainSide === 'call' ? bucket.calls : bucket.puts;
+    const S   = parseFloat(document.getElementById('S').value);
+    const r   = parseFloat(document.getElementById('r').value) / 100;
+    const sig = parseFloat(document.getElementById('sig').value) / 100;
+    const q   = parseFloat(document.getElementById('q').value) / 100;
+    const now = Date.now() / 1000;
+    const T   = Math.max(0.001, (ts - now) / (365 * 24 * 3600));
+
+    const body = document.getElementById('chainBody');
+    body.innerHTML = '';
+    contracts.forEach(c => {
+        const strike  = c.strike;
+        const last    = c.lastPrice ?? 0;
+        const bid     = c.bid ?? 0;
+        const ask     = c.ask ?? 0;
+        const vol     = c.volume ?? 0;
+        const oi      = c.openInterest ?? 0;
+        const mktIV   = c.impliedVolatility ? (c.impliedVolatility * 100).toFixed(1) + '%' : '—';
+        const itm     = c.inTheMoney ?? false;
+        const res     = bs(S, strike, T, r, sig, q);
+        const modelPx = res ? (chainSide === 'call' ? res.call : res.put) : null;
+        const diff    = modelPx !== null ? (last - modelPx) : null;
+
+        const tr = document.createElement('tr');
+        if (itm) tr.classList.add(chainSide === 'call' ? 'itm' : 'itm-put');
+
+        const itmBadge = itm ? `<span class="itm-badge ${chainSide}">ITM</span>` : '';
+        const diffHtml = diff !== null
+            ? `<span class="${diff >= 0 ? 'diff-pos' : 'diff-neg'}">${diff >= 0 ? '+' : ''}$${Math.abs(diff).toFixed(2)}</span>`
+            : '—';
+
+        tr.innerHTML = `
+            <td>$${strike.toFixed(2)}${itmBadge}</td>
+            <td>$${last.toFixed(2)}</td>
+            <td>${bid ? '$' + bid.toFixed(2) : '—'}</td>
+            <td>${ask ? '$' + ask.toFixed(2) : '—'}</td>
+            <td>${vol ? vol.toLocaleString() : '—'}</td>
+            <td>${oi  ? oi.toLocaleString()  : '—'}</td>
+            <td>${mktIV}</td>
+            <td>${modelPx !== null ? '$' + modelPx.toFixed(2) : '—'}</td>
+            <td>${diffHtml}</td>`;
+
+        tr.addEventListener('click', () => populateFromContract(strike, T, last, c.impliedVolatility));
+        body.appendChild(tr);
+    });
+
+    if (!contracts.length) {
+        body.innerHTML = '<tr><td colspan="9" style="color:var(--muted);padding:1rem">No contracts for this expiry.</td></tr>';
+    }
+}
+
+function populateFromContract(strike, T, mktPrice, mktIV) {
+    document.getElementById('K').value     = strike.toFixed(2);
+    const tVal = Math.max(0.01, parseFloat(T.toFixed(4)));
+    document.getElementById('T').value    = tVal;
+    document.getElementById('T_sl').value = tVal;
+    if (mktIV && mktIV > 0) {
+        const ivPct = Math.min(150, (mktIV * 100)).toFixed(1);
+        document.getElementById('sig').value    = ivPct;
+        document.getElementById('sig_sl').value = ivPct;
+    }
+    document.getElementById('ivMarketPrice').value = mktPrice.toFixed(2);
+    setIVType(chainSide);
+    calc();
+    // Switch to IV solver tab so user sees the result
+    const ivTab = document.querySelector('.tab[onclick*="iv"]');
+    showTab('iv', ivTab);
+    solveIV();
+    window.scrollTo({ top: document.getElementById('tab-iv').offsetTop - 20, behavior: 'smooth' });
 }
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
