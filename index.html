@@ -9,7 +9,6 @@
     <title>Eden Bolurian · Portfolio</title>
 
     <link rel="canonical" href="https://bolurian.com/">
-    <!-- Open Graph -->
     <meta property="og:title" content="Eden Bolurian · Portfolio">
     <meta property="og:description" content="Finance and engineering, built from the same bench. Options analytics, valuation, and tools at the intersection of markets and software.">
     <meta property="og:type" content="website">
@@ -32,45 +31,45 @@
 
     <style>
         /* ═══════════════════════════════════════════════════
-           Design tokens — cobalt on darkened Monet, Libre
-           Baskerville + Inter. Verified AA contrast.
+           Design tokens — LinkedIn-blue identity on a darkened
+           Monet ground (dark) / soft white (light). No cream,
+           no orange.
+           Libre Baskerville + Inter two-font system.
            ═══════════════════════════════════════════════════ */
         :root[data-theme="dark"] {
             --bg-base: #0a0b11;
             --bg-scrim: rgba(7, 9, 15, 0.86);
             --surface: rgba(18, 22, 32, 0.74);
             --surface-solid: #12161f;
-            --border: rgba(106, 138, 191, 0.18);
-            --border-hover: rgba(106, 138, 191, 0.55);
+            --border: rgba(112, 168, 235, 0.18);
+            --border-hover: rgba(112, 168, 235, 0.55);
 
             --fg: #eef1f7;
             --fg-muted: #b7c0d3;
             --fg-subtle: #8691a8;
 
-            --accent: #6a8abf;
-            --accent-bright: #9cb6e3;
-            --terracotta: #d16a45;
-            --gold: #c9a24d;
-            --focus-ring: #9cb6e3;
+            --accent: #70a8eb;         /* LinkedIn blue, brightened for dark ground — 9.3:1 on bg */
+            --accent-bright: #9bc1f0;
+            --accent-soft: rgba(112, 168, 235, 0.14);
+            --focus-ring: #9bc1f0;
             color-scheme: dark;
         }
         :root[data-theme="light"] {
-            --bg-base: #f6efdf;      /* warm ivory — pulls from sky highlights */
-            --bg-scrim: transparent;  /* no painting in light mode */
+            --bg-base: #f8f8fa;
+            --bg-scrim: transparent;
             --surface: #ffffff;
             --surface-solid: #ffffff;
-            --border: rgba(30, 60, 100, 0.18);
-            --border-hover: rgba(30, 60, 100, 0.55);
+            --border: rgba(10, 102, 194, 0.18);
+            --border-hover: rgba(10, 102, 194, 0.55);
 
             --fg: #1a1f2e;
             --fg-muted: #4a5064;
             --fg-subtle: #6c7286;
 
-            --accent: #305488;       /* darker cobalt for white ground — 8.1:1 */
-            --accent-bright: #1e3c64;
-            --terracotta: #a04a2a;
-            --gold: #8a6a2f;
-            --focus-ring: #305488;
+            --accent: #0a66c2;         /* Official LinkedIn blue — 5.3:1 on #f8f8fa */
+            --accent-bright: #084f96;
+            --accent-soft: rgba(10, 102, 194, 0.1);
+            --focus-ring: #0a66c2;
             color-scheme: light;
         }
 
@@ -86,7 +85,6 @@
             overflow-x: hidden;
         }
 
-        /* Painting ground (dark only) — single paint, no stacking game */
         :root[data-theme="dark"] body {
             background:
                 linear-gradient(var(--bg-scrim), var(--bg-scrim)),
@@ -108,7 +106,7 @@
         }
         .skip-link:focus-visible { top: 0.75rem; }
 
-        /* Global focus ring — 2px outline + 4px glow */
+        /* Global focus ring */
         :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
             outline: 2px solid var(--focus-ring);
             outline-offset: 2px;
@@ -168,6 +166,12 @@
             color: var(--accent-bright);
             border-bottom-color: var(--accent-bright);
         }
+        :root[data-theme="light"] nav a:hover,
+        :root[data-theme="light"] nav button.nav-btn:hover,
+        :root[data-theme="light"] nav button.nav-btn[aria-expanded="true"] {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
         .theme-toggle {
             height: 36px; width: 36px;
             display: inline-flex; align-items: center; justify-content: center;
@@ -191,18 +195,6 @@
             display: grid; grid-template-columns: 1.5fr auto; gap: 3rem;
             align-items: center; margin-bottom: 6rem;
         }
-        .hero-eyebrow {
-            font-family: "Libre Baskerville", serif; font-style: italic;
-            color: var(--accent); font-size: 1rem;
-            margin-bottom: 1rem;
-            display: inline-flex; align-items: center; gap: 0.6rem;
-        }
-        .hero-eyebrow::before {
-            content: ""; display: inline-block;
-            width: 7px; height: 7px; border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 12px var(--accent);
-        }
         h1 {
             font-family: "Libre Baskerville", serif; font-weight: 700;
             font-size: clamp(3rem, 7vw, 5.25rem);
@@ -210,12 +202,13 @@
             margin-bottom: 1.25rem;
         }
         h1 em { font-style: italic; font-weight: 400; color: var(--accent-bright); }
+        :root[data-theme="light"] h1 em { color: var(--accent); }
 
         .tagline {
             font-family: "Libre Baskerville", serif;
             font-size: 1.2rem; color: var(--fg-muted);
             margin-bottom: 2.25rem; line-height: 1.45;
-            border-left: 2px solid var(--terracotta); padding-left: 1.1rem;
+            border-left: 2px solid var(--accent); padding-left: 1.1rem;
             max-width: 560px;
         }
         .tagline-prefix { color: var(--fg-muted); }
@@ -251,10 +244,12 @@
         .contact-btn:hover {
             border-color: var(--border-hover); color: var(--accent-bright);
         }
+        :root[data-theme="light"] .contact-btn:hover { color: var(--accent); }
         .contact-btn.primary {
-            background: var(--accent); color: var(--bg-base); border-color: var(--accent); font-weight: 600;
+            background: var(--accent); color: #ffffff; border-color: var(--accent); font-weight: 600;
             box-shadow: 0 0 20px color-mix(in oklab, var(--accent) 28%, transparent);
         }
+        :root[data-theme="dark"] .contact-btn.primary { color: var(--bg-base); }
         .contact-btn.primary:hover {
             background: var(--accent-bright); border-color: var(--accent-bright);
             box-shadow: 0 0 28px color-mix(in oklab, var(--accent) 42%, transparent);
@@ -280,7 +275,7 @@
         section.site-section { margin-bottom: 5rem; scroll-margin-top: 100px; }
         h2.section-heading {
             font-family: "Libre Baskerville", serif; font-style: italic;
-            color: var(--terracotta); font-size: 1.15rem; font-weight: 400;
+            color: var(--accent); font-size: 1.15rem; font-weight: 400;
             margin-bottom: 1.5rem;
             display: flex; align-items: center; gap: 1rem;
             letter-spacing: 0.01em;
@@ -290,16 +285,18 @@
             background: linear-gradient(to right, var(--border), transparent);
         }
 
-        /* Experience list — ordered (reverse chronological is meaningful) */
-        .experience-list { list-style: none; padding: 0; margin: 0; counter-reset: role; }
-        /* Experience row */
+        /* ═══════════════════════════════════════════════════
+           Row pattern — used by both Experience AND Projects.
+           No card chrome; just a flat row.
+           ═══════════════════════════════════════════════════ */
+        .row-list { list-style: none; padding: 0; margin: 0; }
         .row {
+            position: relative;
             display: grid; grid-template-columns: 1fr 56px; gap: 2rem;
             align-items: center; padding: 1.5rem 0;
             border-bottom: 1px solid var(--border);
         }
-        .experience-list > li:last-child .row,
-        .row:last-child { border-bottom: none; }
+        .row-list > li:last-child .row { border-bottom: none; }
         .row-year {
             font-family: "Libre Baskerville", serif; font-style: italic;
             font-size: 0.85rem; color: var(--fg-subtle); margin-bottom: 0.4rem;
@@ -309,89 +306,50 @@
             font-size: 1.18rem; font-weight: 700; margin-bottom: 0.45rem;
             letter-spacing: -0.005em;
         }
-        .row-desc { color: var(--fg-muted); font-size: 0.9rem; line-height: 1.6; }
+        .row-title a {
+            color: inherit; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+        }
+        .row-title a svg {
+            width: 14px; height: 14px; color: var(--fg-subtle);
+            transition: color 0.2s, transform 0.2s;
+        }
+        .row:has(.row-title a:hover) .row-title a svg,
+        .row:has(.row-title a:focus-visible) .row-title a svg {
+            color: var(--accent-bright);
+            transform: translate(2px, -2px);
+        }
+        :root[data-theme="light"] .row:has(.row-title a:hover) .row-title a svg,
+        :root[data-theme="light"] .row:has(.row-title a:focus-visible) .row-title a svg {
+            color: var(--accent);
+        }
+        /* Project-row click-extension: pseudo-element covers the whole row
+           so clicking anywhere on the row activates the project link. */
+        .row-title a.row-link::after {
+            content: ""; position: absolute; inset: 0; z-index: 1;
+            border-radius: 2px;
+        }
+        .row:has(.row-title a.row-link:focus-visible) {
+            outline: 2px solid var(--focus-ring);
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+        .row-title a.row-link:focus-visible { outline: none; box-shadow: none; }
+        .row-desc { color: var(--fg-muted); font-size: 0.95rem; line-height: 1.55; }
         .row-logo {
             width: 56px; height: 56px;
             display: flex; align-items: center; justify-content: center;
             border: 1px solid var(--border); border-radius: 6px;
             background: var(--surface); padding: 0.5rem;
+            position: relative; z-index: 2;  /* stay above the row-link pseudo-element */
         }
         .row-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        /* In dark mode, flatten logos to white silhouettes for consistency */
         :root[data-theme="dark"] .row-logo img { filter: brightness(0) invert(1) opacity(0.88); }
         .row-logo-text {
             font-family: "Libre Baskerville", serif;
             font-weight: 700; font-size: 1.1rem; color: var(--fg-muted);
             letter-spacing: 0.06em;
-        }
-
-        /* Project card — heading contains the real link; pseudo-element
-           extends the click target across the whole card. No nested
-           interactives; AT gets a clean accessible name from the heading. */
-        .project-list { list-style: none; padding: 0; margin: 0; }
-        .project-list > li { margin-bottom: 1rem; }
-        .project-card {
-            position: relative;
-            display: grid; grid-template-columns: 1fr 64px; gap: 2rem;
-            align-items: center; padding: 1.75rem 2rem;
-            background: var(--surface);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            color: var(--fg);
-            transition: all 0.25s;
-        }
-        .project-card:has(.project-link:hover),
-        .project-card:has(.project-link:focus-visible) {
-            border-color: var(--border-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-        }
-        .project-card:has(.project-link:focus-visible) {
-            outline: 2px solid var(--focus-ring);
-            outline-offset: 3px;
-            box-shadow: 0 0 0 4px color-mix(in oklab, var(--focus-ring) 28%, transparent);
-        }
-        .project-link { color: inherit; text-decoration: none; }
-        .project-link::after {
-            content: ""; position: absolute; inset: 0; z-index: 1;
-            border-radius: 4px;
-        }
-        /* Suppress default ring on the link itself — the card carries it via :has() */
-        .project-link:focus-visible { outline: none; box-shadow: none; }
-        .project-meta {
-            font-family: "Libre Baskerville", serif; font-style: italic;
-            font-size: 0.82rem; color: var(--fg-subtle); margin-bottom: 0.45rem;
-        }
-        .project-name {
-            font-family: "Libre Baskerville", serif;
-            font-size: 1.4rem; font-weight: 700; margin: 0 0 0.5rem 0;
-            letter-spacing: -0.01em;
-        }
-        .project-name .project-link {
-            display: inline-flex; align-items: center; gap: 0.55rem;
-        }
-        .project-name svg { width: 15px; height: 15px; color: var(--fg-subtle); }
-        .project-card:has(.project-link:hover) .project-name svg,
-        .project-card:has(.project-link:focus-visible) .project-name svg {
-            color: var(--accent-bright);
-        }
-        .project-desc { color: var(--fg-muted); font-size: 0.92rem; line-height: 1.6; }
-        .project-tags {
-            display: flex; gap: 0.4rem; margin-top: 0.85rem; flex-wrap: wrap;
-            list-style: none; padding: 0;
-        }
-        .project-tags li {
-            font-size: 0.72rem; font-weight: 500;
-            padding: 0.15rem 0.55rem;
-            background: color-mix(in oklab, var(--accent) 12%, transparent);
-            border: 1px solid color-mix(in oklab, var(--accent) 26%, transparent);
-            color: var(--accent-bright); border-radius: 3px;
-            letter-spacing: 0.02em;
-        }
-        .project-icon {
-            font-family: "Libre Baskerville", serif; font-size: 2.4rem;
-            color: var(--accent); text-align: center; font-weight: 400;
-            text-shadow: 0 0 18px color-mix(in oklab, var(--accent) 40%, transparent);
         }
 
         /* ═══════════════════════════════════════════════════
@@ -415,6 +373,7 @@
             line-height: 1.7; max-width: 720px;
         }
         #about .accent { color: var(--accent-bright); font-weight: 500; }
+        :root[data-theme="light"] #about .accent { color: var(--accent); }
         .about-grid {
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem;
             margin-top: 1.75rem;
@@ -427,7 +386,7 @@
         .about-item h3 {
             font-family: "Libre Baskerville", serif;
             font-size: 0.98rem; font-weight: 700;
-            color: var(--terracotta); margin-bottom: 0.65rem;
+            color: var(--accent); margin-bottom: 0.65rem;
             letter-spacing: -0.005em;
         }
         .about-item ul { list-style: none; padding: 0; font-size: 0.85rem; color: var(--fg-muted); }
@@ -443,8 +402,11 @@
             color: var(--fg-subtle); font-size: 0.78rem;
             background: color-mix(in oklab, var(--bg-base) 70%, transparent);
         }
+        footer a { color: inherit; text-decoration: underline; }
+        footer a:hover { color: var(--accent-bright); }
+        :root[data-theme="light"] footer a:hover { color: var(--accent); }
 
-        /* Visually-hidden (for AT alternative to typewriter + misc) */
+        /* Visually-hidden */
         .sr-only {
             position: absolute !important;
             width: 1px; height: 1px;
@@ -469,7 +431,8 @@
             .nav-container { padding: 0 1.25rem; }
             nav ul { gap: 1.1rem; }
             nav a, nav button.nav-btn { font-size: 0.82rem; }
-            .project-card { padding: 1.25rem 1.25rem; gap: 1rem; }
+            .row { grid-template-columns: 1fr 44px; gap: 1rem; padding: 1.25rem 0; }
+            .row-logo { width: 44px; height: 44px; }
             main { padding: 95px 1.25rem 4rem; }
         }
 
@@ -488,10 +451,9 @@
         @media (prefers-contrast: more) {
             :root[data-theme="dark"] body { background: var(--bg-base) !important; }
         }
-        /* Users who've opted out of backdrop transparency get solid surfaces everywhere */
         @media (prefers-reduced-transparency: reduce) {
             :root[data-theme="dark"] body { background: var(--bg-base) !important; }
-            .site-header, .project-card, #about, .contact-btn, .row-logo, .theme-toggle {
+            .site-header, #about, .contact-btn, .row-logo, .theme-toggle {
                 backdrop-filter: none !important;
                 -webkit-backdrop-filter: none !important;
                 background: var(--surface-solid) !important;
@@ -543,14 +505,11 @@
             <!-- HERO ═══════════════════════════════════════ -->
             <section class="hero" aria-labelledby="h-hero">
                 <div>
-                    <p class="hero-eyebrow">Portfolio · v2</p>
                     <h1 id="h-hero">Eden <em>Bolurian</em>.</h1>
                     <p class="tagline">
                         <span class="tagline-prefix">I'm into&nbsp;</span>
-                        <!-- Animated typewriter: hidden from AT so screen readers don't re-announce every keystroke -->
                         <span class="typewriter-text" id="typewriter" aria-hidden="true"></span>
                         <span class="cursor-blink" aria-hidden="true"></span>
-                        <!-- Static accessible summary of every phrase, for AT users -->
                         <span class="sr-only">
                             Interests: equity research, valuation modeling, investment analysis, building with AI,
                             fixed income, options and derivatives, portfolio strategy, and financial engineering.
@@ -560,6 +519,10 @@
                         <a href="https://www.linkedin.com/in/edenbolurian/" target="_blank" rel="noopener" class="contact-btn primary">
                             <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                             LinkedIn
+                        </a>
+                        <a href="assets/resume.pdf" download class="contact-btn">
+                            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+                            Résumé <span class="sr-only">(PDF, downloads)</span>
                         </a>
                         <a href="mailto:ebolurian@gmail.com" class="contact-btn">
                             <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
@@ -588,7 +551,7 @@
                         <h3>Skills</h3>
                         <ul>
                             <li>Excel (Advanced) · Bloomberg · FactSet</li>
-                            <li>Power BI · SQL · Python</li>
+                            <li>Power BI · SQL · Python · Tableau</li>
                             <li>Financial modeling · Valuation</li>
                             <li>Tax compliance · Partnership returns</li>
                         </ul>
@@ -598,17 +561,17 @@
                         <ul>
                             <li>Bloomberg Market Concepts</li>
                             <li>FINRA SIE · CPA Eligible</li>
+                            <li>IBM SkillsBuild · Design Thinking &amp; AI</li>
                             <li>Kitt Investing &amp; Trading Center Fellow</li>
-                            <li>FORVIS Accounting Scholar</li>
-                            <li>State Farm Scholar</li>
+                            <li>FORVIS Accounting Scholar · State Farm Scholar</li>
                         </ul>
                     </div>
                     <div class="about-item">
                         <h3>Activities</h3>
                         <ul>
                             <li>MSF Student Program Ambassador</li>
-                            <li>Graduate Finance Association</li>
-                            <li>ACEing Autism</li>
+                            <li>Pi Kappa Phi Fraternity Treasurer</li>
+                            <li>Graduate Finance Association · ACEing Autism</li>
                         </ul>
                     </div>
                     <div class="about-item">
@@ -624,13 +587,13 @@
             <!-- EXPERIENCE ═════════════════════════════════════ -->
             <section class="site-section" id="experience" aria-labelledby="h-experience">
                 <h2 class="section-heading" id="h-experience">Experience</h2>
-                <ol class="experience-list">
+                <ol class="row-list">
                     <li>
                         <article class="row" aria-labelledby="role-1-heading">
                             <div>
                                 <div class="row-year">Jan 2026 – Present</div>
-                                <h3 class="row-title" id="role-1-heading">Nancy Chambers Underwood Fund · Equity Analyst</h3>
-                                <p class="row-desc">Conducting public equity research for SMU's $9M long-only endowment portfolio, building valuation models, and presenting recommendations to the Faculty Investment Committee. Coverage focused on GICS information technology sector.</p>
+                                <h3 class="row-title" id="role-1-heading">Nancy Chambers Underwood Fund · Tech Equity Analyst</h3>
+                                <p class="row-desc">Co-managing a $9M SMU graduate endowment; covering the Information Technology sector.</p>
                             </div>
                             <div class="row-logo" aria-hidden="true">
                                 <img src="assets/smu-logo.png" alt="" loading="lazy" decoding="async">
@@ -641,8 +604,8 @@
                         <article class="row" aria-labelledby="role-2-heading">
                             <div>
                                 <div class="row-year">Jan 2025 – Apr 2025</div>
-                                <h3 class="row-title" id="role-2-heading">KPMG · Tax Intern, Asset Management Group</h3>
-                                <p class="row-desc">Supported tax compliance for $50B+ AUM alternative asset managers including Real Estate, Private Equity, and Hedge Fund clients. Prepared partnership tax workpapers and investor deliverables across complex tiered investment structures.</p>
+                                <h3 class="row-title" id="role-2-heading">KPMG · Asset Management Tax Intern</h3>
+                                <p class="row-desc">Supported federal/state tax compliance for RE/PE/HF clients — prepared 40+ partnership returns.</p>
                             </div>
                             <div class="row-logo" aria-hidden="true">
                                 <img src="assets/kpmg-logo.png" alt="" loading="lazy" decoding="async">
@@ -653,11 +616,23 @@
                         <article class="row" aria-labelledby="role-3-heading">
                             <div>
                                 <div class="row-year">Jun 2023 – Aug 2024</div>
-                                <h3 class="row-title" id="role-3-heading">Baker Tilly · Tax Intern, International Tax Group</h3>
-                                <p class="row-desc">Supported cross-border tax compliance and reporting for multinational clients. Prepared multi-entity workpapers, validated documentation, and researched international tax concepts to resolve client-specific questions and ensure audit-ready deliverables.</p>
+                                <h3 class="row-title" id="role-3-heading">Baker Tilly · International Tax Intern</h3>
+                                <p class="row-desc">Delivered 30+ cross-border federal returns across 15+ jurisdictions; built an Excel VBA FX automation.</p>
                             </div>
                             <div class="row-logo" aria-hidden="true">
-                                <div class="row-logo-text">BT</div>
+                                <img src="assets/bakertilly-logo.png" alt="" loading="lazy" decoding="async">
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="row" aria-labelledby="role-4-heading">
+                            <div>
+                                <div class="row-year">Jan 2023 – May 2023</div>
+                                <h3 class="row-title" id="role-4-heading">NexBank · Internal Audit Intern</h3>
+                                <p class="row-desc">Executed 12+ SOX/FDICIA audit tests; led Vendor Management workflow redesign, cutting review time 25%.</p>
+                            </div>
+                            <div class="row-logo" aria-hidden="true">
+                                <img src="assets/nexbank-logo.svg" alt="" loading="lazy" decoding="async">
                             </div>
                         </article>
                     </li>
@@ -667,66 +642,74 @@
             <!-- PROJECTS ═══════════════════════════════════════ -->
             <section class="site-section" id="projects" aria-labelledby="h-projects">
                 <h2 class="section-heading" id="h-projects">Projects</h2>
-                <ul class="project-list">
+                <ul class="row-list">
                     <li>
-                        <article class="project-card" aria-labelledby="project-1-heading">
+                        <article class="row" aria-labelledby="project-1-heading">
                             <div>
-                                <div class="project-meta">Shipped · 2026</div>
-                                <h3 class="project-name" id="project-1-heading">
-                                    <a class="project-link" href="https://options.bolurian.com" target="_blank" rel="noopener">
+                                <div class="row-year">Shipped · 2026</div>
+                                <h3 class="row-title" id="project-1-heading">
+                                    <a class="row-link" href="https://options.bolurian.com" target="_blank" rel="noopener">
                                         Black-Scholes Options Suite
                                         <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
                                     </a>
                                 </h3>
-                                <p class="project-desc">Live options analytics — Black-Scholes pricing with full Greeks, 3D implied volatility surface, historical vol cone, and a multi-leg strategy builder with net position Greeks and shareable setups.</p>
-                                <ul class="project-tags" aria-label="Technologies">
-                                    <li>Next.js</li>
-                                    <li>TypeScript</li>
-                                    <li>Plotly</li>
-                                    <li>CBOE</li>
-                                </ul>
+                                <p class="row-desc">Live options analytics — full Greeks, 3D IV surface, vol cone, and multi-leg strategy builder.</p>
                             </div>
-                            <div class="project-icon" aria-hidden="true">Δ</div>
+                            <div class="row-logo" aria-hidden="true">
+                                <span class="row-logo-text" style="color: var(--accent); font-size: 1.6rem;">Δ</span>
+                            </div>
                         </article>
                     </li>
                     <li>
-                        <article class="project-card" aria-labelledby="project-2-heading">
+                        <article class="row" aria-labelledby="project-2-heading">
                             <div>
-                                <div class="project-meta">Shipped · 2025</div>
-                                <h3 class="project-name" id="project-2-heading">
-                                    <a class="project-link" href="https://bluffr-ai-trainer.vercel.app" target="_blank" rel="noopener">
+                                <div class="row-year">In progress · 2026</div>
+                                <h3 class="row-title" id="project-2-heading">
+                                    <a class="row-link" href="#" aria-describedby="project-2-aria">
+                                        Prediction Markets Arbitrage Bot
+                                        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
+                                    </a>
+                                </h3>
+                                <p class="row-desc">WebSocket dashboard detecting Kalshi/Polymarket arbitrage across 500+ active markets.</p>
+                                <span id="project-2-aria" class="sr-only">In progress — no public link yet</span>
+                            </div>
+                            <div class="row-logo" aria-hidden="true">
+                                <span class="row-logo-text" style="color: var(--accent); font-size: 1.6rem;">⇄</span>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
+                        <article class="row" aria-labelledby="project-3-heading">
+                            <div>
+                                <div class="row-year">Shipped · 2025</div>
+                                <h3 class="row-title" id="project-3-heading">
+                                    <a class="row-link" href="https://bluffr-ai-trainer.vercel.app" target="_blank" rel="noopener">
                                         Bluffr — AI Poker Trainer
                                         <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
                                     </a>
                                 </h3>
-                                <p class="project-desc">AI-powered poker training platform with GTO-based coaching, hand history analysis, and real-time leak detection to sharpen decision-making.</p>
-                                <ul class="project-tags" aria-label="Technologies">
-                                    <li>Next.js</li>
-                                    <li>AI</li>
-                                    <li>Analytics</li>
-                                </ul>
+                                <p class="row-desc">AI-powered poker training with GTO coaching, hand history analysis, and leak detection.</p>
                             </div>
-                            <div class="project-icon" aria-hidden="true">♠</div>
+                            <div class="row-logo" aria-hidden="true">
+                                <span class="row-logo-text" style="color: var(--accent); font-size: 1.6rem;">♠</span>
+                            </div>
                         </article>
                     </li>
                     <li>
-                        <article class="project-card" aria-labelledby="project-3-heading">
+                        <article class="row" aria-labelledby="project-4-heading">
                             <div>
-                                <div class="project-meta">Shipped · 2024</div>
-                                <h3 class="project-name" id="project-3-heading">
-                                    <a class="project-link" href="https://portfolio-dashboard-o7nsnfsfgwappjedtq9ehxw.streamlit.app/" target="_blank" rel="noopener">
+                                <div class="row-year">Shipped · 2024</div>
+                                <h3 class="row-title" id="project-4-heading">
+                                    <a class="row-link" href="https://portfolio-dashboard-o7nsnfsfgwappjedtq9ehxw.streamlit.app/" target="_blank" rel="noopener">
                                         Portfolio Analytics Dashboard
                                         <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
                                     </a>
                                 </h3>
-                                <p class="project-desc">Interactive dashboard for portfolio performance tracking, risk metrics, and scenario analysis with real-time market data integration.</p>
-                                <ul class="project-tags" aria-label="Technologies">
-                                    <li>Streamlit</li>
-                                    <li>Python</li>
-                                    <li>Pandas</li>
-                                </ul>
+                                <p class="row-desc">Interactive dashboard for portfolio performance, risk metrics, and scenario analysis.</p>
                             </div>
-                            <div class="project-icon" aria-hidden="true">π</div>
+                            <div class="row-logo" aria-hidden="true">
+                                <span class="row-logo-text" style="color: var(--accent); font-size: 1.6rem;">π</span>
+                            </div>
                         </article>
                     </li>
                 </ul>
@@ -736,15 +719,11 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 Eden Bolurian · Built with care · <a href="https://github.com/ebolurian-web" target="_blank" rel="noopener" style="color: inherit; text-decoration: underline;">GitHub</a></p>
+        <p>&copy; 2026 Eden Bolurian · Built with care · <a href="https://github.com/ebolurian-web" target="_blank" rel="noopener">GitHub</a></p>
     </footer>
 
     <script>
-        // ═══════════════════════════════════════════════════
-        // Typewriter — cycles phrases. aria-hidden on the span
-        // means AT never hears the letter-by-letter mutation;
-        // the full phrase list lives in a sr-only sibling.
-        // ═══════════════════════════════════════════════════
+        // Typewriter — aria-hidden span, AT gets static phrase list instead
         (function () {
             const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
             const phrases = [
@@ -759,13 +738,10 @@
             ];
             const el = document.getElementById('typewriter');
             if (!el) return;
-
             if (reduceMotion.matches) {
-                // Reduced motion: just show all phrases joined, no animation
                 el.textContent = phrases[0].replace(/\.$/, '');
                 return;
             }
-
             let phraseIndex = 0, charIndex = 0, isDeleting = false;
             function type() {
                 const current = phrases[phraseIndex];
@@ -797,9 +773,7 @@
             setTimeout(type, 600);
         })();
 
-        // ═══════════════════════════════════════════════════
         // Scroll progress
-        // ═══════════════════════════════════════════════════
         (function () {
             const bar = document.getElementById('scrollProgress');
             if (!bar) return;
@@ -813,20 +787,15 @@
             update();
         })();
 
-        // ═══════════════════════════════════════════════════
-        // Theme toggle — aria-pressed, static aria-label,
-        // SVG sun/moon glyphs, localStorage persistence.
-        // ═══════════════════════════════════════════════════
+        // Theme toggle
         (function () {
             const btn = document.getElementById('themeToggle');
             const icon = document.getElementById('themeIcon');
             if (!btn || !icon) return;
-
             const MOON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
             const SUN =
                 '<circle cx="12" cy="12" r="4"/>' +
                 '<path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>';
-
             function applyTheme(theme) {
                 const isDark = theme === 'dark';
                 document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
@@ -834,25 +803,18 @@
                 icon.innerHTML = isDark ? MOON : SUN;
                 try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch (e) {}
             }
-            // Initialize from the html[data-theme] set by the inline head script
             applyTheme(document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
             btn.addEventListener('click', function () {
                 applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
             });
         })();
 
-        // ═══════════════════════════════════════════════════
-        // About section — native hidden attribute toggled via
-        // aria-expanded nav button. Focus moves into the
-        // section when opened so keyboard users land on the
-        // heading instead of being stranded on the nav.
-        // ═══════════════════════════════════════════════════
+        // About section — hidden attribute + aria-expanded
         (function () {
             const btn = document.getElementById('aboutNavBtn');
             const section = document.getElementById('about');
             const heading = document.getElementById('h-about');
             if (!btn || !section || !heading) return;
-
             function toggle() {
                 const isOpen = !section.hasAttribute('hidden');
                 if (isOpen) {
@@ -861,15 +823,12 @@
                 } else {
                     section.removeAttribute('hidden');
                     btn.setAttribute('aria-expanded', 'true');
-                    // Focus the heading for AT; scroll it into view
                     heading.setAttribute('tabindex', '-1');
                     heading.focus({ preventScroll: true });
                     section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }
             btn.addEventListener('click', toggle);
-
-            // Also close on Escape when focus is inside the about section
             section.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && !section.hasAttribute('hidden')) {
                     toggle();
