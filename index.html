@@ -693,15 +693,31 @@
                                 <p class="row-desc">Live options analytics — full Greeks, 3D IV surface, vol cone, and multi-leg strategy builder.</p>
                             </div>
                             <div class="row-logo logo-bssuite" aria-hidden="true">
-                                <!-- Stylized 3D implied volatility surface: three receding "smile"
-                                     curves, nearest solid, farther ones fading. All stroke, no fill. -->
-                                <svg viewBox="0 0 64 48" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent);">
-                                    <path d="M 12 14 C 22 6 34 6 58 12" stroke-width="2.5" opacity="0.42"/>
-                                    <path d="M 10 25 C 20 15 32 15 56 23" stroke-width="2.5" opacity="0.68"/>
-                                    <path d="M 8 38 C 18 28 30 28 54 36" stroke-width="2.8" opacity="1"/>
-                                    <!-- Two short perspective connectors for depth -->
-                                    <path d="M 10 25 L 12 14" stroke-width="1.5" opacity="0.3"/>
-                                    <path d="M 56 23 L 58 12" stroke-width="1.5" opacity="0.3"/>
+                                <!-- σ sigma tag — dark card, italic serif σ, green (call) + red (put)
+                                     glows matching the BS suite site's aesthetic. -->
+                                <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <filter id="bs-glow-g" x="-60%" y="-60%" width="220%" height="220%">
+                                            <feGaussianBlur stdDeviation="4.5"/>
+                                        </filter>
+                                        <filter id="bs-glow-r" x="-60%" y="-60%" width="220%" height="220%">
+                                            <feGaussianBlur stdDeviation="4.5"/>
+                                        </filter>
+                                    </defs>
+                                    <!-- Call-green glow, upper-left -->
+                                    <circle cx="16" cy="18" r="15" fill="#00d084" opacity="0.75" filter="url(#bs-glow-g)"/>
+                                    <!-- Put-red glow, lower-right -->
+                                    <circle cx="64" cy="62" r="15" fill="#f87171" opacity="0.7" filter="url(#bs-glow-r)"/>
+                                    <!-- Tilted card -->
+                                    <g transform="rotate(-4 40 40)">
+                                        <rect x="14" y="14" width="52" height="52" rx="7"
+                                              fill="#0a0b11"
+                                              stroke="#eef1f7" stroke-opacity="0.35" stroke-width="1.5"/>
+                                        <text x="40" y="54" text-anchor="middle"
+                                              font-family="'Libre Baskerville', serif"
+                                              font-style="italic" font-weight="700"
+                                              font-size="36" fill="#eef1f7">σ</text>
+                                    </g>
                                 </svg>
                             </div>
                         </article>
