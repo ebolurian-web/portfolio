@@ -85,14 +85,19 @@
             overflow-x: hidden;
         }
 
-        :root[data-theme="dark"] body {
+        :root[data-theme="dark"] body { background: var(--bg-base); }
+        :root[data-theme="light"] body { background: var(--bg-base); }
+        /* Painting + scrim live on a fixed ::before pseudo so scroll doesn't
+           re-composite the large JPEG every tick (the real cause of the
+           "shaky" feel from background-attachment: fixed on some devices).
+           Only rendered in dark mode. */
+        :root[data-theme="dark"] body::before {
+            content: "";
+            position: fixed; inset: 0; z-index: -1;
             background:
                 linear-gradient(var(--bg-scrim), var(--bg-scrim)),
-                url("assets/monet-poplars.jpg") center / cover no-repeat fixed,
-                var(--bg-base);
-        }
-        :root[data-theme="light"] body {
-            background: var(--bg-base);
+                url("assets/monet-poplars.jpg") center / cover no-repeat;
+            pointer-events: none;
         }
 
         /* Skip link */
@@ -481,15 +486,18 @@
             .cursor-blink { animation: none !important; opacity: 1; }
         }
         @media (prefers-contrast: more) {
-            :root[data-theme="dark"] body { background: var(--bg-base) !important; }
+            :root[data-theme="dark"] body::before { display: none !important; }
         }
         @media (prefers-reduced-transparency: reduce) {
-            :root[data-theme="dark"] body { background: var(--bg-base) !important; }
-            .site-header, #about, .contact-btn, .row-logo, .theme-toggle {
+            :root[data-theme="dark"] body::before { display: none !important; }
+            #about, .contact-btn, .theme-toggle {
                 backdrop-filter: none !important;
                 -webkit-backdrop-filter: none !important;
                 background: var(--surface-solid) !important;
             }
+        }
+        @media (forced-colors: active) {
+            :root[data-theme="dark"] body::before { display: none !important; }
         }
     </style>
 </head>
