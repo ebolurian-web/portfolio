@@ -331,9 +331,10 @@
             color: var(--accent);
         }
         /* Project-row click-extension: pseudo-element covers the whole row
-           so clicking anywhere on the row activates the project link. */
+           so clicking anywhere on the row activates the project link. Must
+           sit above .row-logo (z-index: 2) or logo area eats the click. */
         .row-title a.row-link::after {
-            content: ""; position: absolute; inset: 0; z-index: 1;
+            content: ""; position: absolute; inset: 0; z-index: 3;
             border-radius: 2px;
         }
         .row:has(.row-title a.row-link:focus-visible) {
