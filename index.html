@@ -139,14 +139,25 @@
             font-family: "Libre Baskerville", serif;
             font-size: 1.35rem; font-weight: 400;
             padding: 0.4rem 1rem 0.3rem;
-            border: 2px solid var(--fg); color: var(--fg); text-decoration: none;
+            border: 2px solid var(--fg);
+            text-decoration: none;
             transition: all 0.25s;
             letter-spacing: 0.01em;
         }
+        /* Blackstone treatment: inverted block — solid ground, inverted text per theme */
+        :root[data-theme="dark"] .logo {
+            background: #000000; color: #ffffff; border-color: #ffffff;
+        }
+        :root[data-theme="light"] .logo {
+            background: #ffffff; color: #000000; border-color: #000000;
+        }
         .logo:hover {
-            background: var(--accent); color: var(--bg-base); border-color: var(--accent);
+            background: var(--accent) !important;
+            color: var(--bg-base) !important;
+            border-color: var(--accent) !important;
             box-shadow: 0 0 20px color-mix(in oklab, var(--accent) 40%, transparent);
         }
+        :root[data-theme="light"] .logo:hover { color: #ffffff !important; }
         nav ul {
             display: flex; gap: 1.75rem; list-style: none; align-items: center;
         }
@@ -194,8 +205,8 @@
         }
         h1 {
             font-family: "Libre Baskerville", serif; font-weight: 700;
-            font-size: clamp(3rem, 7vw, 5.25rem);
-            line-height: 1.02; letter-spacing: -0.025em;
+            font-size: clamp(2.25rem, 5.5vw, 4rem);
+            line-height: 1.04; letter-spacing: -0.02em;
             margin-bottom: 1.25rem;
             color: var(--fg);
         }
@@ -362,6 +373,10 @@
         :root[data-theme="dark"] .row-logo svg .sticki-outline {
             stroke: transparent;
         }
+        /* Sticki mark sits visually heavier than wordmark logos — constrain size */
+        .row-logo.logo-sticki svg {
+            width: 72%; height: 72%;
+        }
         .row-logo-text {
             font-family: "Libre Baskerville", serif;
             font-weight: 700; font-size: 1.1rem; color: var(--fg-muted);
@@ -521,7 +536,7 @@
             <!-- HERO ═══════════════════════════════════════ -->
             <section class="hero" aria-labelledby="h-hero">
                 <div>
-                    <h1 id="h-hero">Eden Bolurian.</h1>
+                    <h1 id="h-hero">Eden Bolurian</h1>
                     <p class="tagline">
                         <span class="tagline-prefix">I'm into&nbsp;</span>
                         <span class="typewriter-text" id="typewriter" aria-hidden="true"></span>
@@ -668,8 +683,17 @@
                                 </h3>
                                 <p class="row-desc">Live options analytics — full Greeks, 3D IV surface, vol cone, and multi-leg strategy builder.</p>
                             </div>
-                            <div class="row-logo" aria-hidden="true">
-                                <span class="row-logo-text" style="color: var(--accent); font-family: 'Libre Baskerville', serif; font-weight: 700; font-size: 2.6rem; line-height: 1;">Δ</span>
+                            <div class="row-logo logo-bssuite" aria-hidden="true">
+                                <!-- Stylized 3D implied volatility surface: three receding "smile"
+                                     curves, nearest solid, farther ones fading. All stroke, no fill. -->
+                                <svg viewBox="0 0 64 48" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent);">
+                                    <path d="M 12 14 C 22 6 34 6 58 12" stroke-width="2.5" opacity="0.42"/>
+                                    <path d="M 10 25 C 20 15 32 15 56 23" stroke-width="2.5" opacity="0.68"/>
+                                    <path d="M 8 38 C 18 28 30 28 54 36" stroke-width="2.8" opacity="1"/>
+                                    <!-- Two short perspective connectors for depth -->
+                                    <path d="M 10 25 L 12 14" stroke-width="1.5" opacity="0.3"/>
+                                    <path d="M 56 23 L 58 12" stroke-width="1.5" opacity="0.3"/>
+                                </svg>
                             </div>
                         </article>
                     </li>
@@ -679,17 +703,19 @@
                                 <div class="row-year">In progress · 2026</div>
                                 <h3 class="row-title" id="project-2-heading">
                                     <a class="row-link" href="https://sticki.app" target="_blank" rel="noopener">
-                                        Sticki.app
+                                        sticki.app
                                         <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
                                     </a>
                                 </h3>
                                 <p class="row-desc">Gamified loyalty platform for small businesses — collectible stickers, streaks, and variance-based retention mechanics.</p>
                             </div>
-                            <div class="row-logo" aria-hidden="true">
-                                <!-- Sticki logomark inlined so dark mode can drop the outline via CSS. -->
-                                <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" stroke-linejoin="round" stroke-linecap="round">
-                                    <path class="sticki-outline" d="M 5 5 H 59 V 59 H 21 L 5 43 Z" fill="#FF3EA5" stroke="#0B0B0B" stroke-width="4"/>
-                                    <path class="sticki-outline" d="M 5 43 H 21 V 59 Z" fill="transparent" stroke="#0B0B0B" stroke-width="4"/>
+                            <div class="row-logo logo-sticki" aria-hidden="true">
+                                <!-- Padded viewBox gives the sticky-note breathing room so it doesn't fill
+                                     the 88px container. Fold rendered as a darker-pink back fill in both
+                                     modes; outline visible in light, hidden in dark. -->
+                                <svg viewBox="0 0 84 84" xmlns="http://www.w3.org/2000/svg" stroke-linejoin="round" stroke-linecap="round">
+                                    <path class="sticki-outline" d="M 14 14 H 70 V 70 H 30 L 14 54 Z" fill="#FF3EA5" stroke="#0B0B0B" stroke-width="4"/>
+                                    <path class="sticki-fold" d="M 14 54 H 30 V 70 Z" fill="#b8297a"/>
                                 </svg>
                             </div>
                         </article>
