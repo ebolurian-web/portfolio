@@ -128,10 +128,7 @@
         header.site-header {
             position: fixed; top: 0; left: 0; right: 0; z-index: 40;
             padding: 1.15rem 0;
-            background: color-mix(in oklab, var(--bg-base) 86%, transparent);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
+            background: transparent;
         }
         .nav-container {
             max-width: 1040px; margin: 0 auto;
@@ -200,9 +197,8 @@
             font-size: clamp(3rem, 7vw, 5.25rem);
             line-height: 1.02; letter-spacing: -0.025em;
             margin-bottom: 1.25rem;
+            color: var(--fg);
         }
-        h1 em { font-style: italic; font-weight: 400; color: var(--accent-bright); }
-        :root[data-theme="light"] h1 em { color: var(--accent); }
 
         .tagline {
             font-family: "Libre Baskerville", serif;
@@ -274,8 +270,8 @@
            ═══════════════════════════════════════════════════ */
         section.site-section { margin-bottom: 5rem; scroll-margin-top: 100px; }
         h2.section-heading {
-            font-family: "Libre Baskerville", serif; font-style: italic;
-            color: var(--accent); font-size: 1.15rem; font-weight: 400;
+            font-family: "Libre Baskerville", serif;
+            color: var(--accent); font-size: 1.15rem; font-weight: 700;
             margin-bottom: 1.5rem;
             display: flex; align-items: center; gap: 1rem;
             letter-spacing: 0.01em;
@@ -292,7 +288,7 @@
         .row-list { list-style: none; padding: 0; margin: 0; }
         .row {
             position: relative;
-            display: grid; grid-template-columns: 1fr 56px; gap: 2rem;
+            display: grid; grid-template-columns: 1fr 88px; gap: 2rem;
             align-items: center; padding: 1.5rem 0;
             border-bottom: 1px solid var(--border);
         }
@@ -337,15 +333,17 @@
         .row-title a.row-link:focus-visible { outline: none; box-shadow: none; }
         .row-desc { color: var(--fg-muted); font-size: 0.95rem; line-height: 1.55; }
         .row-logo {
-            width: 56px; height: 56px;
+            width: 88px; height: 88px;
             display: flex; align-items: center; justify-content: center;
-            border: 1px solid var(--border); border-radius: 6px;
-            background: var(--surface); padding: 0.5rem;
             position: relative; z-index: 2;  /* stay above the row-link pseudo-element */
         }
-        .row-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        /* In dark mode, flatten logos to white silhouettes for consistency */
-        :root[data-theme="dark"] .row-logo img { filter: brightness(0) invert(1) opacity(0.88); }
+        .row-logo img {
+            max-width: 100%; max-height: 100%; object-fit: contain;
+            /* Soft halo so native-color logos stay legible on the dark scrim */
+        }
+        :root[data-theme="dark"] .row-logo img {
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.18));
+        }
         .row-logo-text {
             font-family: "Libre Baskerville", serif;
             font-weight: 700; font-size: 1.1rem; color: var(--fg-muted);
@@ -431,8 +429,8 @@
             .nav-container { padding: 0 1.25rem; }
             nav ul { gap: 1.1rem; }
             nav a, nav button.nav-btn { font-size: 0.82rem; }
-            .row { grid-template-columns: 1fr 44px; gap: 1rem; padding: 1.25rem 0; }
-            .row-logo { width: 44px; height: 44px; }
+            .row { grid-template-columns: 1fr 64px; gap: 1rem; padding: 1.25rem 0; }
+            .row-logo { width: 64px; height: 64px; }
             main { padding: 95px 1.25rem 4rem; }
         }
 
@@ -505,7 +503,7 @@
             <!-- HERO ═══════════════════════════════════════ -->
             <section class="hero" aria-labelledby="h-hero">
                 <div>
-                    <h1 id="h-hero">Eden <em>Bolurian</em>.</h1>
+                    <h1 id="h-hero">Eden Bolurian.</h1>
                     <p class="tagline">
                         <span class="tagline-prefix">I'm into&nbsp;</span>
                         <span class="typewriter-text" id="typewriter" aria-hidden="true"></span>
@@ -519,10 +517,6 @@
                         <a href="https://www.linkedin.com/in/edenbolurian/" target="_blank" rel="noopener" class="contact-btn primary">
                             <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                             LinkedIn
-                        </a>
-                        <a href="assets/resume.pdf" download class="contact-btn">
-                            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
-                            Résumé <span class="sr-only">(PDF, downloads)</span>
                         </a>
                         <a href="mailto:ebolurian@gmail.com" class="contact-btn">
                             <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
@@ -656,7 +650,7 @@
                                 <p class="row-desc">Live options analytics — full Greeks, 3D IV surface, vol cone, and multi-leg strategy builder.</p>
                             </div>
                             <div class="row-logo" aria-hidden="true">
-                                <span class="row-logo-text" style="color: var(--accent); font-size: 1.6rem;">Δ</span>
+                                <span class="row-logo-text" style="color: var(--accent); font-family: 'Libre Baskerville', serif; font-weight: 700; font-size: 2.6rem; line-height: 1;">Δ</span>
                             </div>
                         </article>
                     </li>
@@ -665,50 +659,15 @@
                             <div>
                                 <div class="row-year">In progress · 2026</div>
                                 <h3 class="row-title" id="project-2-heading">
-                                    <a class="row-link" href="#" aria-describedby="project-2-aria">
-                                        Prediction Markets Arbitrage Bot
+                                    <a class="row-link" href="https://sticki.app" target="_blank" rel="noopener">
+                                        Sticki.app
                                         <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
                                     </a>
                                 </h3>
-                                <p class="row-desc">WebSocket dashboard detecting Kalshi/Polymarket arbitrage across 500+ active markets.</p>
-                                <span id="project-2-aria" class="sr-only">In progress — no public link yet</span>
+                                <p class="row-desc">Gamified loyalty platform for small businesses — collectible stickers, streaks, and variance-based retention mechanics.</p>
                             </div>
                             <div class="row-logo" aria-hidden="true">
-                                <span class="row-logo-text" style="color: var(--accent); font-size: 1.6rem;">⇄</span>
-                            </div>
-                        </article>
-                    </li>
-                    <li>
-                        <article class="row" aria-labelledby="project-3-heading">
-                            <div>
-                                <div class="row-year">Shipped · 2025</div>
-                                <h3 class="row-title" id="project-3-heading">
-                                    <a class="row-link" href="https://bluffr-ai-trainer.vercel.app" target="_blank" rel="noopener">
-                                        Bluffr — AI Poker Trainer
-                                        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
-                                    </a>
-                                </h3>
-                                <p class="row-desc">AI-powered poker training with GTO coaching, hand history analysis, and leak detection.</p>
-                            </div>
-                            <div class="row-logo" aria-hidden="true">
-                                <span class="row-logo-text" style="color: var(--accent); font-size: 1.6rem;">♠</span>
-                            </div>
-                        </article>
-                    </li>
-                    <li>
-                        <article class="row" aria-labelledby="project-4-heading">
-                            <div>
-                                <div class="row-year">Shipped · 2024</div>
-                                <h3 class="row-title" id="project-4-heading">
-                                    <a class="row-link" href="https://portfolio-dashboard-o7nsnfsfgwappjedtq9ehxw.streamlit.app/" target="_blank" rel="noopener">
-                                        Portfolio Analytics Dashboard
-                                        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
-                                    </a>
-                                </h3>
-                                <p class="row-desc">Interactive dashboard for portfolio performance, risk metrics, and scenario analysis.</p>
-                            </div>
-                            <div class="row-logo" aria-hidden="true">
-                                <span class="row-logo-text" style="color: var(--accent); font-size: 1.6rem;">π</span>
+                                <span class="row-logo-text" style="color: var(--accent); font-family: 'Libre Baskerville', serif; font-weight: 700; font-size: 2.6rem; line-height: 1;">★</span>
                             </div>
                         </article>
                     </li>
