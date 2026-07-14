@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,8 +24,8 @@
       (function () {
         try {
           var s = localStorage.getItem('theme');
-          document.documentElement.dataset.theme = s === 'light' ? 'light' : 'dark';
-        } catch (e) { document.documentElement.dataset.theme = 'dark'; }
+          document.documentElement.dataset.theme = s === 'dark' ? 'dark' : 'light';
+        } catch (e) { document.documentElement.dataset.theme = 'light'; }
       })();
     </script>
 
@@ -269,11 +269,14 @@
         .contact-btn svg { width: 14px; height: 14px; }
 
         .hero-photo {
-            width: 180px; height: 180px;
-            border-radius: 50%;
+            width: 200px; height: 250px;
+            border-radius: 20px;
             overflow: hidden;
             border: 2px solid var(--border);
             transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-photo { transition: none; }
         }
         .hero-photo:hover {
             border-color: var(--accent);
@@ -375,14 +378,16 @@
             fill: #ffffff;
         }
 
-        /* Sticki inline SVG: drop the black outline on dark ground */
-        :root[data-theme="dark"] .row-logo svg .sticki-outline {
-            stroke: transparent;
-        }
-        /* Sticki mark sits visually heavier than wordmark logos — constrain size */
-        .row-logo.logo-sticki svg {
-            width: 72%; height: 72%;
-        }
+        /* Hartman mark: two serif Hs. Navy in light, gold in dark. */
+        .row-logo.logo-hartman { color: #0d2545; }
+        :root[data-theme="dark"] .row-logo.logo-hartman { color: #d4a437; }
+        .row-logo.logo-hartman svg { width: 82%; height: auto; }
+
+        /* LYÁ mark: black in light, cream in dark. */
+        .row-logo.logo-lya { color: #111111; }
+        :root[data-theme="dark"] .row-logo.logo-lya { color: #f4efe4; }
+        .row-logo.logo-lya svg { width: 84%; height: auto; }
+
         .row-logo-text {
             font-family: "Libre Baskerville", serif;
             font-weight: 700; font-size: 1.1rem; color: var(--fg-muted);
@@ -462,7 +467,7 @@
                 text-align: left;
             }
             .hero-photo {
-                width: 110px; height: 110px; order: -1;
+                width: 120px; height: 150px; order: -1;
             }
             .about-grid { grid-template-columns: 1fr; }
             .nav-container { padding: 0 1.25rem; }
@@ -526,11 +531,12 @@
                             type="button"
                             class="theme-toggle"
                             id="themeToggle"
-                            aria-pressed="true"
+                            aria-pressed="false"
                             aria-label="Toggle dark mode"
                         >
                             <svg id="themeIcon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                                <circle cx="12" cy="12" r="4"/>
+                                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
                             </svg>
                         </button>
                     </li>
@@ -552,7 +558,7 @@
                         <span class="cursor-blink" aria-hidden="true"></span>
                         <span class="sr-only">
                             Interests: equity research, valuation modeling, investment analysis, building with AI,
-                            fixed income, options and derivatives, portfolio strategy, and financial engineering.
+                            strategic thinking, options and derivatives, portfolio strategy, and financial engineering.
                         </span>
                     </p>
                     <div class="contact-row">
@@ -571,7 +577,7 @@
                     </div>
                 </div>
                 <div class="hero-photo" aria-hidden="true">
-                    <img src="assets/headshot.jpg" alt="" width="180" height="180" loading="eager" decoding="async">
+                    <img src="assets/headshot.jpg" alt="" width="200" height="250" loading="eager" decoding="async">
                 </div>
             </section>
 
@@ -625,9 +631,32 @@
                 <h2 class="section-heading" id="h-experience">Experience</h2>
                 <ol class="row-list">
                     <li>
+                        <article class="row" aria-labelledby="role-hartman-heading">
+                            <div>
+                                <div class="row-year">Jun 2026 – Present · 2 mos</div>
+                                <h3 class="row-title" id="role-hartman-heading">Hartman Venture Advisors PLLC · Venture Capital Summer Analyst</h3>
+                                <p class="row-desc">Venture transactions and deal sourcing across managed funds, SPVs, and secondaries; supporting firm business-development strategy and pipeline.</p>
+                            </div>
+                            <div class="row-logo logo-hartman" aria-hidden="true">
+                                <!-- Hartman Venture Advisors: two serif Hs joined by a vertical divider.
+                                     Uses currentColor so CSS themes it (navy in light, gold in dark). -->
+                                <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                                    <text x="22" y="50" text-anchor="middle"
+                                          font-family="'Libre Baskerville', 'Times New Roman', serif"
+                                          font-weight="700" font-size="58">H</text>
+                                    <line x1="50" y1="6" x2="50" y2="54"
+                                          stroke="currentColor" stroke-width="2.25"/>
+                                    <text x="78" y="50" text-anchor="middle"
+                                          font-family="'Libre Baskerville', 'Times New Roman', serif"
+                                          font-weight="700" font-size="58">H</text>
+                                </svg>
+                            </div>
+                        </article>
+                    </li>
+                    <li>
                         <article class="row" aria-labelledby="role-1-heading">
                             <div>
-                                <div class="row-year">Jan 2026 – Present</div>
+                                <div class="row-year">Jan 2026 – May 2026</div>
                                 <h3 class="row-title" id="role-1-heading">Nancy Chambers Underwood Fund · Tech Equity Analyst</h3>
                                 <p class="row-desc">Co-managing a $9M SMU graduate endowment; covering the Information Technology sector.</p>
                             </div>
@@ -693,54 +722,43 @@
                                 <p class="row-desc">Live options analytics — full Greeks, 3D IV surface, vol cone, and multi-leg strategy builder.</p>
                             </div>
                             <div class="row-logo logo-bssuite" aria-hidden="true">
-                                <!-- σ sigma tag — dark card, italic serif σ, green (call) + red (put)
-                                     glows matching the BS suite site's aesthetic. -->
+                                <!-- Simplified: clean σ on a dark rounded card. -->
                                 <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
-                                        <filter id="bs-glow-g" x="-60%" y="-60%" width="220%" height="220%">
-                                            <feGaussianBlur stdDeviation="4.5"/>
-                                        </filter>
-                                        <filter id="bs-glow-r" x="-60%" y="-60%" width="220%" height="220%">
-                                            <feGaussianBlur stdDeviation="4.5"/>
-                                        </filter>
-                                    </defs>
-                                    <!-- Call-green glow, upper-left -->
-                                    <circle cx="16" cy="18" r="15" fill="#00d084" opacity="0.75" filter="url(#bs-glow-g)"/>
-                                    <!-- Put-red glow, lower-right -->
-                                    <circle cx="64" cy="62" r="15" fill="#f87171" opacity="0.7" filter="url(#bs-glow-r)"/>
-                                    <!-- Tilted card -->
-                                    <g transform="rotate(-4 40 40)">
-                                        <rect x="14" y="14" width="52" height="52" rx="7"
-                                              fill="#0a0b11"
-                                              stroke="#eef1f7" stroke-opacity="0.35" stroke-width="1.5"/>
-                                        <text x="40" y="54" text-anchor="middle"
-                                              font-family="'Libre Baskerville', serif"
-                                              font-style="italic" font-weight="700"
-                                              font-size="36" fill="#eef1f7">σ</text>
-                                    </g>
+                                    <rect x="8" y="8" width="64" height="64" rx="12"
+                                          fill="#0a0b11"
+                                          stroke="#eef1f7" stroke-opacity="0.5" stroke-width="1.5"/>
+                                    <text x="40" y="55" text-anchor="middle"
+                                          font-family="'Libre Baskerville', serif"
+                                          font-style="italic" font-weight="700"
+                                          font-size="40" fill="#eef1f7">σ</text>
                                 </svg>
                             </div>
                         </article>
                     </li>
                     <li>
-                        <article class="row" aria-labelledby="project-2-heading">
+                        <article class="row" aria-labelledby="project-lya-heading">
                             <div>
-                                <div class="row-year">In progress · 2026</div>
-                                <h3 class="row-title" id="project-2-heading">
-                                    <a class="row-link" href="https://sticki.app" target="_blank" rel="noopener">
-                                        sticki.app
+                                <div class="row-year">Shipped · 2026</div>
+                                <h3 class="row-title" id="project-lya-heading">
+                                    <a class="row-link" href="https://lyastudios.com" target="_blank" rel="noopener">
+                                        lyá studios
                                         <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
                                     </a>
                                 </h3>
-                                <p class="row-desc">Gamified loyalty platform for small businesses — collectible stickers, streaks, and variance-based retention mechanics.</p>
+                                <p class="row-desc">Creative studio and portfolio site — design system, custom typography, and lightweight motion.</p>
                             </div>
-                            <div class="row-logo logo-sticki" aria-hidden="true">
-                                <!-- Padded viewBox gives the sticky-note breathing room so it doesn't fill
-                                     the 88px container. Fold rendered as a darker-pink back fill in both
-                                     modes; outline visible in light, hidden in dark. -->
-                                <svg viewBox="0 0 84 84" xmlns="http://www.w3.org/2000/svg" stroke-linejoin="round" stroke-linecap="round">
-                                    <path class="sticki-outline" d="M 14 14 H 70 V 70 H 30 L 14 54 Z" fill="#FF3EA5" stroke="#0B0B0B" stroke-width="4"/>
-                                    <path class="sticki-fold" d="M 14 54 H 30 V 70 Z" fill="#b8297a"/>
+                            <div class="row-logo logo-lya" aria-hidden="true">
+                                <!-- LYÁ wordmark placeholder in a rounded/playful font.
+                                     Themes via currentColor (black in light, cream in dark).
+                                     To use the real hand-drawn mark, save the two variants at
+                                     assets/lya-logo-black.png (light mode) and
+                                     assets/lya-logo-cream.png (dark mode), then swap this
+                                     block for two theme-gated <img> tags like NexBank/Hartman. -->
+                                <svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                                    <text x="50" y="38" text-anchor="middle"
+                                          font-family="'Marker Felt', 'Chalkboard SE', 'Comic Sans MS', system-ui, sans-serif"
+                                          font-weight="800" font-size="32"
+                                          letter-spacing="0.5">lyá</text>
                                 </svg>
                             </div>
                         </article>
@@ -764,7 +782,7 @@
                 'valuation modeling.',
                 'investment analysis.',
                 'building with AI.',
-                'fixed income.',
+                'strategic thinking.',
                 'options & derivatives.',
                 'portfolio strategy.',
                 'financial engineering.',
@@ -836,7 +854,7 @@
                 icon.innerHTML = isDark ? MOON : SUN;
                 try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch (e) {}
             }
-            applyTheme(document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
+            applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
             btn.addEventListener('click', function () {
                 applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
             });
