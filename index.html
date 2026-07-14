@@ -378,15 +378,17 @@
             fill: #ffffff;
         }
 
-        /* Hartman mark: two serif Hs. Navy in light, gold in dark. */
-        .row-logo.logo-hartman { color: #0d2545; }
-        :root[data-theme="dark"] .row-logo.logo-hartman { color: #d4a437; }
-        .row-logo.logo-hartman svg { width: 82%; height: auto; }
+        /* Hartman "H|H" mark: navy in light, gold in dark. */
+        .row-logo.logo-hartman img { width: 88%; height: auto; }
+        .row-logo.logo-hartman .theme-dark,
+        :root[data-theme="dark"] .row-logo.logo-hartman .theme-light { display: none; }
+        :root[data-theme="dark"] .row-logo.logo-hartman .theme-dark { display: block; }
 
-        /* LYÁ mark: black in light, cream in dark. */
-        .row-logo.logo-lya { color: #111111; }
-        :root[data-theme="dark"] .row-logo.logo-lya { color: #f4efe4; }
-        .row-logo.logo-lya svg { width: 84%; height: auto; }
+        /* LYÁ wordmark: black in light, cream in dark. */
+        .row-logo.logo-lya img { width: 92%; height: auto; }
+        .row-logo.logo-lya .theme-dark,
+        :root[data-theme="dark"] .row-logo.logo-lya .theme-light { display: none; }
+        :root[data-theme="dark"] .row-logo.logo-lya .theme-dark { display: block; }
 
         .row-logo-text {
             font-family: "Libre Baskerville", serif;
@@ -638,18 +640,8 @@
                                 <p class="row-desc">Venture transactions and deal sourcing across managed funds, SPVs, and secondaries; supporting firm business-development strategy and pipeline.</p>
                             </div>
                             <div class="row-logo logo-hartman" aria-hidden="true">
-                                <!-- Hartman Venture Advisors: two serif Hs joined by a vertical divider.
-                                     Uses currentColor so CSS themes it (navy in light, gold in dark). -->
-                                <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                                    <text x="22" y="50" text-anchor="middle"
-                                          font-family="'Libre Baskerville', 'Times New Roman', serif"
-                                          font-weight="700" font-size="58">H</text>
-                                    <line x1="50" y1="6" x2="50" y2="54"
-                                          stroke="currentColor" stroke-width="2.25"/>
-                                    <text x="78" y="50" text-anchor="middle"
-                                          font-family="'Libre Baskerville', 'Times New Roman', serif"
-                                          font-weight="700" font-size="58">H</text>
-                                </svg>
+                                <img class="theme-light" src="assets/hartman-logo-navy.png" alt="" width="1000" height="644" loading="lazy" decoding="async">
+                                <img class="theme-dark" src="assets/hartman-logo-gold.png" alt="" width="1000" height="644" loading="lazy" decoding="async">
                             </div>
                         </article>
                     </li>
@@ -748,18 +740,8 @@
                                 <p class="row-desc">Creative studio and portfolio site — design system, custom typography, and lightweight motion.</p>
                             </div>
                             <div class="row-logo logo-lya" aria-hidden="true">
-                                <!-- LYÁ wordmark placeholder in a rounded/playful font.
-                                     Themes via currentColor (black in light, cream in dark).
-                                     To use the real hand-drawn mark, save the two variants at
-                                     assets/lya-logo-black.png (light mode) and
-                                     assets/lya-logo-cream.png (dark mode), then swap this
-                                     block for two theme-gated <img> tags like NexBank/Hartman. -->
-                                <svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                                    <text x="50" y="38" text-anchor="middle"
-                                          font-family="'Marker Felt', 'Chalkboard SE', 'Comic Sans MS', system-ui, sans-serif"
-                                          font-weight="800" font-size="32"
-                                          letter-spacing="0.5">lyá</text>
-                                </svg>
+                                <img class="theme-light" src="assets/lya-logo-black.png" alt="" width="600" height="400" loading="lazy" decoding="async">
+                                <img class="theme-dark" src="assets/lya-logo-cream.png" alt="" width="600" height="400" loading="lazy" decoding="async">
                             </div>
                         </article>
                     </li>
