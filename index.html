@@ -150,10 +150,6 @@
         .gpa { display: flex; align-items: baseline; justify-content: flex-end; gap: 5px; }
         .gpa strong { font-family: var(--serif); font-size: 24px; line-height: 1; }
         .gpa span { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; color: var(--subtle); }
-        .text-mark {
-            display: inline-flex; align-items: center; justify-content: center;
-            font-family: var(--serif); font-weight: 700; font-size: 15px; color: #c75b12; white-space: nowrap;
-        }
         .creds { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
         .chip {
             display: inline-flex; align-items: center; height: 32px; padding: 0 12px;
@@ -285,7 +281,6 @@
             .title { font-size: 13px; }
             .roles .edu-row { grid-template-columns: 64px minmax(0, 1fr) auto; }
             .roles .edu-row .gpa { grid-column: 3; grid-row: 1; }
-            .text-mark { font-size: 11px; }
             .work { grid-template-columns: minmax(0, 1fr); }
             .work { --preview-h: 190px; }
             .other-grid { grid-template-columns: minmax(0, 1fr); }
@@ -369,13 +364,13 @@
                     <h2 id="h-edu" class="label">Education</h2>
                     <ol class="roles">
                         <li class="role edu-row">
-                            <img class="logo-slot" src="assets/smu-cox-logo.png" alt="SMU Cox School of Business" width="104" height="30">
+                            <img class="logo-slot" src="assets/smu-logo.png" alt="SMU" width="104" height="30">
                             <span><span class="firm">M.S. Finance</span><br><span class="title">SMU Cox School of Business</span></span>
                             <span class="gpa"><strong>3.9</strong><span>GPA</span></span>
                             <span class="when"><span class="dates">May 2026</span><span class="where">Dallas, TX</span></span>
                         </li>
                         <li class="role edu-row">
-                            <span class="logo-slot text-mark" aria-hidden="true">UT Dallas</span>
+                            <img class="logo-slot" src="assets/utd-logo.png" alt="UT Dallas" width="104" height="30">
                             <span><span class="firm">B.S. Accounting</span><br><span class="title">The University of Texas at Dallas</span></span>
                             <span class="gpa"><strong>3.8</strong><span>GPA</span></span>
                             <span class="when"><span class="dates">May 2025</span><span class="where">Richardson, TX</span></span>
