@@ -125,7 +125,7 @@
             font-size: clamp(40px, min(4.2vw, 6vh), 56px); line-height: 1.05; letter-spacing: -0.02em;
         }
         .hero p { margin-top: 10px; font-size: clamp(16px, 2.2vh, 20px); color: var(--muted); }
-        .portrait { border: 1px solid var(--ink); padding: 6px; background: #fff; }
+        .portrait { line-height: 0; }
         .portrait img { width: clamp(96px, 12.5vh, 136px); height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center top; }
 
         /* Experience rows: logo, firm and title, dates */
@@ -137,11 +137,13 @@
             min-height: 56px;
             padding: clamp(9px, 1.3vh, 14px) 0;
         }
-        .roles .logo-slot { width: 104px; height: 30px; object-fit: contain; object-position: left center; }
+        .roles .logo-slot { width: 104px; height: 30px; object-fit: contain; object-position: center; }
         .roles .logo-slot.crop { object-fit: cover; }
         .firm { font-size: 17px; font-weight: 600; }
         .title { font-size: 14px; color: var(--muted); }
+        .when { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right; }
         .dates { font-size: 13px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+        .where { font-size: 13px; color: var(--subtle); white-space: nowrap; }
 
         /* Education + credentials */
         .edu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 10px; }
@@ -154,8 +156,7 @@
         .gpa { text-align: right; border-left: 1px solid var(--rule); padding-left: 16px; }
         .gpa strong { display: block; font-family: var(--serif); font-size: 30px; line-height: 1; }
         .gpa span { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; color: var(--subtle); }
-        .creds { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-        .creds .label { margin-right: 4px; }
+        .creds { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
         .chip {
             display: inline-flex; align-items: center; height: 32px; padding: 0 12px;
             background: var(--ink); color: #fff; font-size: 13px; font-weight: 600;
@@ -255,10 +256,9 @@
 
         /* Short laptop screens: firm and title share a line so the page fits */
         @media (max-height: 860px) and (min-width: 1101px) {
-            .role br { display: none; }
-            .role .title::before { content: " · "; }
             .roles .logo-slot { height: 26px; }
-            .role { min-height: 50px; }
+            .role { min-height: 0; padding: 6px 0; line-height: 1.35; }
+            .firm { font-size: 16px; }
         }
 
         /* ── Smaller screens ────────────────────────────── */
@@ -277,11 +277,12 @@
             .first { padding-top: 24px; }
             .hero { grid-template-columns: minmax(0, 1fr) 104px; gap: 16px; }
             .hero p { font-size: 15px; }
-            .portrait { padding: 4px; }
             .portrait img { width: 94px; height: 118px; }
             .role { grid-template-columns: 64px minmax(0, 1fr); gap: 12px; }
             .roles .logo-slot { width: 64px; height: 26px; }
-            .roles .dates { grid-column: 2; font-size: 12px; margin-top: -4px; }
+            .roles .when { grid-column: 2; flex-direction: row; gap: 8px; align-items: baseline; margin-top: -4px; }
+            .roles .dates, .roles .where { font-size: 12px; }
+            .chip { height: 28px; font-size: 12px; padding: 0 10px; }
             .firm { font-size: 15px; }
             .title { font-size: 13px; }
             .edu { grid-template-columns: minmax(0, 1fr); }
@@ -312,6 +313,11 @@
                     <div>
                         <h1 id="h-name">Eden Bolurian</h1>
                         <p>Finance, grounded in accounting. Equity research, and the tools I build for it.</p>
+                        <div class="creds" aria-label="Credentials">
+                            <span class="chip">FINRA SIE</span>
+                            <span class="chip">CPA Eligible</span>
+                            <span class="chip">Bloomberg Market Concepts</span>
+                        </div>
                     </div>
                     <div class="portrait">
                         <img src="assets/headshot.jpg" alt="Portrait of Eden Bolurian" width="136" height="170" loading="eager" decoding="async">
@@ -325,35 +331,35 @@
                             <div class="role">
                                     <img class="logo-slot" src="assets/hartman-logo-navy.png" alt="Hartman Venture Advisors" width="96" height="36">
                                     <span><span class="firm">Hartman Venture Advisors</span><br><span class="title">Fund Advisory Intern</span></span>
-                                    <span class="dates">Jun — Aug 2026</span>
+                                    <span class="when"><span class="dates">Jun — Aug 2026</span><span class="where">New York, NY</span></span>
                             </div>
                         </li>
                         <li class="reveal" style="--i:3">
                             <div class="role">
                                     <img class="logo-slot" src="assets/smu-cox-logo.png" alt="SMU Cox" width="110" height="36">
                                     <span><span class="firm">Nancy Chambers Underwood Fund</span><br><span class="title">Student Equity Analyst</span></span>
-                                    <span class="dates">Jan — May 2026</span>
+                                    <span class="when"><span class="dates">Jan — May 2026</span><span class="where">Dallas, TX</span></span>
                             </div>
                         </li>
                         <li class="reveal" style="--i:4">
                             <div class="role">
                                     <img class="logo-slot" src="assets/kpmg-logo.png" alt="KPMG" width="96" height="36">
                                     <span><span class="firm">KPMG</span><br><span class="title">Asset Management Tax Intern</span></span>
-                                    <span class="dates">Jan — Apr 2025</span>
+                                    <span class="when"><span class="dates">Jan — Apr 2025</span><span class="where">Dallas, TX</span></span>
                             </div>
                         </li>
                         <li class="reveal" style="--i:5">
                             <div class="role">
                                     <img class="logo-slot crop" src="assets/bakertilly-logo.png" alt="Baker Tilly" width="96" height="36">
                                     <span><span class="firm">Baker Tilly</span><br><span class="title">International Tax Intern</span></span>
-                                    <span class="dates">Jun 2023 — Aug 2024</span>
+                                    <span class="when"><span class="dates">Jun 2023 — Aug 2024</span><span class="where">Frisco, TX</span></span>
                             </div>
                         </li>
                         <li class="reveal" style="--i:6">
                             <div class="role">
                                     <img class="logo-slot" src="assets/nexbank-logo.svg" alt="NexBank" width="96" height="36">
                                     <span><span class="firm">NexBank</span><br><span class="title">Internal Audit Intern</span></span>
-                                    <span class="dates">Jan — May 2023</span>
+                                    <span class="when"><span class="dates">Jan — May 2023</span><span class="where">Dallas, TX</span></span>
                             </div>
                         </li>
                     </ol>
@@ -370,12 +376,6 @@
                             <div><h3>B.S. Accounting</h3><p>UT Dallas · 2025</p></div>
                             <div class="gpa"><strong>3.8</strong><span>GPA</span></div>
                         </div>
-                    </div>
-                    <div class="creds">
-                        <span class="label">Credentials</span>
-                        <span class="chip">FINRA SIE</span>
-                        <span class="chip">CPA Eligible</span>
-                        <span class="chip">Bloomberg Market Concepts</span>
                     </div>
                 </section>
             </div>
