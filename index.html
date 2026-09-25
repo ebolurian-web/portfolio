@@ -36,7 +36,6 @@
             --serif: "Libre Baskerville", Georgia, serif;
             --sans: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
             color-scheme: light;
-            interpolate-size: allow-keywords;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -136,40 +135,19 @@
         .portrait { border: 1px solid var(--ink); padding: 6px; background: #fff; }
         .portrait img { width: clamp(100px, 15vh, 136px); height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center top; }
 
-        /* Experience: rows open to show résumé bullets */
+        /* Experience rows: logo, firm and title, dates */
         .roles { list-style: none; border-top: 1px solid var(--ink); margin-top: 6px; }
         .roles > li { border-bottom: 1px solid var(--rule); }
-        .roles summary {
-            list-style: none; cursor: pointer;
-            display: grid; grid-template-columns: 96px minmax(0, 1fr) auto 20px;
+        .role {
+            display: grid; grid-template-columns: 110px minmax(0, 1fr) auto;
             gap: 20px; align-items: center;
             padding: clamp(7px, 1.1vh, 12px) 0;
         }
-        .roles summary::-webkit-details-marker { display: none; }
-        .roles .logo-slot { width: 96px; height: 36px; object-fit: contain; }
+        .roles .logo-slot { width: 110px; height: 36px; object-fit: contain; }
         .roles .logo-slot.crop { object-fit: cover; }
         .firm { font-size: 17px; font-weight: 600; }
         .title { font-size: 14px; color: var(--muted); }
         .dates { font-size: 13px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
-        .chev {
-            width: 10px; height: 10px; justify-self: end;
-            border-right: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink);
-            transform: rotate(45deg) translate(-2px, -2px);
-            transition: transform 0.25s ease;
-        }
-        .roles details[open] .chev { transform: rotate(225deg) translate(-2px, -2px); }
-        .roles summary:hover .firm { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
-        .bullets {
-            margin: 0 0 14px 116px; padding-left: 18px;
-            font-size: 14px; line-height: 1.55; color: var(--muted);
-            display: flex; flex-direction: column; gap: 4px;
-        }
-        /* Smooth open/close where supported; instant elsewhere */
-        .roles details::details-content {
-            block-size: 0; overflow: hidden;
-            transition: block-size 0.3s ease, content-visibility 0.3s allow-discrete;
-        }
-        .roles details[open]::details-content { block-size: auto; }
 
         /* Education + credentials */
         .edu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 10px; }
@@ -264,15 +242,14 @@
             100% { opacity: 1; box-shadow: 0 0 0 0 rgba(11, 11, 11, 0); }
         }
         @media (prefers-reduced-motion: reduce) {
-            .preview img, .u, .chev, .work-title .arrow { transition: none; }
+            .preview img, .u, .work-title .arrow { transition: none; }
             .work-card:hover .preview img, .work-card:focus-visible .preview img { transform: none; }
-            .roles details::details-content { transition: none; }
         }
 
         /* Short laptop screens: firm and title share a line so the page fits */
         @media (max-height: 860px) and (min-width: 1101px) {
-            .roles summary br { display: none; }
-            .roles summary .title::before { content: " · "; }
+            .role br { display: none; }
+            .role .title::before { content: " · "; }
             .roles .logo-slot { height: 30px; }
         }
 
@@ -294,13 +271,11 @@
             .hero p { font-size: 15px; }
             .portrait { padding: 4px; }
             .portrait img { width: 94px; height: 118px; }
-            .roles summary { grid-template-columns: 56px minmax(0, 1fr) 14px; gap: 12px; }
-            .roles .logo-slot { width: 56px; height: 26px; }
-            .roles .dates { grid-column: 2; grid-row: 2; font-size: 12px; margin-top: -4px; }
-            .roles .chev { grid-column: 3; grid-row: 1 / span 2; }
+            .role { grid-template-columns: 64px minmax(0, 1fr); gap: 12px; }
+            .roles .logo-slot { width: 64px; height: 26px; }
+            .roles .dates { grid-column: 2; font-size: 12px; margin-top: -4px; }
             .firm { font-size: 15px; }
             .title { font-size: 13px; }
-            .bullets { margin-left: 0; font-size: 13px; }
             .edu { grid-template-columns: minmax(0, 1fr); }
             .work { grid-template-columns: minmax(0, 1fr); }
             .work { --preview-h: 190px; }
@@ -340,78 +315,39 @@
                     <h2 id="h-exp" class="label reveal" style="--i:1">Experience</h2>
                     <ol class="roles">
                         <li class="reveal" style="--i:2">
-                            <details>
-                                <summary>
+                            <div class="role">
                                     <img class="logo-slot" src="assets/hartman-logo-navy.png" alt="Hartman Venture Advisors" width="96" height="36">
                                     <span><span class="firm">Hartman Venture Advisors</span><br><span class="title">Fund Advisory Intern</span></span>
                                     <span class="dates">Jun — Aug 2026</span>
-                                    <span class="chev" aria-hidden="true"></span>
-                                </summary>
-                                <ul class="bullets">
-                                    <li>Venture transactions and deal sourcing across managed funds, SPVs, and secondaries</li>
-                                    <li>Supported the firm&rsquo;s business-development strategy and pipeline</li>
-                                </ul>
-                            </details>
+                            </div>
                         </li>
                         <li class="reveal" style="--i:3">
-                            <details>
-                                <summary>
-                                    <img class="logo-slot" src="assets/smu-logo.png" alt="SMU" width="96" height="36">
+                            <div class="role">
+                                    <img class="logo-slot" src="assets/smu-cox-logo.png" alt="SMU Cox" width="110" height="36">
                                     <span><span class="firm">Nancy Chambers Underwood Fund</span><br><span class="title">Student Equity Analyst</span></span>
                                     <span class="dates">Jan — May 2026</span>
-                                    <span class="chev" aria-hidden="true"></span>
-                                </summary>
-                                <ul class="bullets">
-                                    <li>Co-managed a $9M SMU graduate endowment via Bloomberg and FactSet, covering the Information Technology sector</li>
-                                    <li>Presented live investment recommendations to the Investment Committee, driving $550K in technology sector allocations</li>
-                                    <li>Analyzed portfolio performance, attribution, and factor exposure using Bloomberg (PORT, FA, RV) and FactSet</li>
-                                </ul>
-                            </details>
+                            </div>
                         </li>
                         <li class="reveal" style="--i:4">
-                            <details>
-                                <summary>
+                            <div class="role">
                                     <img class="logo-slot" src="assets/kpmg-logo.png" alt="KPMG" width="96" height="36">
                                     <span><span class="firm">KPMG</span><br><span class="title">Asset Management Tax Intern</span></span>
                                     <span class="dates">Jan — Apr 2025</span>
-                                    <span class="chev" aria-hidden="true"></span>
-                                </summary>
-                                <ul class="bullets">
-                                    <li>Supported federal and state tax compliance for real estate, private equity, and hedge fund clients, preparing 40+ partnership returns</li>
-                                    <li>Modeled tax workpapers in Excel, including partner allocations, book-to-tax adjustments, and K-1 schedules</li>
-                                    <li>Prepared audit-ready investor packages with supporting notes and calculations for management review</li>
-                                </ul>
-                            </details>
+                            </div>
                         </li>
                         <li class="reveal" style="--i:5">
-                            <details>
-                                <summary>
+                            <div class="role">
                                     <img class="logo-slot crop" src="assets/bakertilly-logo.png" alt="Baker Tilly" width="96" height="36">
                                     <span><span class="firm">Baker Tilly</span><br><span class="title">International Tax Intern</span></span>
                                     <span class="dates">Jun 2023 — Aug 2024</span>
-                                    <span class="chev" aria-hidden="true"></span>
-                                </summary>
-                                <ul class="bullets">
-                                    <li>Delivered 30+ federal tax returns, ensuring cross-border compliance for multinational clients across 15+ jurisdictions</li>
-                                    <li>Built an Excel VBA FX automation pulling live OANDA spot rates, reducing manual conversion time 80%</li>
-                                    <li>Reconciled cross-border intercompany transactions and reviewed client trial balances for return preparation</li>
-                                </ul>
-                            </details>
+                            </div>
                         </li>
                         <li class="reveal" style="--i:6">
-                            <details>
-                                <summary>
+                            <div class="role">
                                     <img class="logo-slot" src="assets/nexbank-logo.svg" alt="NexBank" width="96" height="36">
                                     <span><span class="firm">NexBank</span><br><span class="title">Internal Audit Intern</span></span>
                                     <span class="dates">Jan — May 2023</span>
-                                    <span class="chev" aria-hidden="true"></span>
-                                </summary>
-                                <ul class="bullets">
-                                    <li>Executed 12+ audit and control tests across technology and operations under SOX/FDICIA guidelines</li>
-                                    <li>Led a bank-wide vendor-management workflow redesign with the C-suite, cutting review time 25%</li>
-                                    <li>Prepared executive decks on audit findings, remediation progress, and risk assessments for senior leadership</li>
-                                </ul>
-                            </details>
+                            </div>
                         </li>
                     </ol>
                 </section>
