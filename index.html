@@ -119,7 +119,15 @@
             height: 40px; padding: 0 16px;
             background: var(--ink); color: #fff;
             font-family: var(--serif); font-size: 18px;
+            position: relative; isolation: isolate;
         }
+        .logo::after {
+            content: ""; position: absolute; inset: 1px;
+            background: #fff; mix-blend-mode: difference; pointer-events: none;
+            transform: scaleX(0); transform-origin: right;
+            transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        .logo:hover::after, .logo:focus-visible::after { transform: scaleX(1); transform-origin: left; }
         .site-nav {
             display: flex; align-items: center; gap: 32px;
             font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
@@ -187,6 +195,7 @@
 
         /* ── Selected work ──────────────────────────────── */
         .work { --preview-h: clamp(160px, 23vh, 210px); display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+        .work > .label { border-bottom: 1px solid var(--ink); padding-bottom: 6px; }
         .work-card { display: flex; flex-direction: column; gap: 10px; }
         .preview {
             position: relative; height: var(--preview-h); overflow: hidden;
@@ -243,11 +252,19 @@
             font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--subtle);
         }
         footer nav { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
-        .footer-email { text-transform: none; letter-spacing: 0.02em; color: var(--muted); user-select: all; }
         button.u {
             font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit;
             background-color: transparent; border: 0; padding: 0 0 2px; cursor: pointer;
         }
+        /* Copy email: the label lifts away and a page with a check draws in, then it reverts */
+        .copy-email { display: inline-grid; justify-items: center; align-items: center; }
+        .copy-email > * { grid-area: 1 / 1; transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .ce-icon { opacity: 0; transform: translateY(6px) scale(0.7); fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round; }
+        .ce-check { stroke-width: 1.8; stroke-dasharray: 10; stroke-dashoffset: 10; transition: stroke-dashoffset 0.35s ease 0.2s; }
+        .copy-email.copied { background-size: 0% 1px; }
+        .copy-email.copied .ce-text { opacity: 0; transform: translateY(-6px); }
+        .copy-email.copied .ce-icon { opacity: 1; transform: none; }
+        .copy-email.copied .ce-check { stroke-dashoffset: 0; }
 
         /* ── Motion: build-in on load, logo glow ────────── */
         @media (prefers-reduced-motion: no-preference) {
@@ -268,7 +285,7 @@
             100% { opacity: 1; box-shadow: 0 0 0 0 rgba(11, 11, 11, 0); }
         }
         @media (prefers-reduced-motion: reduce) {
-            .preview img, .u, .work-title .arrow { transition: none; }
+            .preview img, .u, .work-title .arrow, .logo::after, .copy-email > *, .ce-check { transition: none; }
             .work-card:hover .preview img, .work-card:focus-visible .preview img { transform: none; }
         }
 
@@ -329,7 +346,7 @@
             <a class="u hide-sm" href="#experience">Experience</a>
             <a class="u hide-sm" href="#work">Work</a>
             <a class="u" href="https://www.linkedin.com/in/edenbolurian/" target="_blank" rel="noopener">LinkedIn ↗</a>
-            <button type="button" class="u copy-email" data-email="ebolurian@gmail.com" aria-describedby="email-status">Copy email</button>
+            <button type="button" class="u copy-email" data-email="ebolurian@gmail.com" aria-label="Copy email address" aria-describedby="email-status"><span class="ce-text">Copy email</span><svg class="ce-icon" viewBox="0 0 16 18" width="16" height="18" aria-hidden="true"><path class="ce-page" d="M2.5 1.5h7l4 4v11h-11z M9.5 1.5v4h4"/><path class="ce-check" d="M5 11l2.2 2.2L11 9.2"/></svg></button>
         </nav>
     </header>
     <p id="email-status" class="sr-only" aria-live="polite"></p>
@@ -340,7 +357,7 @@
                 <section class="hero reveal" style="--i:0" aria-labelledby="h-name">
                     <div>
                         <h1 id="h-name">Eden Bolurian</h1>
-                        <p>Finance, grounded in accounting. Equity research, and the tools I build for it.</p>
+                        <p>Accounting-trained, finance-minded. I turn numbers into clear decisions.</p>
                         <div class="creds" aria-label="Credentials">
                             <span class="chip">FINRA SIE</span>
                             <span class="chip">CPA Eligible</span>
@@ -364,7 +381,7 @@
                         </li>
                         <li class="reveal" style="--i:3">
                             <div class="role">
-                                <img class="logo-slot lg-wordmark" src="assets/smu-cox-logo.png" alt="SMU Cox" width="104" height="28">
+                                <img class="logo-slot lg-smu" src="assets/smu-logo.png" alt="SMU" width="104" height="28">
                                 <span><span class="firm">Nancy Chambers Underwood Fund</span><br><span class="title">Student Equity Analyst</span></span>
                                 <span class="when"><span class="dates">Jan — May 2026</span><span class="where">Dallas, TX</span></span>
                             </div>
@@ -414,6 +431,11 @@
                 <section class="block-lead reveal" style="--i:8" aria-labelledby="h-lead">
                     <h2 id="h-lead" class="label">Leadership &amp; Activities</h2>
                     <ol class="roles">
+                        <li class="role">
+                            <img class="logo-slot lg-smu" src="assets/smu-logo.png" alt="SMU" width="104" height="28">
+                            <span><span class="firm">SMU Cox School of Business</span><br><span class="title">MSF Student Program Ambassador</span></span>
+                            <span class="when"><span class="dates">Aug 2025 — May 2026</span><span class="where">Dallas, TX</span></span>
+                        </li>
                         <li class="role">
                             <img class="logo-slot lg-crest" src="assets/pikappaphi-crest.png" alt="Pi Kappa Phi" width="104" height="28">
                             <span><span class="firm">Pi Kappa Phi Fraternity</span><br><span class="title">Treasurer</span></span>
@@ -480,22 +502,21 @@
         <span>&copy; 2026 Eden Bolurian · Dallas, TX</span>
         <nav aria-label="Elsewhere">
             <a class="u" href="https://www.linkedin.com/in/edenbolurian/" target="_blank" rel="noopener">LinkedIn</a>
-            <span class="footer-email">ebolurian@gmail.com</span>
-            <button type="button" class="u copy-email" data-email="ebolurian@gmail.com" aria-describedby="email-status">Copy</button>
+            <button type="button" class="u copy-email" data-email="ebolurian@gmail.com" aria-label="Copy email address" aria-describedby="email-status"><span class="ce-text">Copy email</span><svg class="ce-icon" viewBox="0 0 16 18" width="16" height="18" aria-hidden="true"><path class="ce-page" d="M2.5 1.5h7l4 4v11h-11z M9.5 1.5v4h4"/><path class="ce-check" d="M5 11l2.2 2.2L11 9.2"/></svg></button>
         </nav>
     </footer>
 
     <script>
         // Copy email to the clipboard; fall back to the mail app if the clipboard is blocked
         document.querySelectorAll('.copy-email').forEach(function (btn) {
-            var label = btn.textContent;
             var status = document.getElementById('email-status');
             btn.addEventListener('click', function () {
                 var email = btn.getAttribute('data-email');
                 function done() {
-                    btn.textContent = 'Copied ✓';
+                    btn.classList.add('copied');
                     if (status) status.textContent = 'Email address copied: ' + email;
-                    setTimeout(function () { btn.textContent = label; }, 1800);
+                    clearTimeout(btn._t);
+                    btn._t = setTimeout(function () { btn.classList.remove('copied'); if (status) status.textContent = ''; }, 2200);
                 }
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(email).then(done, function () { location.href = 'mailto:' + email; });
