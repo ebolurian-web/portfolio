@@ -107,14 +107,14 @@
         /* ── First screen ───────────────────────────────── */
         .first {
             min-height: calc(100vh - 76px);
-            padding: clamp(20px, 3.2vh, 36px) var(--gutter);
+            padding: clamp(20px, 3.2vh, 36px) var(--gutter) clamp(14px, 2.2vh, 26px);
             display: grid;
             grid-template-columns: minmax(0, 1fr) 500px;
             gap: 64px;
             max-width: 1440px;
             margin: 0 auto;
         }
-        .intro { display: flex; flex-direction: column; gap: clamp(14px, 2.4vh, 26px); min-width: 0; }
+        .intro { display: flex; flex-direction: column; gap: clamp(12px, 2vh, 22px); min-width: 0; }
 
         .hero {
             display: grid; grid-template-columns: minmax(0, 1fr) auto;
@@ -146,16 +146,14 @@
         .where { font-size: 13px; color: var(--subtle); white-space: nowrap; }
 
         /* Education + credentials */
-        .edu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 10px; }
-        .degree {
-            border: 1px solid var(--ink); padding: clamp(10px, 1.4vh, 14px) 18px;
-            display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center;
-        }
-        .degree h3 { font-family: var(--serif); font-size: 20px; font-weight: 700; }
-        .degree p { font-size: 14px; color: var(--muted); }
-        .gpa { text-align: right; border-left: 1px solid var(--rule); padding-left: 16px; }
-        .gpa strong { display: block; font-family: var(--serif); font-size: 30px; line-height: 1; }
+        .roles .edu-row { grid-template-columns: 110px minmax(0, 1fr) 84px 130px; }
+        .gpa { display: flex; align-items: baseline; justify-content: flex-end; gap: 5px; }
+        .gpa strong { font-family: var(--serif); font-size: 24px; line-height: 1; }
         .gpa span { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; color: var(--subtle); }
+        .text-mark {
+            display: inline-flex; align-items: center; justify-content: center;
+            font-family: var(--serif); font-weight: 700; font-size: 15px; color: #c75b12; white-space: nowrap;
+        }
         .creds { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
         .chip {
             display: inline-flex; align-items: center; height: 32px; padding: 0 12px;
@@ -285,7 +283,9 @@
             .chip { height: 28px; font-size: 12px; padding: 0 10px; }
             .firm { font-size: 15px; }
             .title { font-size: 13px; }
-            .edu { grid-template-columns: minmax(0, 1fr); }
+            .roles .edu-row { grid-template-columns: 64px minmax(0, 1fr) auto; }
+            .roles .edu-row .gpa { grid-column: 3; grid-row: 1; }
+            .text-mark { font-size: 11px; }
             .work { grid-template-columns: minmax(0, 1fr); }
             .work { --preview-h: 190px; }
             .other-grid { grid-template-columns: minmax(0, 1fr); }
@@ -367,16 +367,20 @@
 
                 <section aria-labelledby="h-edu" class="reveal" style="--i:7">
                     <h2 id="h-edu" class="label">Education</h2>
-                    <div class="edu">
-                        <div class="degree">
-                            <div><h3>M.S. Finance</h3><p>SMU Cox School of Business · 2026</p></div>
-                            <div class="gpa"><strong>3.9</strong><span>GPA</span></div>
-                        </div>
-                        <div class="degree">
-                            <div><h3>B.S. Accounting</h3><p>UT Dallas · 2025</p></div>
-                            <div class="gpa"><strong>3.8</strong><span>GPA</span></div>
-                        </div>
-                    </div>
+                    <ol class="roles">
+                        <li class="role edu-row">
+                            <img class="logo-slot" src="assets/smu-cox-logo.png" alt="SMU Cox School of Business" width="104" height="30">
+                            <span><span class="firm">M.S. Finance</span><br><span class="title">SMU Cox School of Business</span></span>
+                            <span class="gpa"><strong>3.9</strong><span>GPA</span></span>
+                            <span class="when"><span class="dates">May 2026</span><span class="where">Dallas, TX</span></span>
+                        </li>
+                        <li class="role edu-row">
+                            <span class="logo-slot text-mark" aria-hidden="true">UT Dallas</span>
+                            <span><span class="firm">B.S. Accounting</span><br><span class="title">The University of Texas at Dallas</span></span>
+                            <span class="gpa"><strong>3.8</strong><span>GPA</span></span>
+                            <span class="when"><span class="dates">May 2025</span><span class="where">Richardson, TX</span></span>
+                        </li>
+                    </ol>
                 </section>
             </div>
 
