@@ -1,874 +1,424 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Eden Bolurian — finance and engineering, built from the same bench. Portfolio of options analytics, valuation models, and tools built at the intersection of markets, math, and software.">
+    <meta name="description" content="Eden Bolurian — M.S. Finance (SMU Cox, 3.9 GPA) with an accounting foundation. Experience across venture, equity research, tax and audit, plus equity research and tools I've built.">
     <meta name="author" content="Eden Bolurian">
-    <meta name="theme-color" content="#0a0b11">
-    <title>Eden Bolurian · Portfolio</title>
+    <meta name="theme-color" content="#0b0b0b">
+    <title>Eden Bolurian</title>
 
     <link rel="canonical" href="https://bolurian.com/">
-    <meta property="og:title" content="Eden Bolurian · Portfolio">
-    <meta property="og:description" content="Finance and engineering, built from the same bench. Options analytics, valuation, and tools at the intersection of markets and software.">
+    <meta property="og:title" content="Eden Bolurian">
+    <meta property="og:description" content="M.S. Finance, SMU Cox. Venture, equity research, tax and audit experience, plus equity research and tools I've built.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://bolurian.com/">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="https://bolurian.com/assets/headshot.jpg">
+    <meta name="twitter:card" content="summary">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Theme init (before paint — no FOUC) -->
-    <script>
-      (function () {
-        try {
-          var s = localStorage.getItem('theme');
-          document.documentElement.dataset.theme = s === 'dark' ? 'dark' : 'light';
-        } catch (e) { document.documentElement.dataset.theme = 'light'; }
-      })();
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         /* ═══════════════════════════════════════════════════
-           Design tokens — LinkedIn-blue identity on a darkened
-           Monet ground (dark) / soft white (light). No cream,
-           no orange.
-           Libre Baskerville + Inter two-font system.
+           Blackstone-inspired: black & white, Libre Baskerville
+           display over Hanken Grotesk, hairline rules, small
+           tracked uppercase labels. Logos keep their colour.
            ═══════════════════════════════════════════════════ */
-        :root[data-theme="dark"] {
-            --bg-base: #0a0b11;
-            --bg-scrim: rgba(7, 9, 15, 0.86);
-            --surface: rgba(18, 22, 32, 0.74);
-            --surface-solid: #12161f;
-            --border: rgba(112, 168, 235, 0.18);
-            --border-hover: rgba(112, 168, 235, 0.55);
-
-            --fg: #eef1f7;
-            --fg-muted: #b7c0d3;
-            --fg-subtle: #8691a8;
-
-            --accent: #70a8eb;         /* LinkedIn blue, brightened for dark ground — 9.3:1 on bg */
-            --accent-bright: #9bc1f0;
-            --accent-soft: rgba(112, 168, 235, 0.14);
-            --focus-ring: #9bc1f0;
-            color-scheme: dark;
-        }
-        :root[data-theme="light"] {
-            --bg-base: #f8f8fa;
-            --bg-scrim: transparent;
-            --surface: #ffffff;
-            --surface-solid: #ffffff;
-            --border: rgba(10, 102, 194, 0.18);
-            --border-hover: rgba(10, 102, 194, 0.55);
-
-            --fg: #1a1f2e;
-            --fg-muted: #4a5064;
-            --fg-subtle: #6c7286;
-
-            --accent: #0a66c2;         /* Official LinkedIn blue — 5.3:1 on #f8f8fa */
-            --accent-bright: #084f96;
-            --accent-soft: rgba(10, 102, 194, 0.1);
-            --focus-ring: #0a66c2;
+        :root {
+            --ink: #0b0b0b;
+            --muted: #555555;
+            --subtle: #6b6b6b;
+            --rule: #e3e3e3;
+            --bg: #ffffff;
+            --gutter: 64px;
+            --serif: "Libre Baskerville", Georgia, serif;
+            --sans: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
             color-scheme: light;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { font-feature-settings: "tnum" 1; scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; }
         body {
-            color: var(--fg);
-            font-family: "Inter", system-ui, -apple-system, sans-serif;
-            line-height: 1.65;
-            letter-spacing: -0.005em;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--sans);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: inherit; text-decoration: none; }
+        img { display: block; max-width: 100%; }
+
+        :where(a, button, summary):focus-visible {
+            outline: 2px solid var(--ink);
+            outline-offset: 3px;
         }
 
-        :root[data-theme="dark"] body { background: var(--bg-base); }
-        :root[data-theme="light"] body { background: var(--bg-base); }
-        /* Painting + scrim live on a fixed ::before pseudo so scroll doesn't
-           re-composite the large JPEG every tick (the real cause of the
-           "shaky" feel from background-attachment: fixed on some devices).
-           Only rendered in dark mode. */
-        :root[data-theme="dark"] body::before {
-            content: "";
-            position: fixed; inset: 0; z-index: -1;
-            background:
-                linear-gradient(var(--bg-scrim), var(--bg-scrim)),
-                url("assets/monet-poplars.jpg") center / cover no-repeat;
-            pointer-events: none;
-        }
-
-        /* Skip link */
         .skip-link {
-            position: absolute; top: -100px; left: 0.75rem; z-index: 9999;
-            background: var(--surface-solid); color: var(--fg);
-            padding: 0.65rem 1rem; border-radius: 4px;
-            border: 1px solid var(--border);
-            text-decoration: none; font-weight: 600;
-            transition: top 0.18s ease;
+            position: absolute; top: -100px; left: 12px; z-index: 100;
+            background: var(--ink); color: #fff; padding: 10px 14px; font-weight: 600;
         }
-        .skip-link:focus-visible { top: 0.75rem; }
+        .skip-link:focus-visible { top: 12px; }
 
-        /* Global focus ring */
-        :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-            outline: 2px solid var(--focus-ring);
-            outline-offset: 2px;
-            box-shadow: 0 0 0 4px color-mix(in oklab, var(--focus-ring) 28%, transparent);
-            border-radius: 3px;
+        .sr-only {
+            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+            overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
         }
 
-        /* Scroll progress */
-        .scroll-progress {
-            position: fixed; top: 0; left: 0; height: 2px; width: 0;
-            background: linear-gradient(90deg, var(--accent), var(--accent-bright));
-            z-index: 1000; transition: width 0.1s;
-            box-shadow: 0 0 10px color-mix(in oklab, var(--accent) 45%, transparent);
+        /* Small tracked uppercase label used for every section heading */
+        .label {
+            font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+            text-transform: uppercase; color: var(--subtle);
         }
 
-        /* ═══════════════════════════════════════════════════
-           Nav
-           ═══════════════════════════════════════════════════ */
-        header.site-header {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 40;
-            padding: 1.15rem 0;
-            background: transparent;
+        /* Underline that slides in from the left and exits to the right */
+        .u {
+            background-image: linear-gradient(currentColor, currentColor);
+            background-repeat: no-repeat;
+            background-size: 0% 1px;
+            background-position: 100% 100%;
+            padding-bottom: 2px;
+            transition: background-size 0.3s ease;
         }
-        .nav-container {
-            max-width: 1040px; margin: 0 auto;
-            padding: 0 2rem;
-            display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+        .u:hover, .u:focus-visible {
+            background-size: 100% 1px;
+            background-position: 0% 100%;
+        }
+
+        /* ── Header ─────────────────────────────────────── */
+        .site-header {
+            height: 76px;
+            padding: 0 var(--gutter);
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--rule);
         }
         .logo {
-            font-family: "Libre Baskerville", serif;
-            font-size: 1.35rem; font-weight: 400;
-            padding: 0.4rem 1rem 0.3rem;
-            border: 2px solid var(--fg);
-            text-decoration: none;
-            transition: all 0.25s;
-            letter-spacing: 0.01em;
+            display: inline-flex; align-items: center;
+            height: 40px; padding: 0 16px;
+            background: var(--ink); color: #fff;
+            font-family: var(--serif); font-size: 18px;
         }
-        /* Blackstone treatment: inverted block — solid ground, inverted text per theme */
-        :root[data-theme="dark"] .logo {
-            background: #000000; color: #ffffff; border-color: #ffffff;
+        .site-nav {
+            display: flex; align-items: center; gap: 32px;
+            font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
         }
-        :root[data-theme="light"] .logo {
-            background: #ffffff; color: #000000; border-color: #000000;
-        }
-        .logo:hover {
-            background: var(--accent) !important;
-            color: var(--bg-base) !important;
-            border-color: var(--accent) !important;
-            box-shadow: 0 0 20px color-mix(in oklab, var(--accent) 40%, transparent);
-        }
-        :root[data-theme="light"] .logo:hover { color: #ffffff !important; }
-        nav ul {
-            display: flex; gap: 1.75rem; list-style: none; align-items: center;
-        }
-        nav a, nav button.nav-btn {
-            color: var(--fg-muted);
-            font-size: 0.85rem; font-weight: 500;
-            text-decoration: none; background: none; border: none; cursor: pointer;
-            font-family: inherit; padding: 0.25rem 0;
-            border-bottom: 1px solid transparent;
-            transition: color 0.2s, border-color 0.2s;
-        }
-        nav a:hover, nav button.nav-btn:hover,
-        nav button.nav-btn[aria-expanded="true"] {
-            color: var(--accent-bright);
-            border-bottom-color: var(--accent-bright);
-        }
-        :root[data-theme="light"] nav a:hover,
-        :root[data-theme="light"] nav button.nav-btn:hover,
-        :root[data-theme="light"] nav button.nav-btn[aria-expanded="true"] {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
-        }
-        .theme-toggle {
-            height: 36px; width: 36px;
-            display: inline-flex; align-items: center; justify-content: center;
-            border: 1px solid var(--border); border-radius: 6px;
-            background: var(--surface); color: var(--fg);
-            cursor: pointer; transition: border-color 0.2s, background 0.2s;
-        }
-        .theme-toggle:hover { border-color: var(--border-hover); }
-        .theme-toggle svg { width: 16px; height: 16px; }
 
-        /* ═══════════════════════════════════════════════════
-           Main + content container
-           ═══════════════════════════════════════════════════ */
-        main { padding: 120px 2rem 5rem; }
-        .content { max-width: 900px; margin: 0 auto; }
+        /* ── First screen ───────────────────────────────── */
+        .first {
+            min-height: calc(100vh - 76px);
+            padding: clamp(20px, 3.2vh, 36px) var(--gutter);
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 500px;
+            gap: 64px;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+        .intro { display: flex; flex-direction: column; gap: clamp(14px, 2.4vh, 26px); min-width: 0; }
 
-        /* ═══════════════════════════════════════════════════
-           Hero
-           ═══════════════════════════════════════════════════ */
         .hero {
-            display: grid; grid-template-columns: 1.5fr auto; gap: 3rem;
-            align-items: center; margin-bottom: 6rem;
+            display: grid; grid-template-columns: minmax(0, 1fr) auto;
+            gap: 32px; align-items: center;
         }
-        h1 {
-            font-family: "Libre Baskerville", serif; font-weight: 700;
-            font-size: clamp(2.25rem, 5.5vw, 4rem);
-            line-height: 1.04; letter-spacing: -0.02em;
-            margin-bottom: 1.25rem;
-            color: var(--fg);
+        .hero h1 {
+            font-family: var(--serif); font-weight: 700;
+            font-size: clamp(40px, min(4.2vw, 6vh), 56px); line-height: 1.05; letter-spacing: -0.02em;
+        }
+        .hero p { margin-top: 10px; font-size: clamp(16px, 2.2vh, 20px); color: var(--muted); }
+        .portrait { border: 1px solid var(--ink); padding: 6px; background: #fff; }
+        .portrait img { width: clamp(100px, 15vh, 136px); height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center top; }
+
+        /* Experience rows: logo, firm and title, dates */
+        .roles { list-style: none; border-top: 1px solid var(--ink); margin-top: 6px; }
+        .roles > li { border-bottom: 1px solid var(--rule); }
+        .role {
+            display: grid; grid-template-columns: 110px minmax(0, 1fr) auto;
+            gap: 20px; align-items: center;
+            padding: clamp(7px, 1.1vh, 12px) 0;
+        }
+        .roles .logo-slot { width: 110px; height: 36px; object-fit: contain; }
+        .roles .logo-slot.crop { object-fit: cover; }
+        .firm { font-size: 17px; font-weight: 600; }
+        .title { font-size: 14px; color: var(--muted); }
+        .dates { font-size: 13px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+
+        /* Education + credentials */
+        .edu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 10px; }
+        .degree {
+            border: 1px solid var(--ink); padding: clamp(10px, 1.4vh, 14px) 18px;
+            display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center;
+        }
+        .degree h3 { font-family: var(--serif); font-size: 20px; font-weight: 700; }
+        .degree p { font-size: 14px; color: var(--muted); }
+        .gpa { text-align: right; border-left: 1px solid var(--rule); padding-left: 16px; }
+        .gpa strong { display: block; font-family: var(--serif); font-size: 30px; line-height: 1; }
+        .gpa span { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; color: var(--subtle); }
+        .creds { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .creds .label { margin-right: 4px; }
+        .chip {
+            display: inline-flex; align-items: center; height: 32px; padding: 0 12px;
+            background: var(--ink); color: #fff; font-size: 13px; font-weight: 600;
         }
 
-        .tagline {
-            font-family: "Libre Baskerville", serif;
-            font-size: 1.2rem; color: var(--fg-muted);
-            margin-bottom: 2.25rem; line-height: 1.45;
-            border-left: 2px solid var(--accent); padding-left: 1.1rem;
-            max-width: 560px;
+        /* ── Selected work ──────────────────────────────── */
+        .work { --preview-h: clamp(180px, 27vh, 240px); display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+        .work-card { display: flex; flex-direction: column; gap: 10px; }
+        .preview {
+            position: relative; height: var(--preview-h); overflow: hidden;
+            border: 1px solid var(--ink); background: #f4f4f4;
         }
-        .tagline-prefix { color: var(--fg-muted); }
-        .typewriter-text {
-            color: var(--fg); font-weight: 400;
-            background: color-mix(in oklab, var(--accent) 14%, transparent);
-            padding: 0 0.15em;
-            border-radius: 2px;
-            transition: background 0.3s;
+        .preview.dark { background: #0a0a0a; }
+        /* On hover the preview scrolls down inside its own frame */
+        .preview img {
+            width: 100%;
+            transition: transform 5s ease-in-out;
         }
-        .typewriter-text.highlight {
-            background: color-mix(in oklab, var(--accent) 28%, transparent);
+        .preview.app img { width: 152%; max-width: none; margin-left: -1%; margin-top: -5.2%; }
+        .work-card:hover .preview img,
+        .work-card:focus-visible .preview img { transform: translateY(calc(-100% + var(--preview-h))); }
+        .preview.app img { transition-duration: 3.5s; }
+        .work-card:hover .preview.app img,
+        .work-card:focus-visible .preview.app img { transform: translateY(-38%); }
+        .tag {
+            position: absolute; left: 12px; bottom: 12px;
+            background: var(--ink); color: #fff;
+            font-size: 11px; font-weight: 700; letter-spacing: 0.14em; padding: 6px 10px;
         }
-        .cursor-blink {
-            display: inline-block; width: 2px; height: 1em;
-            background: var(--accent); margin-left: 2px;
-            vertical-align: text-bottom;
-            animation: blink 1s step-end infinite;
-        }
-        @keyframes blink { 50% { opacity: 0; } }
+        .preview.dark .tag { background: #fff; color: var(--ink); }
+        .work-title { display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; }
+        .work-title .arrow { transition: transform 0.25s ease; }
+        .work-card:hover .work-title .arrow { transform: translateX(3px); }
+        .work-sub { font-size: 13px; color: var(--muted); }
 
-        .contact-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-        .contact-btn {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            padding: 0.7rem 1.25rem; font-size: 0.85rem; font-weight: 500;
-            text-decoration: none; color: var(--fg);
-            background: var(--surface); border: 1px solid var(--border);
-            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-            border-radius: 4px;
-            transition: all 0.2s;
-            font-family: inherit;
+        /* ── Below the fold ─────────────────────────────── */
+        .other {
+            background: var(--ink); color: #fff;
+            padding: 48px var(--gutter);
+            display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 72px; align-items: center;
         }
-        .contact-btn:hover {
-            border-color: var(--border-hover); color: var(--accent-bright);
-        }
-        :root[data-theme="light"] .contact-btn:hover { color: var(--accent); }
-        .contact-btn.primary {
-            background: var(--accent); color: #ffffff; border-color: var(--accent); font-weight: 600;
-            box-shadow: 0 0 20px color-mix(in oklab, var(--accent) 28%, transparent);
-        }
-        :root[data-theme="dark"] .contact-btn.primary { color: var(--bg-base); }
-        .contact-btn.primary:hover {
-            background: var(--accent-bright); border-color: var(--accent-bright);
-            box-shadow: 0 0 28px color-mix(in oklab, var(--accent) 42%, transparent);
-        }
-        .contact-btn svg { width: 14px; height: 14px; }
-
-        .hero-photo {
-            width: 200px; height: 250px;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 2px solid var(--border);
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .hero-photo { transition: none; }
-        }
-        .hero-photo:hover {
-            border-color: var(--accent);
-            box-shadow: 0 0 40px color-mix(in oklab, var(--accent) 35%, transparent);
-        }
-        .hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-        /* ═══════════════════════════════════════════════════
-           Sections (shared)
-           ═══════════════════════════════════════════════════ */
-        section.site-section { margin-bottom: 5rem; scroll-margin-top: 100px; }
-        h2.section-heading {
-            font-family: "Libre Baskerville", serif;
-            color: var(--accent); font-size: 1.15rem; font-weight: 700;
-            margin-bottom: 1.5rem;
-            display: flex; align-items: center; gap: 1rem;
-            letter-spacing: 0.01em;
-        }
-        h2.section-heading::after {
-            content: ""; height: 1px; flex: 1;
-            background: linear-gradient(to right, var(--border), transparent);
-        }
-
-        /* ═══════════════════════════════════════════════════
-           Row pattern — used by both Experience AND Projects.
-           No card chrome; just a flat row.
-           ═══════════════════════════════════════════════════ */
-        .row-list { list-style: none; padding: 0; margin: 0; }
-        .row {
-            position: relative;
-            display: grid; grid-template-columns: 1fr 88px; gap: 2rem;
-            align-items: center; padding: 1.5rem 0;
-            border-bottom: 1px solid var(--border);
-        }
-        .row-list > li:last-child .row { border-bottom: none; }
-        .row-year {
-            font-family: "Libre Baskerville", serif; font-style: italic;
-            font-size: 0.85rem; color: var(--fg-subtle); margin-bottom: 0.4rem;
-        }
-        .row-title {
-            font-family: "Libre Baskerville", serif;
-            font-size: 1.18rem; font-weight: 700; margin-bottom: 0.45rem;
-            letter-spacing: -0.005em;
-        }
-        .row-title a {
-            color: inherit; text-decoration: none;
-            display: inline-flex; align-items: center; gap: 0.5rem;
-        }
-        .row-title a svg {
-            width: 14px; height: 14px; color: var(--fg-subtle);
-            transition: color 0.2s, transform 0.2s;
-        }
-        .row:has(.row-title a:hover) .row-title a svg,
-        .row:has(.row-title a:focus-visible) .row-title a svg {
-            color: var(--accent-bright);
-            transform: translate(2px, -2px);
-        }
-        :root[data-theme="light"] .row:has(.row-title a:hover) .row-title a svg,
-        :root[data-theme="light"] .row:has(.row-title a:focus-visible) .row-title a svg {
-            color: var(--accent);
-        }
-        /* Project-row click-extension: pseudo-element covers the whole row
-           so clicking anywhere on the row activates the project link. Must
-           sit above .row-logo (z-index: 2) or logo area eats the click. */
-        .row-title a.row-link::after {
-            content: ""; position: absolute; inset: 0; z-index: 3;
-            border-radius: 2px;
-        }
-        .row:has(.row-title a.row-link:focus-visible) {
-            outline: 2px solid var(--focus-ring);
-            outline-offset: 4px;
-            border-radius: 4px;
-        }
-        .row-title a.row-link:focus-visible { outline: none; box-shadow: none; }
-        .row-desc { color: var(--fg-muted); font-size: 0.95rem; line-height: 1.55; }
-        .row-logo {
-            width: 88px; height: 88px;
+        .other h2 { font-family: var(--serif); font-size: 34px; font-weight: 700; }
+        .other > div > p { margin-top: 10px; font-size: 15px; color: #bdbdbd; }
+        .other-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+        .other-card { display: flex; flex-direction: column; gap: 10px; font-size: 14px; font-weight: 600; }
+        .other-card .frame {
+            height: 180px; background: #f4f1ec;
             display: flex; align-items: center; justify-content: center;
-            position: relative; z-index: 2;  /* stay above the row-link pseudo-element */
+            outline: 1px solid transparent; outline-offset: 4px;
+            transition: outline-color 0.2s ease;
         }
-        .row-logo img, .row-logo svg {
-            max-width: 100%; max-height: 100%; object-fit: contain;
-        }
+        .other-card:hover .frame { outline-color: #fff; }
+        .other-card img { width: 150px; height: 100px; object-fit: contain; }
+        .other-card img.lockup { width: 230px; height: 60px; }
+        .other-card .row { display: flex; justify-content: space-between; }
 
-        /* Per-logo dark-mode treatment — light mode always shows native brand colors. */
-
-        /* Baker Tilly: whiteout in dark mode only */
-        :root[data-theme="dark"] .logo-whiteout {
-            filter: brightness(0) invert(1) opacity(0.88);
-        }
-
-        /* Native-color logos (SMU, KPMG) get a soft halo on dark scrim for legibility */
-        :root[data-theme="dark"] .logo-native {
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
-        }
-
-        /* NexBank inline SVG: navy → white in dark mode (red stays) */
-        :root[data-theme="dark"] .row-logo svg .nexbank-navy {
-            fill: #ffffff;
-        }
-
-        /* Hartman "H|H" mark: navy in light, gold in dark. */
-        .row-logo.logo-hartman img { width: 88%; height: auto; }
-        .row-logo.logo-hartman .theme-dark,
-        :root[data-theme="dark"] .row-logo.logo-hartman .theme-light { display: none; }
-        :root[data-theme="dark"] .row-logo.logo-hartman .theme-dark { display: block; }
-
-        /* LYÁ wordmark: black in light, cream in dark. */
-        .row-logo.logo-lya img { width: 92%; height: auto; }
-        .row-logo.logo-lya .theme-dark,
-        :root[data-theme="dark"] .row-logo.logo-lya .theme-light { display: none; }
-        :root[data-theme="dark"] .row-logo.logo-lya .theme-dark { display: block; }
-
-        .row-logo-text {
-            font-family: "Libre Baskerville", serif;
-            font-weight: 700; font-size: 1.1rem; color: var(--fg-muted);
-            letter-spacing: 0.06em;
-        }
-
-        /* ═══════════════════════════════════════════════════
-           About (hidden by default, expanded via nav)
-           ═══════════════════════════════════════════════════ */
-        #about[hidden] { display: none; }
-        #about {
-            padding: 2rem; margin-bottom: 5rem;
-            background: var(--surface); backdrop-filter: blur(8px);
-            border: 1px solid var(--border); border-radius: 6px;
-            scroll-margin-top: 100px;
-        }
-        #about h2 {
-            font-family: "Libre Baskerville", serif;
-            font-size: 1.5rem; font-weight: 700;
-            margin-bottom: 1.2rem; color: var(--fg);
-            letter-spacing: -0.01em;
-        }
-        #about p {
-            color: var(--fg-muted); font-size: 0.94rem; margin-bottom: 1rem;
-            line-height: 1.7; max-width: 720px;
-        }
-        #about .accent { color: var(--accent-bright); font-weight: 500; }
-        :root[data-theme="light"] #about .accent { color: var(--accent); }
-        .about-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem;
-            margin-top: 1.75rem;
-        }
-        .about-item {
-            background: color-mix(in oklab, var(--bg-base) 40%, var(--surface));
-            border: 1px solid var(--border); border-radius: 4px;
-            padding: 1.1rem 1.25rem;
-        }
-        .about-item h3 {
-            font-family: "Libre Baskerville", serif;
-            font-size: 0.98rem; font-weight: 700;
-            color: var(--accent); margin-bottom: 0.65rem;
-            letter-spacing: -0.005em;
-        }
-        .about-item ul { list-style: none; padding: 0; font-size: 0.85rem; color: var(--fg-muted); }
-        .about-item ul li { padding: 0.2rem 0; }
-        .about-item ul li::before { content: "·  "; color: var(--accent); }
-
-        /* ═══════════════════════════════════════════════════
-           Footer
-           ═══════════════════════════════════════════════════ */
         footer {
-            padding: 2rem; text-align: center;
-            border-top: 1px solid var(--border);
-            color: var(--fg-subtle); font-size: 0.78rem;
-            background: color-mix(in oklab, var(--bg-base) 70%, transparent);
+            padding: 22px var(--gutter);
+            display: flex; justify-content: space-between; align-items: center; gap: 16px;
+            font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--subtle);
         }
-        footer a { color: inherit; text-decoration: underline; }
-        footer a:hover { color: var(--accent-bright); }
-        :root[data-theme="light"] footer a:hover { color: var(--accent); }
+        footer nav { display: flex; gap: 24px; }
 
-        /* Visually-hidden */
-        .sr-only {
-            position: absolute !important;
-            width: 1px; height: 1px;
-            padding: 0; margin: -1px;
-            overflow: hidden; clip: rect(0, 0, 0, 0);
-            white-space: nowrap; border: 0;
-        }
-
-        /* ═══════════════════════════════════════════════════
-           Responsive
-           ═══════════════════════════════════════════════════ */
-        @media (max-width: 768px) {
-            .hero {
-                grid-template-columns: 1fr;
-                gap: 1.5rem; margin-bottom: 4rem;
-                text-align: left;
+        /* ── Motion: build-in on load, logo glow ────────── */
+        @media (prefers-reduced-motion: no-preference) {
+            .reveal {
+                opacity: 0;
+                animation: rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+                animation-delay: calc(var(--i, 0) * 60ms + 120ms);
             }
-            .hero-photo {
-                width: 120px; height: 150px; order: -1;
-            }
-            .about-grid { grid-template-columns: 1fr; }
-            .nav-container { padding: 0 1.25rem; }
-            nav ul { gap: 1.1rem; }
-            nav a, nav button.nav-btn { font-size: 0.82rem; }
-            .row { grid-template-columns: 1fr 64px; gap: 1rem; padding: 1.25rem 0; }
-            .row-logo { width: 64px; height: 64px; }
-            main { padding: 95px 1.25rem 4rem; }
+            .logo { animation: glow 1.4s ease-out 0.1s both; }
         }
-
-        /* ═══════════════════════════════════════════════════
-           Motion + contrast preferences
-           ═══════════════════════════════════════════════════ */
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: none; }
+        }
+        @keyframes glow {
+            0%   { opacity: 0; box-shadow: 0 0 0 0 rgba(11, 11, 11, 0); }
+            35%  { opacity: 1; box-shadow: 0 0 26px 6px rgba(11, 11, 11, 0.28); }
+            100% { opacity: 1; box-shadow: 0 0 0 0 rgba(11, 11, 11, 0); }
+        }
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-            .cursor-blink { animation: none !important; opacity: 1; }
+            .preview img, .u, .work-title .arrow { transition: none; }
+            .work-card:hover .preview img, .work-card:focus-visible .preview img { transform: none; }
         }
-        @media (prefers-contrast: more) {
-            :root[data-theme="dark"] body::before { display: none !important; }
+
+        /* Short laptop screens: firm and title share a line so the page fits */
+        @media (max-height: 860px) and (min-width: 1101px) {
+            .role br { display: none; }
+            .role .title::before { content: " · "; }
+            .roles .logo-slot { height: 30px; }
         }
-        @media (prefers-reduced-transparency: reduce) {
-            :root[data-theme="dark"] body::before { display: none !important; }
-            #about, .contact-btn, .theme-toggle {
-                backdrop-filter: none !important;
-                -webkit-backdrop-filter: none !important;
-                background: var(--surface-solid) !important;
-            }
+
+        /* ── Smaller screens ────────────────────────────── */
+        @media (max-width: 1100px) {
+            .first { grid-template-columns: minmax(0, 1fr); min-height: 0; gap: 40px; }
+            .work { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+            .work .label { grid-column: 1 / -1; }
+            .other { grid-template-columns: minmax(0, 1fr); gap: 24px; }
         }
-        @media (forced-colors: active) {
-            :root[data-theme="dark"] body::before { display: none !important; }
+        @media (max-width: 700px) {
+            :root { --gutter: 16px; }
+            .site-header { height: 64px; }
+            .logo { height: 34px; font-size: 15px; padding: 0 12px; }
+            .site-nav { gap: 16px; }
+            .site-nav .hide-sm { display: none; }
+            .first { padding-top: 24px; }
+            .hero { grid-template-columns: minmax(0, 1fr) 104px; gap: 16px; }
+            .hero p { font-size: 15px; }
+            .portrait { padding: 4px; }
+            .portrait img { width: 94px; height: 118px; }
+            .role { grid-template-columns: 64px minmax(0, 1fr); gap: 12px; }
+            .roles .logo-slot { width: 64px; height: 26px; }
+            .roles .dates { grid-column: 2; font-size: 12px; margin-top: -4px; }
+            .firm { font-size: 15px; }
+            .title { font-size: 13px; }
+            .edu { grid-template-columns: minmax(0, 1fr); }
+            .work { grid-template-columns: minmax(0, 1fr); }
+            .work { --preview-h: 190px; }
+            .other-grid { grid-template-columns: minmax(0, 1fr); }
+            footer { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
-    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
     <header class="site-header">
-        <div class="nav-container">
-            <a class="logo" href="#" aria-label="Bolurian dot com, home">Bolurian.com</a>
-            <nav aria-label="Primary">
-                <ul>
-                    <li><a href="#experience">Experience</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li>
-                        <button
-                            type="button"
-                            class="nav-btn"
-                            id="aboutNavBtn"
-                            aria-expanded="false"
-                            aria-controls="about"
-                        >About</button>
-                    </li>
-                    <li>
-                        <button
-                            type="button"
-                            class="theme-toggle"
-                            id="themeToggle"
-                            aria-pressed="false"
-                            aria-label="Toggle dark mode"
-                        >
-                            <svg id="themeIcon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="4"/>
-                                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-                            </svg>
-                        </button>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+        <a class="logo" href="/" aria-label="Bolurian.com, home">Bolurian.com</a>
+        <nav class="site-nav" aria-label="Primary">
+            <a class="u hide-sm" href="#experience">Experience</a>
+            <a class="u hide-sm" href="#work">Work</a>
+            <a class="u" href="https://www.linkedin.com/in/edenbolurian/" target="_blank" rel="noopener">LinkedIn ↗</a>
+            <a class="u" href="mailto:ebolurian@gmail.com">Email</a>
+        </nav>
     </header>
 
     <main id="main-content" tabindex="-1">
-        <div class="content">
-
-            <!-- HERO ═══════════════════════════════════════ -->
-            <section class="hero" aria-labelledby="h-hero">
-                <div>
-                    <h1 id="h-hero">Eden Bolurian</h1>
-                    <p class="tagline">
-                        <span class="tagline-prefix">I'm into&nbsp;</span>
-                        <span class="typewriter-text" id="typewriter" aria-hidden="true"></span>
-                        <span class="cursor-blink" aria-hidden="true"></span>
-                        <span class="sr-only">
-                            Interests: equity research, valuation modeling, investment analysis, building with AI,
-                            strategic thinking, options and derivatives, portfolio strategy, and financial engineering.
-                        </span>
-                    </p>
-                    <div class="contact-row">
-                        <a href="https://www.linkedin.com/in/edenbolurian/" target="_blank" rel="noopener" class="contact-btn primary">
-                            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                            LinkedIn
-                        </a>
-                        <a href="mailto:ebolurian@gmail.com" class="contact-btn">
-                            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                            Email
-                        </a>
-                        <a href="tel:4693455481" class="contact-btn">
-                            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                            Phone
-                        </a>
+        <div class="first">
+            <div class="intro">
+                <section class="hero reveal" style="--i:0" aria-labelledby="h-name">
+                    <div>
+                        <h1 id="h-name">Eden Bolurian</h1>
+                        <p>Finance, grounded in accounting. Equity research, and the tools I build for it.</p>
                     </div>
-                </div>
-                <div class="hero-photo" aria-hidden="true">
-                    <img src="assets/headshot.jpg" alt="" width="200" height="250" loading="eager" decoding="async">
-                </div>
+                    <div class="portrait">
+                        <img src="assets/headshot.jpg" alt="Portrait of Eden Bolurian" width="136" height="170" loading="eager" decoding="async">
+                    </div>
+                </section>
+
+                <section id="experience" aria-labelledby="h-exp">
+                    <h2 id="h-exp" class="label reveal" style="--i:1">Experience</h2>
+                    <ol class="roles">
+                        <li class="reveal" style="--i:2">
+                            <div class="role">
+                                    <img class="logo-slot" src="assets/hartman-logo-navy.png" alt="Hartman Venture Advisors" width="96" height="36">
+                                    <span><span class="firm">Hartman Venture Advisors</span><br><span class="title">Fund Advisory Intern</span></span>
+                                    <span class="dates">Jun — Aug 2026</span>
+                            </div>
+                        </li>
+                        <li class="reveal" style="--i:3">
+                            <div class="role">
+                                    <img class="logo-slot" src="assets/smu-cox-logo.png" alt="SMU Cox" width="110" height="36">
+                                    <span><span class="firm">Nancy Chambers Underwood Fund</span><br><span class="title">Student Equity Analyst</span></span>
+                                    <span class="dates">Jan — May 2026</span>
+                            </div>
+                        </li>
+                        <li class="reveal" style="--i:4">
+                            <div class="role">
+                                    <img class="logo-slot" src="assets/kpmg-logo.png" alt="KPMG" width="96" height="36">
+                                    <span><span class="firm">KPMG</span><br><span class="title">Asset Management Tax Intern</span></span>
+                                    <span class="dates">Jan — Apr 2025</span>
+                            </div>
+                        </li>
+                        <li class="reveal" style="--i:5">
+                            <div class="role">
+                                    <img class="logo-slot crop" src="assets/bakertilly-logo.png" alt="Baker Tilly" width="96" height="36">
+                                    <span><span class="firm">Baker Tilly</span><br><span class="title">International Tax Intern</span></span>
+                                    <span class="dates">Jun 2023 — Aug 2024</span>
+                            </div>
+                        </li>
+                        <li class="reveal" style="--i:6">
+                            <div class="role">
+                                    <img class="logo-slot" src="assets/nexbank-logo.svg" alt="NexBank" width="96" height="36">
+                                    <span><span class="firm">NexBank</span><br><span class="title">Internal Audit Intern</span></span>
+                                    <span class="dates">Jan — May 2023</span>
+                            </div>
+                        </li>
+                    </ol>
+                </section>
+
+                <section aria-labelledby="h-edu" class="reveal" style="--i:7">
+                    <h2 id="h-edu" class="label">Education</h2>
+                    <div class="edu">
+                        <div class="degree">
+                            <div><h3>M.S. Finance</h3><p>SMU Cox School of Business · 2026</p></div>
+                            <div class="gpa"><strong>3.9</strong><span>GPA</span></div>
+                        </div>
+                        <div class="degree">
+                            <div><h3>B.S. Accounting</h3><p>UT Dallas · 2025</p></div>
+                            <div class="gpa"><strong>3.8</strong><span>GPA</span></div>
+                        </div>
+                    </div>
+                    <div class="creds">
+                        <span class="label">Credentials</span>
+                        <span class="chip">FINRA SIE</span>
+                        <span class="chip">CPA Eligible</span>
+                        <span class="chip">Bloomberg Market Concepts</span>
+                    </div>
+                </section>
+            </div>
+
+            <section id="work" class="work" aria-labelledby="h-work">
+                <h2 id="h-work" class="label reveal" style="--i:2">Selected work</h2>
+
+                <a class="work-card reveal" style="--i:3" href="assets/Eden_Bolurian_Dutch_Bros_Short.pdf" target="_blank" rel="noopener">
+                    <div class="preview">
+                        <img src="assets/work-bros.jpg" alt="First page of the Dutch Bros equity research report" loading="eager" decoding="async">
+                        <span class="tag">SHORT · PT $40.58 · −16%</span>
+                    </div>
+                    <div>
+                        <div class="work-title"><span>Dutch Bros (BROS) short thesis</span><span class="arrow" aria-hidden="true">↗</span></div>
+                        <div class="work-sub">5-page equity research report · Point72 Academy case study · PDF</div>
+                    </div>
+                </a>
+
+                <a class="work-card reveal" style="--i:4" href="https://options.bolurian.com/trade" target="_blank" rel="noopener">
+                    <div class="preview dark app">
+                        <img src="assets/work-options.png" alt="The options trade finder web app" loading="eager" decoding="async">
+                        <span class="tag">LIVE WEB APP</span>
+                    </div>
+                    <div>
+                        <div class="work-title"><span>Options trade finder</span><span class="arrow" aria-hidden="true">↗</span></div>
+                        <div class="work-sub">Pick a view on a stock; get option trades priced at live quotes</div>
+                    </div>
+                </a>
             </section>
-
-            <!-- ABOUT (hidden until toggled) ═══════════════════ -->
-            <section id="about" hidden aria-labelledby="h-about">
-                <h2 id="h-about">More about me</h2>
-                <p>I'm <span class="accent">Eden Bolurian</span>, a Master of Science in Finance candidate at SMU's Cox School of Business with a background in accounting and a deep interest in investment analysis, valuation, and financial operations.</p>
-                <p>Beyond the résumé, I'm drawn to the intersection of <span class="accent">finance and technology</span> — I build tools, models, and projects that apply AI and modern software to real financial problems. Whether it's an options pricing engine, a portfolio analytics dashboard, or an AI poker trainer, I enjoy creating things that work and that I'd actually use.</p>
-                <p>Outside of work and school, I stay active, travel when I can, and spend time with my cat. I'm fluent in English and Hebrew.</p>
-
-                <div class="about-grid">
-                    <div class="about-item">
-                        <h3>Skills</h3>
-                        <ul>
-                            <li>Excel (Advanced) · Bloomberg · FactSet</li>
-                            <li>Power BI · SQL · Python · Tableau</li>
-                            <li>Financial modeling · Valuation</li>
-                            <li>Tax compliance · Partnership returns</li>
-                        </ul>
-                    </div>
-                    <div class="about-item">
-                        <h3>Certifications &amp; honors</h3>
-                        <ul>
-                            <li>Bloomberg Market Concepts</li>
-                            <li>FINRA SIE · CPA Eligible</li>
-                            <li>IBM SkillsBuild · Design Thinking &amp; AI</li>
-                            <li>Kitt Investing &amp; Trading Center Fellow</li>
-                            <li>FORVIS Accounting Scholar · State Farm Scholar</li>
-                        </ul>
-                    </div>
-                    <div class="about-item">
-                        <h3>Activities</h3>
-                        <ul>
-                            <li>MSF Student Program Ambassador</li>
-                            <li>Pi Kappa Phi Fraternity Treasurer</li>
-                            <li>Graduate Finance Association · ACEing Autism</li>
-                        </ul>
-                    </div>
-                    <div class="about-item">
-                        <h3>Languages</h3>
-                        <ul>
-                            <li>English — Fluent</li>
-                            <li>Hebrew — Fluent</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- EXPERIENCE ═════════════════════════════════════ -->
-            <section class="site-section" id="experience" aria-labelledby="h-experience">
-                <h2 class="section-heading" id="h-experience">Experience</h2>
-                <ol class="row-list">
-                    <li>
-                        <article class="row" aria-labelledby="role-hartman-heading">
-                            <div>
-                                <div class="row-year">Jun 2026 – Present · 2 mos</div>
-                                <h3 class="row-title" id="role-hartman-heading">Hartman Venture Advisors PLLC · Venture Capital Summer Analyst</h3>
-                                <p class="row-desc">Venture transactions and deal sourcing across managed funds, SPVs, and secondaries; supporting firm business-development strategy and pipeline.</p>
-                            </div>
-                            <div class="row-logo logo-hartman" aria-hidden="true">
-                                <img class="theme-light" src="assets/hartman-logo-navy.png" alt="" width="1000" height="644" loading="lazy" decoding="async">
-                                <img class="theme-dark" src="assets/hartman-logo-gold.png" alt="" width="1000" height="644" loading="lazy" decoding="async">
-                            </div>
-                        </article>
-                    </li>
-                    <li>
-                        <article class="row" aria-labelledby="role-1-heading">
-                            <div>
-                                <div class="row-year">Jan 2026 – May 2026</div>
-                                <h3 class="row-title" id="role-1-heading">Nancy Chambers Underwood Fund · Tech Equity Analyst</h3>
-                                <p class="row-desc">Co-managing a $9M SMU graduate endowment; covering the Information Technology sector.</p>
-                            </div>
-                            <div class="row-logo" aria-hidden="true">
-                                <img src="assets/smu-logo.png" alt="" class="logo-native" loading="lazy" decoding="async">
-                            </div>
-                        </article>
-                    </li>
-                    <li>
-                        <article class="row" aria-labelledby="role-2-heading">
-                            <div>
-                                <div class="row-year">Jan 2025 – Apr 2025</div>
-                                <h3 class="row-title" id="role-2-heading">KPMG · Asset Management Tax Intern</h3>
-                                <p class="row-desc">Supported federal/state tax compliance for RE/PE/HF clients — prepared 40+ partnership returns.</p>
-                            </div>
-                            <div class="row-logo" aria-hidden="true">
-                                <img src="assets/kpmg-logo.png" alt="" class="logo-native" loading="lazy" decoding="async">
-                            </div>
-                        </article>
-                    </li>
-                    <li>
-                        <article class="row" aria-labelledby="role-3-heading">
-                            <div>
-                                <div class="row-year">Jun 2023 – Aug 2024</div>
-                                <h3 class="row-title" id="role-3-heading">Baker Tilly · International Tax Intern</h3>
-                                <p class="row-desc">Delivered 30+ cross-border federal returns across 15+ jurisdictions; built an Excel VBA FX automation.</p>
-                            </div>
-                            <div class="row-logo" aria-hidden="true">
-                                <img src="assets/bakertilly-logo.png" alt="" class="logo-whiteout" loading="lazy" decoding="async">
-                            </div>
-                        </article>
-                    </li>
-                    <li>
-                        <article class="row" aria-labelledby="role-4-heading">
-                            <div>
-                                <div class="row-year">Jan 2023 – May 2023</div>
-                                <h3 class="row-title" id="role-4-heading">NexBank · Internal Audit Intern</h3>
-                                <p class="row-desc">Executed 12+ SOX/FDICIA audit tests; led Vendor Management workflow redesign, cutting review time 25%.</p>
-                            </div>
-                            <div class="row-logo" aria-hidden="true">
-                                <!-- Inline so CSS can recolor the navy path in dark mode. Red path keeps brand. -->
-                                <svg viewBox="0 0 160.6 33.9" xmlns="http://www.w3.org/2000/svg"><path fill="#C10230" d="M20.8 16.8c5.7-6.6 12.2-6.6 13.6-6.6V0c-1.7 0-10.8.1-17 11.6 0 .1-.1.2-.1.3-1 2-3.6 4.9-3.6 4.9C7.5 23.4 0 23.7 0 23.7v10.2s10.9-.5 17.2-11.8c0 0 2.4-4 3.6-5.3"/><path class="nexbank-navy" fill="#154372" d="M13.8 16.8C8.1 10.2 1.6 10.2.2 10.2V0c1.7 0 10.8.1 17 11.6 0 .1.1.2.1.3 1 2 3.6 4.9 3.6 4.9 6.1 6.5 13.6 6.9 13.6 6.9v10.2s-10.9-.5-17.2-11.8c.1 0-2.3-4-3.5-5.3"/><path class="nexbank-navy" fill="#154372" d="M160.6 11.4v3h-.5v-2.5l-.9 2.5h-.4l-.9-2.5v2.5h-.5v-3h.8l.8 2.1.8-2.1h.8zm-5.9.5h.9v2.5h.6v-2.5h.9v-.5h-2.4v.5zM55 7.3h-3l-.1.2h.4c.3 0 .6.3.8.8.2.5.3 1.3.3 2.2v12.9l-6.9-16h-7.2l-.1.2h.3c.2 0 .5.2.6.7.2.5.3 1 .3 1.5v15.5c0 1.9-.4 2.9-1.1 3l-.5.2h6l.1-.2h-.4c-.3 0-.5-.3-.7-.8s-.3-1.3-.3-2.2V10.6l8.3 17.8c.1 0 4.7-.1 4.7-.1V10.5c0-1.9.3-2.9 1-3l.5-.2h-3zm30.6 19l-4-7 3.2-5.8c.5-.7 1-1.1 1-1.1.5-.5 1-.7 1.3-.9l-.1-.1h-5.3l-.1.2c.3.2.5.4.5.7 0 .1-.1.3-.2.5-.2.6-2.3 5.2-2.3 5.2s-1.9-5.1-2.1-5.4c-.1-.2-.1-.3-.1-.5.1-.3.2-.5.5-.6l-.1-.1H72v.1c.3.2.6.4.8.6.3.3.5.6.7.9l3.6 6.8-4 6.8c-.2.4-.5.8-.9 1-.2.2-.6.4-1.1.6l.6-3.2h-.2l-.1.2c-.4.5-1 .9-1.7 1.1-.8.3-1.8.4-3.1.4h-2.2c-.7 0-1.1-.1-1.3-.3-.2-.3-.4-.8-.4-1.7v-4.5h2.7c1.3 0 2.3.1 2.8.4.6.2.9.5.9.8l-.1-4c-.2.3-.5.6-.7.8-.5.2-1.5.4-3 .4h-2.7V13h3.9c1.1 0 1.9.1 2.5.4.6.2 1.1.6 1.3 1 .1.1.1.2.2.2s.1 0 .1-.1l-.5-3.1H58.6l-.1.1h.2c.4 0 .6.8.6 2.4v11.9c0 1.5-.3 2.3-.8 2.4l-.4.1h13.1v-.1l.1.1h5.4l.1-.1c-.2-.1-.4-.2-.4-.5 0-.4.2-.7.3-1.1.2-.5 2.3-5.4 2.3-5.4s2.2 5.5 2.4 5.8c.1.3.2.5.2.7s-.1.3-.3.5l.1.1h6.1l.1-.1c-.4-.2-.7-.4-1.1-.7-.3-.3-.6-.8-.9-1.2zm21.6-3.9c0 3.9-2.3 5.9-7 5.9h-8.6l-3.6.1-.2-.1.5-.1c.7-.1 1.1-1.1 1.1-3V10.5c0-2-.3-3-.8-3h-.3l.1-.2h9.4c2.8 0 4.8.4 6.1 1.2 1.3.8 1.9 2.1 1.9 4 0 1.2-.4 2.2-1.3 3-.8.8-2.1 1.4-3.9 1.7 2.2.3 3.8.9 4.9 1.8 1.1.9 1.6 2.1 1.7 3.4zm-13.3-6.1h3.8c1.2 0 2.1-.3 2.6-.9.5-.5.8-1.5.8-2.8 0-1.3-.2-2.2-.8-2.7-.6-.5-1.5-.8-2.8-.8h-3.6v7.2zm8.3 6.2c0-1.5-.4-2.6-1.1-3.3-.8-.7-1.9-1-3.6-1h-3.7v6.2c.1.9.3 1.4.6 1.7.4.3.9.4 1.6.4h1.6c1.7 0 2.9-.3 3.6-.9.7-.6 1.1-1.7 1-3.1zm35.1-11h.1l-.4.1c-.5.1-.8.9-.8 2.4v14.4h-3.8l-6.7-14.3v12c0 .8.1 1.4.2 1.8.1.4.3.6.5.6h.3l-.1.1h-9.5l-.1-.1c.4-.2.6-.4.6-.7 0-.2-.1-.8-.2-1.1-.1-.5-1.2-4.4-1.2-4.4h-4.6s-.9 3-1.1 3.7c0 .1-.3.9-.3 1.4 0 .4.2.7.7.9l-.1.2h-4.7l-.1-.1c.3-.3.7-.6 1.1-1.2.4-.6.7-1 .8-1.3l5.1-14.6h3.1l5.1 15c.1.3.3.7.6 1 .2.3.5.6.8.8.3-.4.5-1.1.5-2.3V13.3c0-.4-.1-.8-.2-1.2-.1-.4-.3-.6-.5-.6h-.3l.1-.1h5.8l5.5 13V14c0-.8 0-1.4-.2-1.8-.1-.5-.3-.7-.6-.7h-.4l.1-.1h2.4l2.5.1zm-21.7 9l-1.7-6.2-1.8 6.2h3.5zm36 5.6c-.9-1.7-1.5-2.7-1.7-3.1-.6-1-1.3-1.7-1.9-2.3-.8-.7-1.7-1.2-2.8-1.6l4.2-5.3c.2-.3.9-1.1 1.7-1.5.6-.3 1.1-.5 1.8-.8h-5.7l-.1.1c.2.1.3.3.3.4 0 .2-.1.4-.4.8-.2.3-3.8 6.7-3.8 6.7V14c0-1.5.2-2.3.6-2.4l.3-.1H139l-.1.1h.2c.4 0 .6.8.6 2.5V26c0 1.5-.2 2.3-.6 2.5l-.3.1h5.2l.1-.1h-.2c-.4 0-.5-.8-.5-2.5v-6.1c.6.8 1.1 1.6 1.6 2.4.5.9 3.8 6.2 3.8 6.2h5.3l.1-.1c-.7-.3-1.1-.6-1.5-1-.4-.4-.8-.8-1.1-1.3z"/></svg>
-                            </div>
-                        </article>
-                    </li>
-                </ol>
-            </section>
-
-            <!-- PROJECTS ═══════════════════════════════════════ -->
-            <section class="site-section" id="projects" aria-labelledby="h-projects">
-                <h2 class="section-heading" id="h-projects">Projects</h2>
-                <ul class="row-list">
-                    <li>
-                        <article class="row" aria-labelledby="project-1-heading">
-                            <div>
-                                <div class="row-year">Shipped · 2026</div>
-                                <h3 class="row-title" id="project-1-heading">
-                                    <a class="row-link" href="https://options.bolurian.com" target="_blank" rel="noopener">
-                                        Black-Scholes Options Suite
-                                        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
-                                    </a>
-                                </h3>
-                                <p class="row-desc">Tell it where a stock is headed and it finds option trades that fit — priced at live market quotes, with max loss, odds of profit, and what-if P&amp;L. Plus a live chain explorer and multi-leg strategy builder.</p>
-                            </div>
-                            <div class="row-logo logo-bssuite" aria-hidden="true">
-                                <!-- Simplified: clean σ on a dark rounded card. -->
-                                <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="8" y="8" width="64" height="64" rx="12"
-                                          fill="#0a0b11"
-                                          stroke="#eef1f7" stroke-opacity="0.5" stroke-width="1.5"/>
-                                    <text x="40" y="55" text-anchor="middle"
-                                          font-family="'Libre Baskerville', serif"
-                                          font-style="italic" font-weight="700"
-                                          font-size="40" fill="#eef1f7">σ</text>
-                                </svg>
-                            </div>
-                        </article>
-                    </li>
-                    <li>
-                        <article class="row" aria-labelledby="project-lya-heading">
-                            <div>
-                                <div class="row-year">Shipped · 2026</div>
-                                <h3 class="row-title" id="project-lya-heading">
-                                    <a class="row-link" href="https://lyastudios.com" target="_blank" rel="noopener">
-                                        lyá studios
-                                        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
-                                    </a>
-                                </h3>
-                                <p class="row-desc">Creative studio and portfolio site — design system, custom typography, and lightweight motion.</p>
-                            </div>
-                            <div class="row-logo logo-lya" aria-hidden="true">
-                                <img class="theme-light" src="assets/lya-logo-black.png" alt="" width="600" height="400" loading="lazy" decoding="async">
-                                <img class="theme-dark" src="assets/lya-logo-cream.png" alt="" width="600" height="400" loading="lazy" decoding="async">
-                            </div>
-                        </article>
-                    </li>
-                </ul>
-            </section>
-
         </div>
+
+        <section class="other" aria-labelledby="h-other">
+            <div>
+                <h2 id="h-other">Other work</h2>
+                <p>Projects outside finance: design, brand, and the web.</p>
+            </div>
+            <div class="other-grid">
+                <a class="other-card" href="https://hartmanadvisory.com" target="_blank" rel="noopener">
+                    <div class="frame"><img class="lockup" src="assets/hartman-lockup-navy.svg" alt="Hartman Venture Advisors logo" loading="lazy"></div>
+                    <div class="row"><span>Hartman Venture Advisors · Firm website</span><span aria-hidden="true">↗</span></div>
+                </a>
+                <a class="other-card" href="https://lyastudios.com" target="_blank" rel="noopener">
+                    <div class="frame"><img src="assets/lya-logo-dark.png" alt="lyá studios logo" loading="lazy"></div>
+                    <div class="row"><span>lyá studios · Site &amp; design system</span><span aria-hidden="true">↗</span></div>
+                </a>
+            </div>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; 2026 Eden Bolurian · Built with care · <a href="https://github.com/ebolurian-web" target="_blank" rel="noopener">GitHub</a></p>
+        <span>&copy; 2026 Eden Bolurian · Dallas, TX</span>
+        <nav aria-label="Elsewhere">
+            <a class="u" href="https://www.linkedin.com/in/edenbolurian/" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="u" href="mailto:ebolurian@gmail.com">Email</a>
+            <a class="u" href="https://github.com/ebolurian-web" target="_blank" rel="noopener">GitHub</a>
+        </nav>
     </footer>
-
-    <script>
-        // Typewriter — aria-hidden span, AT gets static phrase list instead
-        (function () {
-            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-            const phrases = [
-                'equity research.',
-                'valuation modeling.',
-                'investment analysis.',
-                'building with AI.',
-                'strategic thinking.',
-                'options & derivatives.',
-                'portfolio strategy.',
-                'financial engineering.',
-            ];
-            const el = document.getElementById('typewriter');
-            if (!el) return;
-            if (reduceMotion.matches) {
-                el.textContent = phrases[0].replace(/\.$/, '');
-                return;
-            }
-            let phraseIndex = 0, charIndex = 0, isDeleting = false;
-            function type() {
-                const current = phrases[phraseIndex];
-                if (!isDeleting) {
-                    el.textContent = current.substring(0, charIndex + 1);
-                    charIndex++;
-                    if (charIndex === current.length) {
-                        el.classList.add('highlight');
-                        setTimeout(function () {
-                            el.classList.remove('highlight');
-                            isDeleting = true;
-                            setTimeout(type, 60);
-                        }, 1800);
-                        return;
-                    }
-                    setTimeout(type, 70);
-                } else {
-                    el.textContent = current.substring(0, charIndex - 1);
-                    charIndex--;
-                    if (charIndex === 0) {
-                        isDeleting = false;
-                        phraseIndex = (phraseIndex + 1) % phrases.length;
-                        setTimeout(type, 300);
-                        return;
-                    }
-                    setTimeout(type, 40);
-                }
-            }
-            setTimeout(type, 600);
-        })();
-
-        // Scroll progress
-        (function () {
-            const bar = document.getElementById('scrollProgress');
-            if (!bar) return;
-            function update() {
-                const scrollTop = window.pageYOffset;
-                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-                bar.style.width = Math.min(100, Math.max(0, pct)) + '%';
-            }
-            window.addEventListener('scroll', update, { passive: true });
-            update();
-        })();
-
-        // Theme toggle
-        (function () {
-            const btn = document.getElementById('themeToggle');
-            const icon = document.getElementById('themeIcon');
-            if (!btn || !icon) return;
-            const MOON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
-            const SUN =
-                '<circle cx="12" cy="12" r="4"/>' +
-                '<path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>';
-            function applyTheme(theme) {
-                const isDark = theme === 'dark';
-                document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
-                btn.setAttribute('aria-pressed', String(isDark));
-                icon.innerHTML = isDark ? MOON : SUN;
-                try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch (e) {}
-            }
-            applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
-            btn.addEventListener('click', function () {
-                applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
-            });
-        })();
-
-        // About section — hidden attribute + aria-expanded
-        (function () {
-            const btn = document.getElementById('aboutNavBtn');
-            const section = document.getElementById('about');
-            const heading = document.getElementById('h-about');
-            if (!btn || !section || !heading) return;
-            function toggle() {
-                const isOpen = !section.hasAttribute('hidden');
-                if (isOpen) {
-                    section.setAttribute('hidden', '');
-                    btn.setAttribute('aria-expanded', 'false');
-                } else {
-                    section.removeAttribute('hidden');
-                    btn.setAttribute('aria-expanded', 'true');
-                    heading.setAttribute('tabindex', '-1');
-                    heading.focus({ preventScroll: true });
-                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }
-            btn.addEventListener('click', toggle);
-            section.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape' && !section.hasAttribute('hidden')) {
-                    toggle();
-                    btn.focus();
-                }
-            });
-        })();
-    </script>
 </body>
 </html>
