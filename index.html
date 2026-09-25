@@ -14,6 +14,27 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://bolurian.com/">
     <meta property="og:image" content="https://bolurian.com/assets/headshot.jpg">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Eden Bolurian",
+        "url": "https://bolurian.com/",
+        "image": "https://bolurian.com/assets/headshot.jpg",
+        "email": "mailto:ebolurian@gmail.com",
+        "jobTitle": "Finance professional",
+        "address": { "@type": "PostalAddress", "addressLocality": "Dallas", "addressRegion": "TX", "addressCountry": "US" },
+        "alumniOf": [
+            { "@type": "CollegeOrUniversity", "name": "Southern Methodist University, Cox School of Business" },
+            { "@type": "CollegeOrUniversity", "name": "The University of Texas at Dallas" }
+        ],
+        "knowsLanguage": ["English", "Hebrew"],
+        "sameAs": ["https://www.linkedin.com/in/edenbolurian/"]
+    }
+    </script>
     <meta name="twitter:card" content="summary">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -126,7 +147,7 @@
         }
         .hero p { margin-top: 10px; font-size: clamp(16px, 2.2vh, 20px); color: var(--muted); }
         .portrait { line-height: 0; }
-        .portrait img { width: clamp(96px, 12.5vh, 136px); height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center top; }
+        .portrait img { width: clamp(116px, 16vh, 168px); height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center top; }
 
         /* Experience rows: logo, firm and title, dates */
         .roles { list-style: none; border-top: 1px solid var(--ink); margin-top: 6px; }
@@ -134,11 +155,19 @@
         .role {
             display: grid; grid-template-columns: 110px minmax(0, 1fr) auto;
             gap: 24px; align-items: center;
-            min-height: 56px;
-            padding: clamp(9px, 1.3vh, 14px) 0;
+            min-height: 50px;
+            padding: clamp(6px, 0.9vh, 10px) 0;
+            line-height: 1.35;
         }
-        .roles .logo-slot { width: 104px; height: 30px; object-fit: contain; object-position: center; }
+        .roles .logo-slot { width: 104px; height: 28px; object-fit: contain; object-position: center; align-self: center; justify-self: center; }
         .roles .logo-slot.crop { object-fit: cover; }
+        .roles .lg-hartman  { height: 32px; }
+        .roles .lg-kpmg     { height: 24px; }
+        .roles .lg-wordmark { height: 24px; }
+        .roles .lg-smu      { height: 28px; }
+        .roles .lg-seal     { height: 36px; }
+        .roles .lg-crest    { height: 42px; }
+        .roles .lg-ace      { height: 38px; }
         .firm { font-size: 17px; font-weight: 600; }
         .title { font-size: 14px; color: var(--muted); }
         .when { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right; }
@@ -157,7 +186,7 @@
         }
 
         /* ── Selected work ──────────────────────────────── */
-        .work { --preview-h: clamp(180px, 27vh, 240px); display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+        .work { --preview-h: clamp(160px, 23vh, 210px); display: flex; flex-direction: column; gap: 14px; min-width: 0; }
         .work-card { display: flex; flex-direction: column; gap: 10px; }
         .preview {
             position: relative; height: var(--preview-h); overflow: hidden;
@@ -186,44 +215,39 @@
         .work-card:hover .work-title .arrow { transform: translateX(3px); }
         .work-sub { font-size: 13px; color: var(--muted); }
 
-        /* Leadership: sits under selected work in the right column */
-        .lead { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
-        .lead-row {
-            display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 16px; align-items: center;
-            border-top: 1px solid var(--ink); padding-top: 12px;
+        /* ── Right column: work, other work, skills ─────── */
+        .side { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+        .other-card {
+            display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 16px; align-items: center;
+            border-top: 1px solid var(--ink); padding-top: 10px; margin-top: 6px;
         }
-        .greek {
-            display: inline-flex; align-items: center; justify-content: center;
-            height: 44px; border: 1px solid #1f4e9c; color: #1f4e9c;
-            font-family: Georgia, "Times New Roman", serif; font-size: 18px; letter-spacing: 0.08em;
-        }
-
-        /* ── Below the fold ─────────────────────────────── */
-        .other {
-            background: var(--ink); color: #fff;
-            padding: 48px var(--gutter);
-            display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 72px; align-items: center;
-        }
-        .other h2 { font-family: var(--serif); font-size: 34px; font-weight: 700; }
-        .other > div > p { margin-top: 10px; font-size: 15px; color: #bdbdbd; }
-        .other-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-        .other-card { display: flex; flex-direction: column; gap: 10px; font-size: 14px; font-weight: 600; }
         .other-card .frame {
-            height: 180px; background: #f4f1ec;
+            height: 56px; background: #f4f1ec;
             display: flex; align-items: center; justify-content: center;
-            outline: 1px solid transparent; outline-offset: 4px;
-            transition: outline-color 0.2s ease;
         }
-        .other-card:hover .frame { outline-color: #fff; }
-        .other-card img { width: 150px; height: 100px; object-fit: contain; }
-        .other-card .row { display: flex; justify-content: space-between; }
+        .other-card .frame img { width: 60px; height: 40px; object-fit: contain; }
+        .other-card .arrow { transition: transform 0.25s ease; }
+        .other-card:hover .arrow { transform: translateX(3px); }
+        .other-card:hover .firm { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+        .tags {
+            list-style: none; display: flex; flex-wrap: wrap; gap: 6px;
+            border-top: 1px solid var(--ink); padding-top: 12px; margin-top: 6px;
+        }
+        .tags li { border: 1px solid var(--ink); padding: 4px 10px; font-size: 13px; font-weight: 500; }
+        .langs { margin-top: 10px; font-size: 14px; color: var(--muted); }
+        .langs strong { color: var(--ink); font-weight: 600; margin-right: 6px; }
 
         footer {
             padding: 22px var(--gutter);
             display: flex; justify-content: space-between; align-items: center; gap: 16px;
             font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--subtle);
         }
-        footer nav { display: flex; gap: 24px; }
+        footer nav { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+        .footer-email { text-transform: none; letter-spacing: 0.02em; color: var(--muted); user-select: all; }
+        button.u {
+            font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit;
+            background-color: transparent; border: 0; padding: 0 0 2px; cursor: pointer;
+        }
 
         /* ── Motion: build-in on load, logo glow ────────── */
         @media (prefers-reduced-motion: no-preference) {
@@ -257,10 +281,17 @@
 
         /* ── Smaller screens ────────────────────────────── */
         @media (max-width: 1100px) {
-            .first { grid-template-columns: minmax(0, 1fr); min-height: 0; gap: 40px; }
+            .first { grid-template-columns: minmax(0, 1fr); min-height: 0; gap: 28px; }
+            .intro, .side { display: contents; }
+            .hero { order: 1; }
+            .block-exp { order: 2; }
+            .block-work { order: 3; }
+            .block-edu { order: 4; }
+            .block-lead { order: 5; }
+            .block-skills { order: 6; }
+            .block-other { order: 7; }
             .work { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-            .work .label, .work .lead { grid-column: 1 / -1; }
-            .other { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+            .work .label { grid-column: 1 / -1; }
         }
         @media (max-width: 700px) {
             :root { --gutter: 16px; }
@@ -271,9 +302,11 @@
             .first { padding-top: 24px; }
             .hero { grid-template-columns: minmax(0, 1fr) 104px; gap: 16px; }
             .hero p { font-size: 15px; }
-            .portrait img { width: 94px; height: 118px; }
+            .portrait img { width: 104px; height: 130px; }
             .role { grid-template-columns: 64px minmax(0, 1fr); gap: 12px; }
-            .roles .logo-slot { width: 64px; height: 26px; }
+            .roles .logo-slot { width: 64px; height: 26px; grid-row: 1 / span 2; }
+            .roles .lg-seal { height: 30px; } .roles .lg-crest { height: 34px; } .roles .lg-ace { height: 32px; }
+            .roles .lg-kpmg, .roles .lg-wordmark { height: 20px; }
             .roles .when { grid-column: 2; flex-direction: row; gap: 8px; align-items: baseline; margin-top: -4px; }
             .roles .dates, .roles .where { font-size: 12px; }
             .chip { height: 28px; font-size: 12px; padding: 0 10px; }
@@ -283,7 +316,6 @@
             .roles .edu-row .gpa { grid-column: 3; grid-row: 1; }
             .work { grid-template-columns: minmax(0, 1fr); }
             .work { --preview-h: 190px; }
-            .other-grid { grid-template-columns: minmax(0, 1fr); }
             footer { flex-direction: column; align-items: flex-start; }
         }
     </style>
@@ -297,9 +329,10 @@
             <a class="u hide-sm" href="#experience">Experience</a>
             <a class="u hide-sm" href="#work">Work</a>
             <a class="u" href="https://www.linkedin.com/in/edenbolurian/" target="_blank" rel="noopener">LinkedIn ↗</a>
-            <a class="u" href="mailto:ebolurian@gmail.com">Email</a>
+            <button type="button" class="u copy-email" data-email="ebolurian@gmail.com" aria-describedby="email-status">Copy email</button>
         </nav>
     </header>
+    <p id="email-status" class="sr-only" aria-live="polite"></p>
 
     <main id="main-content" tabindex="-1">
         <div class="first">
@@ -315,126 +348,163 @@
                         </div>
                     </div>
                     <div class="portrait">
-                        <img src="assets/headshot.jpg" alt="Portrait of Eden Bolurian" width="136" height="170" loading="eager" decoding="async">
+                        <img src="assets/headshot.jpg" alt="Portrait of Eden Bolurian" width="168" height="210" loading="eager" decoding="async">
                     </div>
                 </section>
 
-                <section id="experience" aria-labelledby="h-exp">
+                <section id="experience" class="block-exp" aria-labelledby="h-exp">
                     <h2 id="h-exp" class="label reveal" style="--i:1">Experience</h2>
                     <ol class="roles">
                         <li class="reveal" style="--i:2">
                             <div class="role">
-                                    <img class="logo-slot" src="assets/hartman-logo-navy.png" alt="Hartman Venture Advisors" width="96" height="36">
-                                    <span><span class="firm">Hartman Venture Advisors</span><br><span class="title">Fund Advisory Intern</span></span>
-                                    <span class="when"><span class="dates">Jun — Aug 2026</span><span class="where">New York, NY</span></span>
+                                <img class="logo-slot lg-hartman" src="assets/hartman-logo-navy.png" alt="Hartman Venture Advisors" width="104" height="28">
+                                <span><span class="firm">Hartman Venture Advisors</span><br><span class="title">Fund Advisory Intern</span></span>
+                                <span class="when"><span class="dates">Jun — Aug 2026</span><span class="where">New York, NY</span></span>
                             </div>
                         </li>
                         <li class="reveal" style="--i:3">
                             <div class="role">
-                                    <img class="logo-slot" src="assets/smu-cox-logo.png" alt="SMU Cox" width="110" height="36">
-                                    <span><span class="firm">Nancy Chambers Underwood Fund</span><br><span class="title">Student Equity Analyst</span></span>
-                                    <span class="when"><span class="dates">Jan — May 2026</span><span class="where">Dallas, TX</span></span>
+                                <img class="logo-slot lg-wordmark" src="assets/smu-cox-logo.png" alt="SMU Cox" width="104" height="28">
+                                <span><span class="firm">Nancy Chambers Underwood Fund</span><br><span class="title">Student Equity Analyst</span></span>
+                                <span class="when"><span class="dates">Jan — May 2026</span><span class="where">Dallas, TX</span></span>
                             </div>
                         </li>
                         <li class="reveal" style="--i:4">
                             <div class="role">
-                                    <img class="logo-slot" src="assets/kpmg-logo.png" alt="KPMG" width="96" height="36">
-                                    <span><span class="firm">KPMG</span><br><span class="title">Asset Management Tax Intern</span></span>
-                                    <span class="when"><span class="dates">Jan — Apr 2025</span><span class="where">Dallas, TX</span></span>
+                                <img class="logo-slot lg-kpmg" src="assets/kpmg-logo.png" alt="KPMG" width="104" height="28">
+                                <span><span class="firm">KPMG</span><br><span class="title">Asset Management Tax Intern</span></span>
+                                <span class="when"><span class="dates">Jan — Apr 2025</span><span class="where">Dallas, TX</span></span>
                             </div>
                         </li>
                         <li class="reveal" style="--i:5">
                             <div class="role">
-                                    <img class="logo-slot crop" src="assets/bakertilly-logo.png" alt="Baker Tilly" width="96" height="36">
-                                    <span><span class="firm">Baker Tilly</span><br><span class="title">International Tax Intern</span></span>
-                                    <span class="when"><span class="dates">Jun 2023 — Aug 2024</span><span class="where">Frisco, TX</span></span>
+                                <img class="logo-slot crop" src="assets/bakertilly-logo.png" alt="Baker Tilly" width="104" height="28">
+                                <span><span class="firm">Baker Tilly</span><br><span class="title">International Tax Intern</span></span>
+                                <span class="when"><span class="dates">Jun 2023 — Aug 2024</span><span class="where">Frisco, TX</span></span>
                             </div>
                         </li>
                         <li class="reveal" style="--i:6">
                             <div class="role">
-                                    <img class="logo-slot" src="assets/nexbank-logo.svg" alt="NexBank" width="96" height="36">
-                                    <span><span class="firm">NexBank</span><br><span class="title">Internal Audit Intern</span></span>
-                                    <span class="when"><span class="dates">Jan — May 2023</span><span class="where">Dallas, TX</span></span>
+                                <img class="logo-slot lg-wordmark" src="assets/nexbank-logo.svg" alt="NexBank" width="104" height="28">
+                                <span><span class="firm">NexBank</span><br><span class="title">Internal Audit Intern</span></span>
+                                <span class="when"><span class="dates">Jan — May 2023</span><span class="where">Dallas, TX</span></span>
                             </div>
                         </li>
                     </ol>
                 </section>
 
-                <section aria-labelledby="h-edu" class="reveal" style="--i:7">
+                <section class="block-edu reveal" style="--i:7" aria-labelledby="h-edu">
                     <h2 id="h-edu" class="label">Education</h2>
                     <ol class="roles">
                         <li class="role edu-row">
-                            <img class="logo-slot" src="assets/smu-logo.png" alt="SMU" width="104" height="30">
+                            <img class="logo-slot lg-smu" src="assets/smu-logo.png" alt="SMU" width="104" height="28">
                             <span><span class="firm">M.S. Finance</span><br><span class="title">SMU Cox School of Business</span></span>
                             <span class="gpa"><strong>3.9</strong><span>GPA</span></span>
                             <span class="when"><span class="dates">May 2026</span><span class="where">Dallas, TX</span></span>
                         </li>
                         <li class="role edu-row">
-                            <img class="logo-slot" src="assets/utd-logo.png" alt="UT Dallas" width="104" height="30">
+                            <img class="logo-slot lg-seal" src="assets/utd-logo.png" alt="UT Dallas" width="104" height="28">
                             <span><span class="firm">B.S. Accounting</span><br><span class="title">The University of Texas at Dallas</span></span>
                             <span class="gpa"><strong>3.8</strong><span>GPA</span></span>
                             <span class="when"><span class="dates">May 2025</span><span class="where">Richardson, TX</span></span>
                         </li>
                     </ol>
                 </section>
+
+                <section class="block-lead reveal" style="--i:8" aria-labelledby="h-lead">
+                    <h2 id="h-lead" class="label">Leadership &amp; Activities</h2>
+                    <ol class="roles">
+                        <li class="role">
+                            <img class="logo-slot lg-crest" src="assets/pikappaphi-crest.png" alt="Pi Kappa Phi" width="104" height="28">
+                            <span><span class="firm">Pi Kappa Phi Fraternity</span><br><span class="title">Treasurer</span></span>
+                            <span class="when"><span class="dates">Nov 2021 — May 2025</span><span class="where">Dallas, TX</span></span>
+                        </li>
+                        <li class="role">
+                            <img class="logo-slot lg-ace" src="assets/aceing-autism-logo.png" alt="ACEing Autism" width="104" height="28">
+                            <span><span class="firm">ACEing Autism</span><br><span class="title">Lead Volunteer</span></span>
+                            <span class="when"><span class="dates">Jan 2023 — May 2025</span><span class="where">Dallas, TX</span></span>
+                        </li>
+                    </ol>
+                </section>
             </div>
 
-            <section id="work" class="work" aria-labelledby="h-work">
-                <h2 id="h-work" class="label reveal" style="--i:2">Selected work</h2>
+            <div class="side">
+                <section id="work" class="work block-work" aria-labelledby="h-work">
+                    <h2 id="h-work" class="label reveal" style="--i:2">Selected work</h2>
 
-                <a class="work-card reveal" style="--i:3" href="assets/Eden_Bolurian_Dutch_Bros_Short.pdf" target="_blank" rel="noopener">
-                    <div class="preview">
-                        <img src="assets/work-bros.jpg" alt="First page of the Dutch Bros equity research report" loading="eager" decoding="async">
-                        <span class="tag">SHORT · PT $40.58 · −16%</span>
-                    </div>
-                    <div>
-                        <div class="work-title"><span>Dutch Bros (BROS) short thesis</span><span class="arrow" aria-hidden="true">↗</span></div>
-                        <div class="work-sub">5-page equity research report · Point72 Academy case study · PDF</div>
-                    </div>
-                </a>
+                    <a class="work-card reveal" style="--i:3" href="assets/Eden_Bolurian_Dutch_Bros_Short.pdf" target="_blank" rel="noopener">
+                        <div class="preview">
+                            <img src="assets/work-bros.jpg" alt="First page of the Dutch Bros equity research report" loading="eager" decoding="async">
+                            <span class="tag">SHORT · PT $40.58 · −16%</span>
+                        </div>
+                        <div>
+                            <div class="work-title"><span>Dutch Bros (BROS) short thesis</span><span class="arrow" aria-hidden="true">↗</span></div>
+                            <div class="work-sub">Independent equity research · 5-page report · PDF</div>
+                        </div>
+                    </a>
 
-                <a class="work-card reveal" style="--i:4" href="https://options.bolurian.com/trade" target="_blank" rel="noopener">
-                    <div class="preview dark app">
-                        <img src="assets/work-options.png" alt="The options trade finder web app" loading="eager" decoding="async">
-                        <span class="tag">LIVE WEB APP</span>
-                    </div>
-                    <div>
-                        <div class="work-title"><span>Options trade finder</span><span class="arrow" aria-hidden="true">↗</span></div>
-                        <div class="work-sub">Pick a view on a stock; get option trades priced at live quotes</div>
-                    </div>
-                </a>
+                    <a class="work-card reveal" style="--i:4" href="https://options.bolurian.com/trade" target="_blank" rel="noopener">
+                        <div class="preview dark app">
+                            <img src="assets/work-options.png" alt="The options trade finder web app" loading="eager" decoding="async">
+                            <span class="tag">LIVE WEB APP</span>
+                        </div>
+                        <div>
+                            <div class="work-title"><span>Options trade finder</span><span class="arrow" aria-hidden="true">↗</span></div>
+                            <div class="work-sub">Pick a view on a stock; get option trades priced at live quotes</div>
+                        </div>
+                    </a>
+                </section>
 
-                <div class="lead reveal" style="--i:5">
-                    <h2 id="h-lead" class="label">Leadership</h2>
-                    <div class="lead-row">
-                        <span class="greek" aria-hidden="true">ΠΚΦ</span>
-                        <span><span class="firm">Pi Kappa Phi</span><br><span class="title">Fraternity Treasurer</span></span>
-                    </div>
-                </div>
-            </section>
+                <section class="block-other reveal" style="--i:5" aria-labelledby="h-other">
+                    <h2 id="h-other" class="label">Other work</h2>
+                    <a class="other-card" href="https://lyastudios.com" target="_blank" rel="noopener">
+                        <span class="frame"><img src="assets/lya-logo-dark.png" alt="lyá studios logo" loading="eager"></span>
+                        <span class="other-text"><span class="firm">lyá studios</span><br><span class="title">Studio site &amp; design system</span></span>
+                        <span class="arrow" aria-hidden="true">↗</span>
+                    </a>
+                </section>
+
+                <section class="block-skills reveal" style="--i:6" aria-labelledby="h-skills">
+                    <h2 id="h-skills" class="label">Skills &amp; Languages</h2>
+                    <ul class="tags" aria-label="Skills">
+                        <li>Excel (Advanced)</li><li>PowerPoint</li><li>Bloomberg</li><li>FactSet</li>
+                        <li>Python</li><li>SQL</li><li>Power BI</li><li>Tableau</li><li>Claude Code</li>
+                    </ul>
+                    <p class="langs"><strong>Languages</strong> English · Hebrew (fluent)</p>
+                </section>
+            </div>
         </div>
-
-        <section class="other" aria-labelledby="h-other">
-            <div>
-                <h2 id="h-other">Other work</h2>
-                <p>Projects outside finance: design, brand, and the web.</p>
-            </div>
-            <div class="other-grid">
-                <a class="other-card" href="https://lyastudios.com" target="_blank" rel="noopener">
-                    <div class="frame"><img src="assets/lya-logo-dark.png" alt="lyá studios logo" loading="lazy"></div>
-                    <div class="row"><span>lyá studios · Site &amp; design system</span><span aria-hidden="true">↗</span></div>
-                </a>
-            </div>
-        </section>
     </main>
 
     <footer>
         <span>&copy; 2026 Eden Bolurian · Dallas, TX</span>
         <nav aria-label="Elsewhere">
             <a class="u" href="https://www.linkedin.com/in/edenbolurian/" target="_blank" rel="noopener">LinkedIn</a>
-            <a class="u" href="mailto:ebolurian@gmail.com">Email</a>
-            <a class="u" href="https://github.com/ebolurian-web" target="_blank" rel="noopener">GitHub</a>
+            <span class="footer-email">ebolurian@gmail.com</span>
+            <button type="button" class="u copy-email" data-email="ebolurian@gmail.com" aria-describedby="email-status">Copy</button>
         </nav>
     </footer>
+
+    <script>
+        // Copy email to the clipboard; fall back to the mail app if the clipboard is blocked
+        document.querySelectorAll('.copy-email').forEach(function (btn) {
+            var label = btn.textContent;
+            var status = document.getElementById('email-status');
+            btn.addEventListener('click', function () {
+                var email = btn.getAttribute('data-email');
+                function done() {
+                    btn.textContent = 'Copied ✓';
+                    if (status) status.textContent = 'Email address copied: ' + email;
+                    setTimeout(function () { btn.textContent = label; }, 1800);
+                }
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(email).then(done, function () { location.href = 'mailto:' + email; });
+                } else {
+                    location.href = 'mailto:' + email;
+                }
+            });
+        });
+    </script>
+    <script data-goatcounter="https://bolurian.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
