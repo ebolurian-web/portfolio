@@ -138,7 +138,7 @@
             padding: clamp(6px, 0.9vh, 10px) 0;
             line-height: 1.35;
         }
-        .roles .logo-slot { width: 104px; height: 28px; object-fit: contain; object-position: center; }
+        .roles .logo-slot { width: 104px; height: 28px; object-fit: contain; object-position: center; align-self: center; justify-self: center; }
         .roles .logo-slot.crop { object-fit: cover; }
         .firm { font-size: 17px; font-weight: 600; }
         .title { font-size: 14px; color: var(--muted); }
@@ -262,7 +262,7 @@
             .hero p { font-size: 15px; }
             .portrait img { width: 104px; height: 130px; }
             .role { grid-template-columns: 64px minmax(0, 1fr); gap: 12px; }
-            .roles .logo-slot { width: 64px; height: 26px; }
+            .roles .logo-slot { width: 64px; height: 26px; grid-row: 1 / span 2; }
             .roles .when { grid-column: 2; flex-direction: row; gap: 8px; align-items: baseline; margin-top: -4px; }
             .roles .dates, .roles .where { font-size: 12px; }
             .chip { height: 28px; font-size: 12px; padding: 0 10px; }
@@ -368,17 +368,17 @@
                 </section>
 
                 <section aria-labelledby="h-lead" class="reveal" style="--i:8">
-                    <h2 id="h-lead" class="label">Leadership</h2>
+                    <h2 id="h-lead" class="label">Leadership &amp; Activities</h2>
                     <ol class="roles">
                         <li class="role">
                             <img class="logo-slot" src="assets/pikappaphi-crest.png" alt="Pi Kappa Phi" width="104" height="30">
-                            <span><span class="firm">Pi Kappa Phi</span><br><span class="title">Fraternity Treasurer</span></span>
-                            <span class="when"></span>
+                            <span><span class="firm">Pi Kappa Phi Fraternity</span><br><span class="title">Treasurer</span></span>
+                            <span class="when"><span class="dates">Nov 2021 — May 2025</span><span class="where">Dallas, TX</span></span>
                         </li>
                         <li class="role">
                             <img class="logo-slot" src="assets/aceing-autism-logo.png" alt="ACEing Autism" width="104" height="30">
                             <span><span class="firm">ACEing Autism</span><br><span class="title">Lead Volunteer</span></span>
-                            <span class="when"><span class="dates">Jan 2023 — May 2025</span></span>
+                            <span class="when"><span class="dates">Jan 2023 — May 2025</span><span class="where">Dallas, TX</span></span>
                         </li>
                     </ol>
                 </section>
