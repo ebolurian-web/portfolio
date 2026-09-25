@@ -126,7 +126,7 @@
         }
         .hero p { margin-top: 10px; font-size: clamp(16px, 2.2vh, 20px); color: var(--muted); }
         .portrait { line-height: 0; }
-        .portrait img { width: clamp(96px, 12.5vh, 136px); height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center top; }
+        .portrait img { width: clamp(116px, 16vh, 168px); height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: center top; }
 
         /* Experience rows: logo, firm and title, dates */
         .roles { list-style: none; border-top: 1px solid var(--ink); margin-top: 6px; }
@@ -134,10 +134,11 @@
         .role {
             display: grid; grid-template-columns: 110px minmax(0, 1fr) auto;
             gap: 24px; align-items: center;
-            min-height: 56px;
-            padding: clamp(9px, 1.3vh, 14px) 0;
+            min-height: 50px;
+            padding: clamp(6px, 0.9vh, 10px) 0;
+            line-height: 1.35;
         }
-        .roles .logo-slot { width: 104px; height: 30px; object-fit: contain; object-position: center; }
+        .roles .logo-slot { width: 104px; height: 28px; object-fit: contain; object-position: center; }
         .roles .logo-slot.crop { object-fit: cover; }
         .firm { font-size: 17px; font-weight: 600; }
         .title { font-size: 14px; color: var(--muted); }
@@ -185,18 +186,6 @@
         .work-title .arrow { transition: transform 0.25s ease; }
         .work-card:hover .work-title .arrow { transform: translateX(3px); }
         .work-sub { font-size: 13px; color: var(--muted); }
-
-        /* Leadership: sits under selected work in the right column */
-        .lead { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
-        .lead-row {
-            display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 16px; align-items: center;
-            border-top: 1px solid var(--ink); padding-top: 12px;
-        }
-        .greek {
-            display: inline-flex; align-items: center; justify-content: center;
-            height: 44px; border: 1px solid #1f4e9c; color: #1f4e9c;
-            font-family: Georgia, "Times New Roman", serif; font-size: 18px; letter-spacing: 0.08em;
-        }
 
         /* ── Below the fold ─────────────────────────────── */
         .other {
@@ -259,7 +248,7 @@
         @media (max-width: 1100px) {
             .first { grid-template-columns: minmax(0, 1fr); min-height: 0; gap: 40px; }
             .work { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-            .work .label, .work .lead { grid-column: 1 / -1; }
+            .work .label { grid-column: 1 / -1; }
             .other { grid-template-columns: minmax(0, 1fr); gap: 24px; }
         }
         @media (max-width: 700px) {
@@ -271,7 +260,7 @@
             .first { padding-top: 24px; }
             .hero { grid-template-columns: minmax(0, 1fr) 104px; gap: 16px; }
             .hero p { font-size: 15px; }
-            .portrait img { width: 94px; height: 118px; }
+            .portrait img { width: 104px; height: 130px; }
             .role { grid-template-columns: 64px minmax(0, 1fr); gap: 12px; }
             .roles .logo-slot { width: 64px; height: 26px; }
             .roles .when { grid-column: 2; flex-direction: row; gap: 8px; align-items: baseline; margin-top: -4px; }
@@ -377,6 +366,22 @@
                         </li>
                     </ol>
                 </section>
+
+                <section aria-labelledby="h-lead" class="reveal" style="--i:8">
+                    <h2 id="h-lead" class="label">Leadership</h2>
+                    <ol class="roles">
+                        <li class="role">
+                            <img class="logo-slot" src="assets/pikappaphi-crest.png" alt="Pi Kappa Phi" width="104" height="30">
+                            <span><span class="firm">Pi Kappa Phi</span><br><span class="title">Fraternity Treasurer</span></span>
+                            <span class="when"></span>
+                        </li>
+                        <li class="role">
+                            <img class="logo-slot" src="assets/aceing-autism-logo.png" alt="ACEing Autism" width="104" height="30">
+                            <span><span class="firm">ACEing Autism</span><br><span class="title">Lead Volunteer</span></span>
+                            <span class="when"><span class="dates">Jan 2023 — May 2025</span></span>
+                        </li>
+                    </ol>
+                </section>
             </div>
 
             <section id="work" class="work" aria-labelledby="h-work">
@@ -403,14 +408,6 @@
                         <div class="work-sub">Pick a view on a stock; get option trades priced at live quotes</div>
                     </div>
                 </a>
-
-                <div class="lead reveal" style="--i:5">
-                    <h2 id="h-lead" class="label">Leadership</h2>
-                    <div class="lead-row">
-                        <span class="greek" aria-hidden="true">ΠΚΦ</span>
-                        <span><span class="firm">Pi Kappa Phi</span><br><span class="title">Fraternity Treasurer</span></span>
-                    </div>
-                </div>
             </section>
         </div>
 
