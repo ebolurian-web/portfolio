@@ -103,13 +103,6 @@
             display: flex; align-items: center; gap: 32px;
             font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
         }
-        .btn-outline {
-            display: inline-flex; align-items: center;
-            height: 40px; padding: 0 18px;
-            border: 1px solid var(--ink);
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-        .btn-outline:hover { background: var(--ink); color: #fff; }
 
         /* ── First screen ───────────────────────────────── */
         .first {
@@ -208,12 +201,14 @@
         .other-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
         .other-card { display: flex; flex-direction: column; gap: 10px; font-size: 14px; font-weight: 600; }
         .other-card .frame {
-            height: 180px; border: 1px solid rgba(255, 255, 255, 0.25);
+            height: 180px; background: #f4f1ec;
             display: flex; align-items: center; justify-content: center;
-            transition: border-color 0.2s ease;
+            outline: 1px solid transparent; outline-offset: 4px;
+            transition: outline-color 0.2s ease;
         }
-        .other-card:hover .frame { border-color: #fff; }
+        .other-card:hover .frame { outline-color: #fff; }
         .other-card img { width: 150px; height: 100px; object-fit: contain; }
+        .other-card img.lockup { width: 230px; height: 60px; }
         .other-card .row { display: flex; justify-content: space-between; }
 
         footer {
@@ -293,8 +288,7 @@
             <a class="u hide-sm" href="#experience">Experience</a>
             <a class="u hide-sm" href="#work">Work</a>
             <a class="u" href="https://www.linkedin.com/in/edenbolurian/" target="_blank" rel="noopener">LinkedIn ↗</a>
-            <a class="u hide-sm" href="mailto:ebolurian@gmail.com">Email</a>
-            <a class="btn-outline" href="assets/resume.pdf" target="_blank" rel="noopener">Résumé ↓</a>
+            <a class="u" href="mailto:ebolurian@gmail.com">Email</a>
         </nav>
     </header>
 
@@ -406,8 +400,12 @@
                 <p>Projects outside finance: design, brand, and the web.</p>
             </div>
             <div class="other-grid">
+                <a class="other-card" href="https://hartmanadvisory.com" target="_blank" rel="noopener">
+                    <div class="frame"><img class="lockup" src="assets/hartman-lockup-navy.svg" alt="Hartman Venture Advisors logo" loading="lazy"></div>
+                    <div class="row"><span>Hartman Venture Advisors · Firm website</span><span aria-hidden="true">↗</span></div>
+                </a>
                 <a class="other-card" href="https://lyastudios.com" target="_blank" rel="noopener">
-                    <div class="frame"><img src="assets/lya-logo-cream.png" alt="lyá studios logo" loading="lazy"></div>
+                    <div class="frame"><img src="assets/lya-logo-dark.png" alt="lyá studios logo" loading="lazy"></div>
                     <div class="row"><span>lyá studios · Site &amp; design system</span><span aria-hidden="true">↗</span></div>
                 </a>
             </div>
